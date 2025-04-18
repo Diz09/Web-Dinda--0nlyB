@@ -3,59 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\BarangMasuk;
+use App\Models\BarangKeluar;
 
 class DashboardController extends Controller
 {
     /**
      * Menampilkan dashboard pimpinan.
-     *
-     * @return \Illuminate\View\View
      */
     public function pimpinan()
     {
-        // Ambil data yang diperlukan untuk dashboard
         $keuangan = $this->getKeuangan();
         $statistikProduksi = $this->getStatistikProduksi();
+        $pengeluaranTerbaru = $this->getPengeluaranTerbaru();
 
-        // Ambil data pengeluaran terbaru
-    $pengeluaranTerbaru = $this->getPengeluaranTerbaru(); // Pastikan ini diisi
+        return view('dashboard.pimpinan', compact('keuangan', 'statistikProduksi', 'pengeluaranTerbaru'));
+    }
 
-    return view('dashboard.pimpinan', compact('keuangan', 'statistikProduksi', 'pengeluaranTerbaru'));
-}
+    /**
+     * Menampilkan dashboard operator.
+     */
+    public function operator()
+    {
+        $barangMasukTerbaru = BarangMasuk::with('barang')->latest()->take(5)->get();
+        $barangKeluarTerbaru = BarangKeluar::with('barang')->latest()->take(5)->get();
 
-// Fungsi untuk mengambil pengeluaran terbaru
-private function getPengeluaranTerbaru()
-{
-    // Ambil data pengeluaran dari database atau model (contoh menggunakan model Pengeluaran)
-    return \App\Models\Pengeluaran::latest()->take(5)->get(); // Sesuaikan dengan model dan data pengeluaran
-}
+        return view('dashboard.operator', compact('barangMasukTerbaru', 'barangKeluarTerbaru'));
+    }
+
+    /**
+     * Fungsi untuk mengambil pengeluaran terbaru.
+     */
+    private function getPengeluaranTerbaru()
+    {
+        return \App\Models\Pengeluaran::latest()->take(5)->get();
+    }
+
     /**
      * Fungsi untuk mengambil laporan keuangan.
-     *
-     * @return array
      */
     private function getKeuangan()
     {
-        // Ambil data keuangan dari database atau model
         return [
-            'pendapatan' => 100000000, // Contoh data pendapatan
-            'pengeluaran' => 50000000, // Contoh data pengeluaran
-            'laba' => 50000000,       // Contoh data laba
+            'pendapatan' => 100000000,
+            'pengeluaran' => 50000000,
+            'laba' => 50000000,
         ];
     }
 
     /**
      * Fungsi untuk mengambil statistik produksi.
-     *
-     * @return array
      */
     private function getStatistikProduksi()
     {
-        // Ambil data statistik produksi dari database atau model
         return [
-            'produk_terjual' => 1000,      // Contoh jumlah produk terjual
-            'produk_diproduksi' => 1500,   // Contoh jumlah produk diproduksi
-            'stok' => 2000,                // Contoh jumlah stok yang tersedia
+            'produk_terjual' => 1000,
+            'produk_diproduksi' => 1500,
+            'stok' => 2000,
         ];
     }
 }

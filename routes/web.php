@@ -22,6 +22,10 @@ Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->mid
 // Rute untuk dashboard operator
 Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
 
+// tampilan dashboard
+Route::get('/dashboard/operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
+
+
 // Rute untuk pengeluaran
 Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index')->middleware('auth');
 
@@ -50,3 +54,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
     Route::post('/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
 });
+

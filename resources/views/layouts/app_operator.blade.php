@@ -29,20 +29,52 @@
             margin-bottom: 30px;
         }
 
-        .sidebar a {
+        .sidebar-link{
             padding: 12px 20px;
             width: 100%;
             color: #ecf0f1;
+            text-align: center;
             text-decoration: none;
             display: block;
             transition: 0.3s ease;
+            box-sizing: border-box;
         }
-
-        .sidebar a:hover,
-        .sidebar a.active {
+        
+        
+        .sidebar-link:hover,
+        .sidebar-link.active{
             background-color: #ecf0f1;
             color: #2c3e50;
             font-weight: bold;
+        }
+        
+        .sidebar-link-out {
+            padding: 12px 20px;
+            width: 100%;
+            color: orangered;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: 0.3s ease;
+            box-sizing: border-box;
+            margin-top: 40px;
+        }
+
+        .sidebar-link-out:hover{
+            /* width: 100%; */
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sidebar-category {
+            font-weight: bold;
+            padding: 10px 15px;
+            color: #666;
+            text-transform: uppercase;
+            font-size: 12px;
+            text-align: start;
+            margin-top: 20px;
         }
 
         .main-content {
@@ -90,7 +122,7 @@
 
         @media (max-width: 600px) {
             .sidebar {
-                position: static;
+                /* position: static; */
                 width: 100%;
                 height: auto;
                 flex-direction: row;
@@ -163,15 +195,29 @@
 <body>
     <div class="sidebar">
         <img src="https://img.icons8.com/ios-filled/50/user.png" alt="user icon">
-        <a href="/dashboard-operator">Dashboard</a>
-        <a href="/presensi">Presensi</a>
-        <a href="/barang">Data Barang</a>
-        <a href="/barang-masuk">Barang Masuk</a>
-        <a href="/barang-keluar">Barang Keluar</a>
-        <a href="#">Logout</a>
+
+        <!-- Dashboard -->
+        <a href="/dashboard-operator" class="sidebar-link">Dashboard</a>
+
+        <!-- Kategori: Data -->
+        <div class="sidebar-category">Data</div>
+        <a href="/karyawan" class="sidebar-link">Karyawan</a>
+        <a href="/barang" class="sidebar-link">Data Barang</a>
+
+        <!-- Kategori: Aktivitas -->
+        <div class="sidebar-category">Aktivitas</div>
+        <a href="/presensi" class="sidebar-link">Presensi</a>
+        <a href="/barang-masuk" class="sidebar-link">Barang Masuk</a>
+        <a href="/barang-keluar" class="sidebar-link">Barang Keluar</a>
+
+        <!-- Logout -->
+        <a href="/" class="sidebar-link-out">Logout</a>
     </div>
+
     <div class="main-content">
         @yield('content')
     </div>
 </body>
+
+
 </html>

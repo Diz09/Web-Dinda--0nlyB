@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.app_operator')
 
 @section('content')
 <div class="container">
-    <h2>Data Barang Masuk</h2>
+    <h2>Data Barang Keluar</h2>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    <a href="{{ route('barangmasuk.create') }}" class="btn btn-primary mb-3">Tambah Barang Masuk</a>
+    <a href="{{ route('barangkeluar.create') }}" class="btn btn-primary mb-3">Tambah Barang Keluar</a>
 
     <table class="table table-bordered">
         <thead>
@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($barangMasuks as $item)
+            @foreach($barangKeluars as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->barang->nama }}</td>

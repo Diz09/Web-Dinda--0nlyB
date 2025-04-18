@@ -1,6 +1,6 @@
 <!-- resources/views/operator/barang/edit.blade.php -->
 
-@extends('layouts.app')
+@extends('layouts.app_operator')
 
 @section('content')
     <div class="container">

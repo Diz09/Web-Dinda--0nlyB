@@ -7,6 +7,9 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
+use App\Http\Controllers\BarangKeluarController;
+use App\Http\Controllers\gajiController;
+use App\Http\Controllers\PresensiController;
 
 // Rute untuk login dan logout
 Route::get('/', function () {
@@ -55,3 +58,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
+    Route::get('/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
+    Route::post('/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
+});
+
+// Presensi & gaji
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/gaji', [gajiController::class, 'index'])->name('gaji.index'); 
+//     // Route::get('/gaji/create', [gajiController::class, 'create'])->name('gaji.create');
+//     Route::post('/gaji', [gajiController::class, 'store'])->name('gaji.store');
+// });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi.index');
+    Route::get('/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
+    Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+});

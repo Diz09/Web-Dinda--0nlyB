@@ -41,12 +41,25 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Redirect user based on their role
      */
+    // public static function redirectToByRole($user)
+    // {
+    //     return match ($user->role) {
+    //         'pimpinan' => '/dashboard-pimpinan',
+    //         'operator' => '/dashboard-operator',
+    //         default => '/dashboard',
+    //     };
+    // }
+    
     public static function redirectToByRole($user)
     {
-        return match ($user->role) {
-            'pimpinan' => '/dashboard-pimpinan',
-            'operator' => '/dashboard-operator',
-            default => '/dashboard',
-        };
+        if ($user->role === 'pimpinan') {
+            return '/dashboard-pimpinan';
+        } elseif ($user->role === 'operator') {
+            return '/dashboard-operator';
+        }
+
+        // Default redirect jika role tidak dikenal
+        return '/';
     }
+
 }

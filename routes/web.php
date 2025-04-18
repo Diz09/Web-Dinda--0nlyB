@@ -9,11 +9,11 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
 
 // Rute untuk login dan logout
-Route::get('/login', function () {
+Route::get('/', function () {
     return view('login'); // pastikan file ini ada di resources/views/auth/login.blade.php
 })->name('login');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 
 // Rute untuk dashboard pimpinan

@@ -68,9 +68,14 @@
 <body>
     <div class="sidebar">
         <img src="https://img.icons8.com/ios-filled/50/user.png" alt="user icon">
-        <a href="/dashboard-pimpinan" class="active">Dashboard</a>
-        <a href="/absen">Absen</a>
-        <a href="#">Stok Barang</a>
+        {{-- jumlah (rp) pendapatan (barang keluar) dan pengeluaran (barang masuk dan gaji) --}}
+        {{-- serta berisikan tabel dengan grafiks garis yang mena garis merah berupa pengeluaran dan garis biru pendapatan --}}
+        {{--  --}}
+        <a href="/pimpinan/dashboard" class="active">Dashboard</a>
+        {{--  --}}
+        <a href="#">Laporan Pekerja</a>
+        {{--  --}}
+        <a href="#">Stok Barang</a> 
         <a href="#">Supplier</a>
         <a href="#">Pembelian</a>
         <a href="#">Laporan Keuangan</a>

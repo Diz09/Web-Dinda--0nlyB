@@ -22,11 +22,11 @@ Route::post('/', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Pimpinan
-Route::middleware(['auth', 'role:pimpinan'])->group(function () {
+// Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
-    Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
-    Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-});
+    Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
+    Route::get('/pimpinan/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+// });
 
 // tampilan dashboard
 // Laporan
@@ -36,7 +36,7 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
 // laporan pendapantan
 
 // Operator
-Route::middleware(['auth', 'role:operator'])->group(function () {
+// Route::middleware(['auth', 'role:operator'])->group(function () {
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
     Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
@@ -66,7 +66,7 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::get('/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
     Route::put('/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
     Route::delete('/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
-});
+// });
 
 // Presensi & gaji
 // Route::middleware(['auth'])->group(function () {

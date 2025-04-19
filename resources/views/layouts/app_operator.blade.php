@@ -211,7 +211,13 @@
         <a href="/barang-keluar" class="sidebar-link">Barang Keluar</a>
 
         <!-- Logout -->
-        <a href="/" class="sidebar-link-out">Logout</a>
+        {{-- <a href="/logout" class="sidebar-link-out">Logout</a> --}}
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Logout
+        </a>
     </div>
 
     <div class="main-content">

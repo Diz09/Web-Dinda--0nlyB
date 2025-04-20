@@ -12,6 +12,11 @@
             color: #333;
         }
 
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
         /* style sidebar */
         .sidebar {
             width: 230px;
@@ -253,15 +258,15 @@
         <img src="https://img.icons8.com/ios-filled/50/user.png" alt="user icon">
         {{-- jumlah (rp) pendapatan (barang keluar) dan pengeluaran (barang masuk dan gaji) --}}
         {{-- serta berisikan tabel dengan grafiks garis yang mena garis merah berupa pengeluaran dan garis biru pendapatan --}}
-        {{--  --}}
         <a href="/pimpinan/dashboard" class="sidebar-link">Dashboard</a>
-        {{--  --}}
-        <a href="#" class="sidebar-link">Laporan Pekerja</a>
-        {{--  --}}
-        <a href="#" class="sidebar-link">Stok Barang</a> 
+        {{-- tabel laporan para pekerja --}}
+        <a href="/pimpinan/laporan-karyawan" class="sidebar-link">Laporan Pekerja</a>
+        {{-- tabel stok barang --}}
+        <a href="/pimpinan/stok-barang" class="sidebar-link">Stok Barang</a> 
         {{-- <a href="#" class="sidebar-link">Supplier</a> --}}
         {{-- <a href="#" class="sidebar-link">Pembelian</a> --}}
-        <a href="#" class="sidebar-link">Laporan Pembelian</a>
+        {{-- tabel laporan pembelian --}}
+        <a href="/pimpinan/laporan-keuangan" class="sidebar-link">Laporan Keuangan</a>
         
         {{-- <a href="/logout" class="sidebar-link-out">Logout</a> --}}
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

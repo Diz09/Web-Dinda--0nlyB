@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
+            $table->string('kode')->unique(); // Ditambahkan agar sesuai dengan validasi
             $table->string('nama');
             $table->string('kategori');
+            $table->integer('harga'); // Ditambahkan agar sesuai dengan validasi
             $table->integer('stok')->default(0);
             $table->timestamps();
         });
+        
     }
 
     /**

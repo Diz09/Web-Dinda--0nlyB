@@ -11,6 +11,8 @@ use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\gajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\LaporanKaryawanController;
+use App\Http\Controllers\DataKeuanganController;
 
 // Rute untuk login dan logout
 Route::get('/', function () {
@@ -26,14 +28,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::get('/pimpinan/laporan-karyawan', [LaporanKaryawanController::class, 'index'])->name('pimpinan.laporan_karyawan.index');
+    Route::get('/pimpinan/stok-barang', [BarangController::class, 'stokPimpinan'])->name('pimpinan.stock_barang.index');
+    Route::get('/pimpinan/laporan-keuangan', [DataKeuanganController::class, 'index'])->name('pimpinan.laporan_keuangan.index');
 // });
-
-// tampilan dashboard
-// Laporan
-// laporankaryawan
-// laporan stockbarang
-// laporanpengeluaran
-// laporan pendapantan
 
 // Operator
 // Route::middleware(['auth', 'role:operator'])->group(function () {
@@ -47,6 +45,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
     Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
     Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+
+    Route::post('/barang/{id}/tambah', [BarangController::class, 'tambahStok'])->name('barang.tambah');
+    Route::post('/barang/{id}/kurang', [BarangController::class, 'kurangStok'])->name('barang.kurang');
+
 
     Route::get('/operator/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
     Route::get('/operator/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
@@ -66,11 +68,4 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/operator/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
     Route::put('/operator/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
     Route::delete('/operator/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
-// });
-
-// Presensi & gaji
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/gaji', [gajiController::class, 'index'])->name('gaji.index'); 
-//     // Route::get('/gaji/create', [gajiController::class, 'create'])->name('gaji.create');
-//     Route::post('/gaji', [gajiController::class, 'store'])->name('gaji.store');
 // });

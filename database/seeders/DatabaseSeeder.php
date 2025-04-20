@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
         // Panggil seeder lain di sini
         $this->call([
             UserSeeder::class,
-            // PostSeeder::class,
+            BarangSeeder::class,
         ]);
     }
 }

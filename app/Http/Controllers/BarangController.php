@@ -25,8 +25,10 @@ class BarangController extends Controller
     {
         // Validasi data yang diterima dari form
         $request->validate([
+            'kode' => 'required|unique:barangs,kode,' . $id,
             'nama' => 'required',
             'kategori' => 'required',
+            'harga' => 'required|integer',
             'stok' => 'required|integer',
         ]);
 
@@ -38,33 +40,61 @@ class BarangController extends Controller
     }
 
     // Menampilkan form untuk edit barang
-    public function edit($id)
-    {
-        // Cari barang berdasarkan ID
-        $barang = Barang::findOrFail($id);
+    // public function edit($id)
+    // {
+    //     // Cari barang berdasarkan ID
+    //     $barang = Barang::findOrFail($id);
 
-        // Menampilkan form edit dengan data barang yang sudah ada
-        return view('operator.barang.edit', compact('barang'));
-    }
+    //     // Menampilkan form edit dengan data barang yang sudah ada
+    //     return view('operator.barang.edit', compact('barang'));
+    // }
 
     // Menyimpan perubahan barang
-    public function update(Request $request, $id)
+    // public function update(Request $request, $id)
+    // {
+    //     // Validasi data yang diterima dari form
+    //     $request->validate([
+    //         'kode' => 'required|unique:barangs,kode,' . $id,
+    //         'nama' => 'required',
+    //         'kategori' => 'required',
+    //         'harga' => 'required|integer',
+    //         'stok' => 'required|integer',
+    //     ]);
+
+    //     // Cari barang berdasarkan ID
+    //     $barang = Barang::findOrFail($id);
+
+    //     // Update data barang
+    //     $barang->update($request->all());
+
+    //     // Redirect ke halaman daftar barang dengan pesan sukses
+    //     return redirect()->route('barang.index')->with('success', 'Data barang berhasil diperbarui');
+    // }
+
+    public function tambahStok(Request $request, $id)
     {
-        // Validasi data yang diterima dari form
         $request->validate([
-            'nama' => 'required',
-            'kategori' => 'required',
-            'stok' => 'required|integer',
+            'jumlah' => 'required|integer|min:1',
         ]);
 
-        // Cari barang berdasarkan ID
         $barang = Barang::findOrFail($id);
+        $barang->stok += $request->jumlah;
+        $barang->save();
 
-        // Update data barang
-        $barang->update($request->all());
+        return redirect()->back()->with('success', 'Stok berhasil ditambah.');
+    }
 
-        // Redirect ke halaman daftar barang dengan pesan sukses
-        return redirect()->route('barang.index')->with('success', 'Data barang berhasil diperbarui');
+    public function kurangStok(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        $barang = Barang::findOrFail($id);
+        $barang->stok = max(0, $barang->stok - $request->jumlah);
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
 
     // Menghapus barang
@@ -78,5 +108,11 @@ class BarangController extends Controller
 
         // Redirect ke halaman daftar barang dengan pesan sukses
         return redirect()->route('barang.index')->with('success', 'Data barang berhasil dihapus');
+    }
+
+    public function stokPimpinan()
+    {
+        $barang = Barang::all();
+        return view('pimpinan.stock_barang.index', compact('barang'));
     }
 }

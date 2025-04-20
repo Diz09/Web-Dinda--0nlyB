@@ -9,21 +9,17 @@
     </div>
 
     <div class="dashboard-container">
-        <div class="row mb-3">
-            <div class="col-md-6 mb-3">
-                <div class="info-box">
-                    <div>Pendapatan</div>
-                    <div class="text-success mt-2">
-                        Rp {{ number_format($keuangan['pendapatan'], 0, ',', '.') }}
-                    </div>
+        <div class="info-row">
+            <div class="info-box">
+                <div>Pendapatan</div>
+                <div class="text-success mt-2">
+                    Rp {{ number_format($keuangan['pendapatan'], 0, ',', '.') }}
                 </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <div class="info-box">
-                    <div>Pengeluaran</div>
-                    <div class="text-danger mt-2">
-                        Rp {{ number_format($keuangan['pengeluaran'], 0, ',', '.') }}
-                    </div>
+            <div class="info-box">
+                <div>Pengeluaran</div>
+                <div class="text-danger mt-2">
+                    Rp {{ number_format($keuangan['pengeluaran'], 0, ',', '.') }}
                 </div>
             </div>
         </div>

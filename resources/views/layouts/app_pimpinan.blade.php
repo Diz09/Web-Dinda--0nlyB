@@ -103,6 +103,17 @@
             font-weight: bold;
         }
 
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-row .info-box {
+            flex: 1;
+        }
+        
         /* style grafiks */
         .chart-card {
             background-color: #eff0c0;

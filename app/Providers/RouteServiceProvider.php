@@ -53,9 +53,9 @@ class RouteServiceProvider extends ServiceProvider
     public static function redirectToByRole($user)
     {
         if ($user->role === 'pimpinan') {
-            return '/dashboard-pimpinan';
+            return '/pimpinan/dashboard';
         } elseif ($user->role === 'operator') {
-            return '/dashboard-operator';
+            return '/operator/dashboard';
         }
 
         // Default redirect jika role tidak dikenal

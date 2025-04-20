@@ -17,7 +17,19 @@ class DashboardController extends Controller
         $statistikProduksi = $this->getStatistikProduksi();
         $pengeluaranTerbaru = $this->getPengeluaranTerbaru();
 
-        return view('dashboard.pimpinan', compact('keuangan', 'statistikProduksi', 'pengeluaranTerbaru'));
+        // data dummy grafiks
+        $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'];
+        $pendapatanBulanan = [20000000, 25000000, 15000000, 18000000, 22000000];
+        $pengeluaranBulanan = [10000000, 12000000, 9000000, 11000000, 8000000];
+
+        return view('dashboard.pimpinan', compact(
+            'keuangan',
+            'statistikProduksi',
+            'pengeluaranTerbaru',
+            'labels',
+            'pendapatanBulanan',
+            'pengeluaranBulanan'
+        ));        
     }
 
     /**

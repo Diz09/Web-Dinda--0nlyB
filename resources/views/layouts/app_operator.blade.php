@@ -197,18 +197,18 @@
         <img src="https://img.icons8.com/ios-filled/50/user.png" alt="user icon">
 
         <!-- Dashboard -->
-        <a href="/dashboard-operator" class="sidebar-link">Dashboard</a>
+        <a href="/operator/dashboard" class="sidebar-link">Dashboard</a>
 
         <!-- Kategori: Data -->
         <div class="sidebar-category">Data</div>
-        <a href="/karyawan" class="sidebar-link">Karyawan</a>
-        <a href="/barang" class="sidebar-link">Data Barang</a>
+        <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
+        <a href="/operator/barang" class="sidebar-link">Data Barang</a>
 
         <!-- Kategori: Aktivitas -->
         <div class="sidebar-category">Aktivitas</div>
-        <a href="/presensi" class="sidebar-link">Presensi</a>
-        <a href="/barang-masuk" class="sidebar-link">Barang Masuk</a>
-        <a href="/barang-keluar" class="sidebar-link">Barang Keluar</a>
+        <a href="/operator/presensi" class="sidebar-link">Presensi</a>
+        <a href="/operator/barang-masuk" class="sidebar-link">Barang Masuk</a>
+        <a href="/operator/barang-keluar" class="sidebar-link">Barang Keluar</a>
 
         <!-- Logout -->
         {{-- <a href="/logout" class="sidebar-link-out">Logout</a> --}}

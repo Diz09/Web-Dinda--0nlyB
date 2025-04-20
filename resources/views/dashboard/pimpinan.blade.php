@@ -3,15 +3,79 @@
 @section('title', 'Dashboard Pimpinan')
 
 @section('content')
-    <div class="welcome-box">Welcome To UD.DNL Putra</div>
-    <div class="grid-container">
-        <div class="box">
-            <h2>Total Customer</h2>
-            <p style="font-size: 12px;">Diagram Garis</p> <!-- Bisa diganti dengan grafik atau data lainnya -->
+<div class="container mt-4">
+    <div class="title-box">
+        <h3 class="fw-bold m-0">Dashboard</h3>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="row mb-3">
+            <div class="col-md-6 mb-3">
+                <div class="info-box">
+                    <div>Pendapatan</div>
+                    <div class="text-success mt-2">
+                        Rp {{ number_format($keuangan['pendapatan'], 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="info-box">
+                    <div>Pengeluaran</div>
+                    <div class="text-danger mt-2">
+                        Rp {{ number_format($keuangan['pengeluaran'], 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="box large-box">
-            <h2>Pendapatan 1 Bulan</h2>
-            <p>Rp 15.000.000</p> <!-- Data pendapatan bulan ini -->
+
+        <div class="chart-card">
+            <div class="chart-title mb-2">Grafik Pendapatan <span class="text-dark">vs</span> Pengeluaran</div>
+            <canvas id="financeChart" height="100"></canvas>
         </div>
     </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('financeChart').getContext('2d');
+    const financeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($labels) !!},
+            datasets: [
+                {
+                    label: 'Pendapatan',
+                    data: {!! json_encode($pendapatanBulanan) !!},
+                    borderColor: 'blue',
+                    backgroundColor: 'blue',
+                    fill: false,
+                    tension: 0.4
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: {!! json_encode($pengeluaranBulanan) !!},
+                    borderColor: 'red',
+                    backgroundColor: 'red',
+                    fill: false,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'Rp ' + value.toLocaleString('id-ID');
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

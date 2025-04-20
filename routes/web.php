@@ -39,33 +39,33 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 // Route::middleware(['auth', 'role:operator'])->group(function () {
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
-    Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
+    Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
-    Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
-    Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
-    Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
-    Route::get('/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
-    Route::put('/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
-    Route::delete('/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/operator/barang', [BarangController::class, 'index'])->name('barang.index');
+    Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
+    Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
+    Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
+    Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
-    Route::get('/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
-    Route::get('/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
-    Route::post('/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
+    Route::get('/operator/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
+    Route::get('/operator/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
+    Route::post('/operator/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
     
-    Route::get('/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
-    Route::get('/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
-    Route::post('/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
+    Route::get('/operator/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
+    Route::get('/operator/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
+    Route::post('/operator/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
 
-    Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi.index');
-    Route::get('/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
-    Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+    Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
+    Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
+    Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
     
-    Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
-    Route::get('/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
-    Route::post('/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
-    Route::get('/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
-    Route::put('/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
-    Route::delete('/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
+    Route::get('/operator/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
+    Route::get('/operator/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
+    Route::post('/operator/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
+    Route::get('/operator/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
+    Route::put('/operator/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
+    Route::delete('/operator/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
 // });
 
 // Presensi & gaji

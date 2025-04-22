@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('gaji', function (Blueprint $table) {
             $table->id();
             $table->foreignId('presensi_id')->constrained()->onDelete('cascade');
-            $table->decimal('total_jam',5,2);
-            $table->decimal('jam_lembur',5,2)->default(0);
-            $table->integer('gaji_pokok');
-            $table->integer('gaji_lembur')->default(0);
-            $table->integer('total_gaji');
+            $table->decimal('total_jam',5,2)->default(0);
+            // $table->decimal('jam_lembur',5,2)->default(0);
+            $table->integer('gaji_pokok')->nullable();
+            // $table->integer('gaji_lembur')->default(0);
+            $table->integer('total_gaji')->nullable();
             $table->timestamps();
         });
     }

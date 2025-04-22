@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('jabatan')->nullable();
-            $table->integer('gaji_per_jam');
+            $table->enum('jenis_kelamin', ['L', 'P'])->default('L');
+            // $table->string('jabatan')->nullable();
+            // $table->integer('gaji_per_jam');
             $table->timestamps();
         });
     }

@@ -13,30 +13,32 @@
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
+                <th>No</th>
                 <th>Nama</th>
-                <th>Jabatan</th>
-                <th>Gaji per Jam</th>
+                <th>Jenis Kelamin</th>
+                <th>Gaji Belum Dibayar</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($karyawans as $karyawan)
-                <tr>
-                    <td>{{ $karyawan->nama }}</td>
-                    <td>{{ $karyawan->jabatan ?? '-' }}</td>
-                    <td>Rp {{ number_format($karyawan->gaji_per_jam, 0, ',', '.') }}</td>
-                    <td>
-                        <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('karyawan.destroy', $karyawan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?')">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="4" class="text-center">Tidak ada data.</td></tr>
-            @endforelse
+            @foreach($karyawans as $i => $k)
+            <tr>
+                <td>{{ $i+1 }}</td>
+                <td>{{ $k->nama }}</td>
+                <td>{{ $k->jenis_kelamin }}</td>
+                <td>Rp {{ number_format($k->presensis->sum(function($p) {
+                    return optional($p->gaji)->total_gaji ?? 0;
+                }), 0, ',', '.') }}</td>
+                <td>
+                    <form action="{{ route('karyawan.gaji.bayar', $k->id) }}" method="POST">
+                        @csrf
+                        <input type="text" name="keterangan" placeholder="Keterangan lunas..." class="form-control form-control-sm mb-1" />
+                        <button class="btn btn-sm btn-success">Lunas</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
         </tbody>
-    </table>
+    </table>    
 </div>
 @endsection

@@ -13,6 +13,7 @@ use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LaporanKaryawanController;
 use App\Http\Controllers\DataKeuanganController;
+use App\Http\Controllers\TonIkanController;
 
 // Rute untuk login dan logout
 Route::get('/', function () {
@@ -62,10 +63,23 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
     
+    Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
+    Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
+    
     Route::get('/operator/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
     Route::get('/operator/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
     Route::post('/operator/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
     Route::get('/operator/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
     Route::put('/operator/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
     Route::delete('/operator/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
+    
+    Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
+    
+    Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
+    Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
+    
+    Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
+
+    Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
+
 // });

@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->after('password')->default('operator'); // default opsional
+        Schema::create('ton_ikans', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('jumlah_ton', 8, 2); // atau integer sesuai kebutuhanmu
+            $table->date('tanggal');
+            $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('ton_ikans');
     }
 };

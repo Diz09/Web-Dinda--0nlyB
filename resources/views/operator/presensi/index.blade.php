@@ -2,94 +2,113 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-4">Data Gaji Harian Karyawan</h3>
+    <h3 class="mb-4">Presensi Harian Pekerja</h3>
 
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('tonikan.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="tanggal">Tanggal</label>
-            <input type="date" name="tanggal" class="form-control" value="{{ $tanggal }}">
+    {{-- Dropdown pilih kuartal --}}
+    <form method="GET" class="mb-3">
+        <label for="kuartal_id">Pilih Kuartal</label>
+        <div class="input-group">
+            <select name="kuartal_id" id="kuartal_id" class="form-control">
+                @foreach($kuartals as $k)
+                    <option value="{{ $k->id }}" {{ $selectedKuartal->id == $k->id ? 'selected' : '' }}>
+                        {{ $k->nama_kuartal }}
+                    </option>
+                @endforeach
+            </select>
+            <button class="btn btn-outline-primary" type="submit">Lihat</button>
         </div>
+    </form>
+
+    {{-- Tombol Buat Kuartal Baru --}}
+    <form method="GET" class="mb-4">
+        <input type="hidden" name="buat_kuartal" value="1">
+        <button class="btn btn-success">+ Buat Kuartal Baru</button>
+    </form>
+
+    {{-- Form Simpan Ton Ikan --}}
+    <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
+        @csrf
+        <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+        <input type="hidden" name="tanggal" value="{{ $tanggal }}">
         <div class="mb-3">
-            <label for="jumlah_ton">Jumlah Ton Ikan</label>
+            <label for="jumlah_ton">Jumlah Ton Ikan ({{ $tanggal }})</label>
             <input type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $jumlahTonHariIni) }}" required>
         </div>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-    </form>    
+        <button type="submit" class="btn btn-primary">Simpan Ton Ikan</button>
+    </form>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Nama</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Aksi Masuk</th>
-                    <th>Jam Masuk</th>
-                    <th>Aksi Pulang</th>
-                    <th>Jam Pulang</th>
-                    <th>Gaji</th>
-                    <th>Aksi Gaji</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($karyawans as $i => $k)
-                @php
-                    $p = $presensis->get($k->id); // cek apakah karyawan ini sudah presensi
-                @endphp
-                <tr>
-                    <td>{{ $i+1 }}</td>
-                    <td>{{ $tanggal }}</td>
-                    <td>{{ $k->nama }}</td>
-                    <td>{{ $k->jenis_kelamin }}</td>
-                    <td>
-                        @if(!$p || !$p->jam_masuk)
-                            <form action="{{ route('presensi.masuk', $k->id) }}" method="POST">
-                                @csrf
-                                <button class="btn btn-sm btn-success">✓ Masuk</button>
-                            </form>
-                        @else
-                            <span class="text-success">✓</span>
-                        @endif
-                    </td>
-                    <td>{{ $p->jam_masuk ?? '-' }}</td>
-                    
-                    <td>
-                        @if($p && !$p->jam_pulang)
-                            <form action="{{ route('presensi.pulang', $k->id) }}" method="POST">
-                                @csrf
-                                <button class="btn btn-sm btn-warning">✓ Pulang</button>
-                            </form>
-                        @elseif($p)
-                            <span class="text-warning">✓</span>
-                        @else
-                            <span class="text-muted">-</span>
-                        @endif
-                    </td>
-                    <td>{{ $p->jam_pulang ?? '-' }}</td>                    
-                    <td>Rp {{ number_format($p->gaji->total_gaji ?? 0, 0, ',', '.') }}</td>
-                    <td>
-                        @if($p && $p->gaji)
-                        <form action="{{ route('gaji.lunas', $p->gaji->id) }}" method="POST">
+    {{-- Tabel Presensi --}}
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Jenis Kelamin</th>
+                <th>Aksi Masuk</th>
+                <th>Jam Masuk</th>
+                <th>Aksi Pulang</th>
+                <th>Jam Pulang</th>
+                <th>Total Jam</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($karyawans as $i => $k)
+            @php
+                $p = $presensis->get($k->id);
+                $totalJam = 0;
+                if ($p && $p->jam_masuk && $p->jam_pulang) {
+                    $totalJam = \Carbon\Carbon::parse($p->jam_masuk)->diffInMinutes(\Carbon\Carbon::parse($p->jam_pulang)) / 60;
+                }
+            @endphp
+            <tr>
+                <td>{{ $i + 1 }}</td>
+                <td>{{ $k->nama }}</td>
+                <td>{{ $k->jenis_kelamin }}</td>
+                {{-- Aksi Masuk --}}
+                <td>
+                    @if(!$p || !$p->jam_masuk)
+                        <form method="POST" action="{{ route('presensi.masuk', $k->id) }}">
                             @csrf
-                            <input type="number" name="dibayar" value="{{ $p->gaji->total_gaji }}" class="form-control form-control-sm" />
-                            <button class="btn btn-sm btn-primary mt-1">Bayar</button>
+                            <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+                            <input type="hidden" name="tanggal" value="{{ $tanggal }}">
+                            <button class="btn btn-success btn-sm">✓ Masuk</button>
                         </form>
-                        @else
-                            <span class="text-muted">-</span>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>        
-    </div>
+                    @else
+                        <span class="text-success">✓</span>
+                    @endif
+                </td>
+
+                {{-- Jam Masuk --}}
+                <td>{{ $p->jam_masuk ?? '-' }}</td>
+
+                {{-- Aksi Pulang --}}
+                <td>
+                    @if($p && !$p->jam_pulang)
+                        <form method="POST" action="{{ route('presensi.pulang', $k->id) }}">
+                            @csrf
+                            <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+                            <input type="hidden" name="tanggal" value="{{ $tanggal }}">
+                            <button class="btn btn-warning btn-sm">✓ Pulang</button>
+                        </form>
+                    @elseif($p)
+                        <span class="text-warning">✓</span>
+                    @else
+                        <span>-</span>
+                    @endif
+                </td>
+
+                {{-- Jam Pulang --}}
+                <td>{{ $p->jam_pulang ?? '-' }}</td>
+
+                {{-- Total Jam --}}
+                <td>{{ number_format($totalJam, 2) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection

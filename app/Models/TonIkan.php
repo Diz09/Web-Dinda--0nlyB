@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class TonIkan extends Model
 {
-    protected $fillable = ['tanggal', 'jumlah_ton'];
+    protected $fillable = ['tanggal', 'jumlah_ton', 'kuartal_id'];
+
+    public function kuartal()
+    {
+        return $this->belongsTo(Kuartal::class);
+    }
+
 }

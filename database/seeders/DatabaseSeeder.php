@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BarangSeeder::class,
             KaryawanSeeder::class,
+            KuartalSeeder::class,
         ]);
     }
 }

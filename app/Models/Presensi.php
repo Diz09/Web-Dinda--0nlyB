@@ -12,6 +12,7 @@ class Presensi extends Model
 
     protected $fillable = [
         'karyawan_id',
+        'kuartal_id',
         'tanggal',
         'jam_masuk',
         'jam_pulang',
@@ -26,4 +27,10 @@ class Presensi extends Model
     {
         return $this->hasOne(Gaji::class);
     }
+
+    public function kuartal()
+    {
+        return $this->belongsTo(Kuartal::class);
+    }
+
 }

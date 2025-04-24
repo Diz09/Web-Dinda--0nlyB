@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('ton_ikans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('kuartal_id')->nullable()->constrained('kuartals')->onDelete('set null');
             $table->decimal('jumlah_ton', 8, 2); // atau integer sesuai kebutuhanmu
             $table->date('tanggal');
             $table->timestamps();

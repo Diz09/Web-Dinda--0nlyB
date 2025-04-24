@@ -82,4 +82,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
     Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
 
+    Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
+
 // });

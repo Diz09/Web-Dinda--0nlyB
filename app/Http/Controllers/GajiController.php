@@ -44,29 +44,36 @@ class GajiController extends Controller
     }
 
 
-    public function rekap(Request $request)
+    public function detail($id)
     {
-        $mulai = $request->input('mulai');
-        $akhir = $request->input('akhir');
+        // $kuartalId = 1; // Ganti sesuai kuartal id yang kamu mau
+        
+        // Ambil data kuartal lengkap dengan presensi dan karyawan
+        // $kuartal = Kuartal::with(['presensis.karyawan', 'tonIkan'])->findOrFail($kuartalId);
 
-        if (!$mulai || !$akhir) {
-            return view('operator.gaji.index', ['karyawans' => [], 'tanggalRange' => [], 'mulai' => $mulai, 'akhir' => $akhir]);
+        $kuartal = Kuartal::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
+        
+        // Ambil semua tanggal unik
+        $tanggalUnik = $kuartal->presensis->pluck('tanggal')->unique()->sort()->values();
+
+        // Group presensi berdasarkan karyawan
+        $dataKaryawan = $kuartal->presensis->groupBy('karyawan_id');
+
+        // Hitung banyak pekerja yang presensi
+        $banyakPekerja = $dataKaryawan->count();
+
+        // Ambil jumlah ton ikan dan harga per ton dari ton_ikans
+        $jumlahTon = optional($kuartal->tonIkan)->jumlah_ton ?? 0;
+        $hargaPerTon = optional($kuartal->tonIkan)->harga_ikan_per_ton ?? 1000000; // default kalau null
+
+        // Hitung gaji per jam
+        if ($banyakPekerja > 0) {
+            $gajiPerJam = ($jumlahTon * $hargaPerTon) / $banyakPekerja;
+        } else {
+            $gajiPerJam = 0;
         }
 
-        $tanggalRange = CarbonPeriod::create($mulai, $akhir)->toArray(); // daftar tanggal
-
-        // $karyawans = Karyawan::with(['presensis.gaji' => function ($q) use ($mulai, $akhir) {
-        //     $q->whereBetween('tanggal', [$mulai, $akhir]);
-        // }, 'presensis' => function ($q) use ($mulai, $akhir) {
-        //     $q->whereBetween('tanggal', [$mulai, $akhir]);
-        // }])->get();
-
-        $karyawans = Karyawan::with(['presensis' => function ($q) use ($mulai, $akhir) {
-            $q->whereBetween('tanggal', [$mulai, $akhir]);
-        }, 'presensis.gaji'])->get();
-        
-
-        return view('operator.gaji.index', compact('karyawans', 'tanggalRange', 'mulai', 'akhir'));
+        return view('operator.gaji.detailGaji', compact('kuartal', 'tanggalUnik', 'dataKaryawan', 'gajiPerJam'));
     }
 
 }

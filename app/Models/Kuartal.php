@@ -16,7 +16,7 @@ class Kuartal extends Model
 
     public function tonIkan()
     {
-        return $this->hasMany(TonIkan::class);
+        return $this->hasOne(TonIkan::class);
     }
 
 

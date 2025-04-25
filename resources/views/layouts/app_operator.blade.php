@@ -216,7 +216,7 @@
         <div class="sidebar-category">Data</div>
         <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/barang" class="sidebar-link">Data Barang</a>
-        <a href="/operator/rekap-gaji" class="sidebar-link">Gaji</a>
+        <a href="/operator/gaji" class="sidebar-link">Gaji</a>
 
         <!-- Kategori: Aktivitas -->
         <div class="sidebar-category">Aktivitas</div>

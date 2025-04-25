@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class TonIkan extends Model
 {
-    protected $fillable = ['tanggal', 'jumlah_ton', 'kuartal_id'];
+    protected $fillable = [
+        // 'tanggal',
+        'kuartal_id',
+        'jumlah_ton', 
+        'harga_ikan_per_ton'
+    ];
 
     public function kuartal()
     {

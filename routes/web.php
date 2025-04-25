@@ -15,6 +15,11 @@ use App\Http\Controllers\LaporanKaryawanController;
 use App\Http\Controllers\DataKeuanganController;
 use App\Http\Controllers\TonIkanController;
 
+// Route::get('/home', function () {
+//     return view('welcome');
+// })->name('home');
+// Route::get('/home', function () {    return view('operator.gaji.detailGaji');    })->name('home');
+
 // Rute untuk login dan logout
 Route::get('/', function () {
     return view('login'); // pastikan file ini ada di resources/views/auth/login.blade.php
@@ -80,9 +85,13 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
 
-    Route::get('/operator/rekap-gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
+    Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
+    Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kuartal');
+    // Route::get('/operator/gaji', [GajiController::class, 'detail'])->name('gaji.kuartal.detail');
+    
     // Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
 
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
 // });
+

@@ -80,7 +80,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
 
-    Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
+    Route::get('/operator/rekap-gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
+    // Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
 
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 

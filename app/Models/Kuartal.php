@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kuartal extends Model
 {
-    protected $fillable = ['nama_kuartal', 'tanggal_mulai', 'tanggal_akhir', 'jumlah_ton'];
+    protected $fillable = ['nama_kuartal'];
 
     public function presensis()
     {
@@ -19,6 +19,8 @@ class Kuartal extends Model
         return $this->hasMany(TonIkan::class);
     }
 
+
+
     public function getTanggalMulaiAttribute()
     {
         return $this->presensis()->orderBy('tanggal', 'asc')->value('tanggal');
@@ -29,5 +31,9 @@ class Kuartal extends Model
         return $this->presensis()->orderBy('tanggal', 'desc')->value('tanggal');
     }
 
+    public function getJumlahTonAttribute()
+    {
+        return $this->tonIkan()->value('jumlah_ton') ?? 0;
+    }
 
 }

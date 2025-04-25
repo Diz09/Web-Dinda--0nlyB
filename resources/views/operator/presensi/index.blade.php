@@ -33,9 +33,10 @@
     <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
         @csrf
         <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
-        <input type="hidden" name="tanggal" value="{{ $tanggal }}">
+        {{-- <input type="hidden" name="tanggal" value="{{ $tanggal }}"> --}}
         <div class="mb-3">
-            <label for="jumlah_ton">Jumlah Ton Ikan ({{ $tanggal }})</label>
+            {{-- <label for="jumlah_ton">Jumlah Ton Ikan ({{ $tanggal }})</label> --}}
+            <label for="jumlah_ton">Jumlah Ton Ikan (Kuartal {{ $selectedKuartal->nama_kuartal }})</label>
             <input type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $jumlahTonHariIni) }}" required>
         </div>
         <button type="submit" class="btn btn-primary">Simpan Ton Ikan</button>

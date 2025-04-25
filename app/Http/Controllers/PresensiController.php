@@ -44,7 +44,7 @@ class PresensiController extends Controller
             ->keyBy('karyawan_id');
 
         $jumlahTonHariIni = TonIkan::where('kuartal_id', $selectedKuartal->id)
-            ->whereDate('tanggal', $tanggal)
+            // ->whereDate('tanggal', $tanggal)
             ->value('jumlah_ton');
 
         return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kuartals', 'selectedKuartal', 'jumlahTonHariIni'));
@@ -93,12 +93,12 @@ class PresensiController extends Controller
     {
         $request->validate([
             'kuartal_id' => 'required|exists:kuartals,id',
-            'tanggal' => 'required|date',
+            // 'tanggal' => 'required|date',
             'jumlah_ton' => 'required|numeric'
         ]);
 
         TonIkan::updateOrCreate(
-            ['kuartal_id' => $request->kuartal_id, 'tanggal' => $request->tanggal],
+            ['kuartal_id' => $request->kuartal_id/*, 'tanggal' => $request->tanggal*/],
             ['jumlah_ton' => $request->jumlah_ton]
         );
 

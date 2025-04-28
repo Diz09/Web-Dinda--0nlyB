@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barang;
+use App\Models\BarangDasar;
+use App\Models\BarangMentah;
+use App\Models\BarangProduk;
 use App\Models\Transaksi;
-use App\Models\BarangMasuk;
-use App\Models\BarangKeluar;
+// use App\Models\BarangMasuk;
+// use App\Models\BarangKeluar;
 
 class DashboardController extends Controller
 {
@@ -39,19 +42,14 @@ class DashboardController extends Controller
      */
     public function operator()
     {
-        // $barangMasukTerbaru = BarangMasuk::with('barang')->latest()->take(5)->get();
-        // $barangKeluarTerbaru = BarangKeluar::with('barang')->latest()->take(5)->get();
-
-        // return view('dashboard.operator', compact('barangMasukTerbaru', 'barangKeluarTerbaru'));
-        
         // Ambil 5 data barang terbaru
-        $barangTerbaru = Barang::latest()->take(5)->get();
+        $barangTerbaru = Barang::with(['mentah', 'dasar', 'produk'])->latest()->take(5)->get();
 
         // Ambil 5 transaksi terbaru
-        $transaksiTerbaru = Transaksi::latest()->take(5)->get();
+        $transaksiTerbaru = Transaksi::with('barang')->latest()->take(5)->get();
 
         // Jumlah total barang
-        $jumlahBarang = Barang::sum('stok');
+        $jumlahBarang = Barang::sum('qty');
 
         return view('dashboard.operator', compact('barangTerbaru', 'transaksiTerbaru', 'jumlahBarang'));
     }

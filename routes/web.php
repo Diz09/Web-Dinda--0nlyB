@@ -15,6 +15,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LaporanKaryawanController;
 use App\Http\Controllers\DataKeuanganController;
 use App\Http\Controllers\TonIkanController;
+use App\Http\Controllers\TransaksiController;
 
 // Route::get('/home', function () {
 //     return view('welcome');
@@ -95,9 +96,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
 
-    Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
+    // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
     Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('operator.supplier.index');
-
-    Route::get('/operator/transaksi', function () {    return view('operator.transaksi.index');    })->name('transaksi');
+    
+    Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
+    // Route::get('/operator/transaksi', function () {    return view('operator.transaksi.index');    })->name('transaksi');
 // });
 

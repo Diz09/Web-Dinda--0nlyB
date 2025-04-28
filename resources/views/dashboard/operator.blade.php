@@ -25,22 +25,32 @@
                         <tr>
                             <th class="p-2 text-left">No</th>
                             <th class="p-2 text-left">Kode</th>
-                            <th class="p-2 text-left">Nama</th>
-                            <th class="p-2 text-left">Sisa Stok</th>
+                            <th class="p-2 text-left">Nama Barang</th>
+                            <th class="p-2 text-left">Qty</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($barangTerbaru as $i => $b)
+                        @foreach ($barangTerbaru as $i => $barang)
+                            @php
+                                $kode = '-';
+                                if ($barang->mentah) {
+                                    $kode = $barang->mentah->kode;
+                                } elseif ($barang->dasar) {
+                                    $kode = $barang->dasar->kode;
+                                } elseif ($barang->produk) {
+                                    $kode = $barang->produk->kode;
+                                }
+                            @endphp
                             <tr>
                                 <td class="p-2">{{ $i + 1 }}</td>
-                                <td class="p-2">{{ $b->kode }}</td>
-                                <td class="p-2">{{ $b->nama }}</td>
-                                <td class="p-2">{{ $b->stok }}</td>
+                                <td class="p-2">{{ $kode }}</td>
+                                <td class="p-2">{{ $barang->nama_barang }}</td>
+                                <td class="p-2">{{ $barang->qty ?? 0 }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <a href="{{ route('barang.index') }}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a>
+                <a href="{{ route('operator.barang.index') }}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a>
             </div>
 
             <!-- Tabel Transaksi -->
@@ -51,7 +61,8 @@
                         <tr>
                             <th class="p-2 text-left">No</th>
                             <th class="p-2 text-left">Tanggal</th>
-                            <th class="p-2 text-left">Nama</th>
+                            <th class="p-2 text-left">Barang</th>
+                            <th class="p-2 text-left">Kategori</th>
                             <th class="p-2 text-left">Harga</th>
                         </tr>
                     </thead>
@@ -59,14 +70,15 @@
                         @foreach ($transaksiTerbaru as $i => $trx)
                             <tr>
                                 <td class="p-2">{{ $i + 1 }}</td>
-                                <td class="p-2">{{ $trx->tanggal_transaksi }}</td>
-                                <td class="p-2">{{ $trx->aktifitas }}</td>
-                                <td class="p-2">Rp {{ number_format($trx->jumlah, 0, ',', '.') }}</td>
+                                <td class="p-2">{{ \Carbon\Carbon::parse($trx->waktu_transaksi)->format('d-m-Y H:i') }}</td>
+                                <td class="p-2">{{ $trx->barang->nama_barang ?? '-' }}</td>
+                                <td class="p-2">{{ ucfirst($trx->kategori) }}</td>
+                                <td></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <a href="#{{-- {{ route('transaksi.index') }} --}}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a>
+                {{-- <a href="#{{ route('operator.transaksi.index') }}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a> --}}
             </div>
         </div>
 

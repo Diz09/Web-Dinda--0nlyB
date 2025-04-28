@@ -12,11 +12,24 @@ class DatabaseSeeder extends Seeder
         // Panggil seeder lain di sini
         $this->call([
             UserSeeder::class,
-            // BarangSeeder::class,
+
+            // fungsi presensi dan penggajian
             KaryawanSeeder::class,
             KuartalSeeder::class,
-            PresensiSeeder::class,
             TonIkanSeeder::class,
+            PresensiSeeder::class,
+
+            // Gudang Barang
+            BarangSeeder::class,
+            BarangDasarSeeder::class,
+            BarangMentahSeeder::class,
+            BarangProdukSeeder::class,
+            SupplierSeeder::class,
+
+            // Transaksi
+            TransaksiSeeder::class,
+            PengeluaranSeeder::class,
+            PemasukanSeeder::class,
         ]);
     }
 }

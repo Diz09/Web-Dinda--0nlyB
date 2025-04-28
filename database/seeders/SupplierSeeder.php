@@ -4,27 +4,30 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Kuartal; 
 use Illuminate\Support\Facades\DB;
 
-class KuartalSeeder extends Seeder
+class SupplierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('kuartals')->insert([
+        DB::table('suppliers')->insert([
             [
-                'nama_kuartal' => 'Kuartal-1',
+                'nama' => 'Resto canda Kidama',
+                'alamat' => 'Jl. Merdeka No.123, Jakarta',
+                'no_tlp' => '081234567890',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kuartal' => 'Kuartal-2',
+                'nama' => 'Abdi Jaya Kusuma Bali',
+                'alamat' => 'Jl. Gatot Subroto No.456, Bali',
+                'no_tlp' => '082345678901',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-        ]);  
+            ]
+        ]);
     }
 }

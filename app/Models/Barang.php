@@ -9,11 +9,30 @@ class Barang extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama', 'kategori', 'stok'];
+    protected $fillable = [
+        'nama_barang',
+        'qty',
+        'exp',
+        'harga',
+    ];
+
+    public function mentah()
+    {
+        return $this->hasOne(BarangMentah::class);
+    }
+
+    public function dasar()
+    {
+        return $this->hasOne(BarangDasar::class);
+    }
+
+    public function produk()
+    {
+        return $this->hasOne(BarangProduk::class);
+    }
 
     public function transaksis()
     {
         return $this->hasMany(Transaksi::class);
     }
-
 }

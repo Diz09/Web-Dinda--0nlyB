@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\gajiController;
@@ -45,24 +46,24 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
     Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
-    Route::get('/operator/barang', [BarangController::class, 'index'])->name('barang.index');
-    Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
-    Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
-    Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
-    Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
-    Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/operator/barang', [BarangController::class, 'index'])->name('operator.barang.index');
+    // // Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
+    // // Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
+    // // Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+    // // Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
+    // // Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
-    Route::post('/barang/{id}/tambah', [BarangController::class, 'tambahStok'])->name('barang.tambah');
-    Route::post('/barang/{id}/kurang', [BarangController::class, 'kurangStok'])->name('barang.kurang');
+    // // Route::post('/barang/{id}/tambah', [BarangController::class, 'tambahStok'])->name('barang.tambah');
+    // // Route::post('/barang/{id}/kurang', [BarangController::class, 'kurangStok'])->name('barang.kurang');
 
 
-    Route::get('/operator/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
-    Route::get('/operator/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
-    Route::post('/operator/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
+    // Route::get('/operator/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
+    // Route::get('/operator/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
+    // Route::post('/operator/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
     
-    Route::get('/operator/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
-    Route::get('/operator/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
-    Route::post('/operator/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
+    // Route::get('/operator/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
+    // Route::get('/operator/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
+    // Route::post('/operator/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
 
     Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
@@ -95,6 +96,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
 
     Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
+    Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('operator.supplier.index');
+
     Route::get('/operator/transaksi', function () {    return view('operator.transaksi.index');    })->name('transaksi');
 // });
 

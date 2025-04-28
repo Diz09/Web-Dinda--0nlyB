@@ -2,24 +2,21 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Barang;
 
 class BarangSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
-        for ($i = 1; $i <= 10; $i++) {
-            DB::table('barangs')->insert([
-                'kode' => 'BRG' . str_pad($i, 3, '0', STR_PAD_LEFT), // BRG001, BRG002, ...
-                'nama' => 'Barang ' . $i,
-                'kategori' => ['Elektronik', 'Pakaian', 'Makanan'][rand(0, 2)],
-                'harga' => rand(10000, 100000),
-                'stok' => rand(1, 50),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        Barang::insert([
+            ['nama_barang' => 'Tepung Terigu', 'qty' => 100, 'exp' => '2025-01-01', 'harga' => 9000],
+            ['nama_barang' => 'Gula Pasir', 'qty' => 200, 'exp' => '2025-06-01', 'harga' => 12000],
+            ['nama_barang' => 'Minyak Goreng', 'qty' => 150, 'exp' => '2025-03-01', 'harga' => 14000],
+        ]);        
     }
 }

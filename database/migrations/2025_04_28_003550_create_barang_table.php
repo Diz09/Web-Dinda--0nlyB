@@ -9,24 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('transaksis', function (Blueprint $table) {
+        Schema::create('barangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
-            $table->date('tanggal');
-            $table->integer('jumlah');
-            $table->integer('harga'); // total harga transaksi
+            $table->string('nama_barang');
+            $table->integer('qty')->nullable();
+            $table->date('exp')->nullable();
+            $table->integer('harga');
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksis');
+        Schema::dropIfExists('barang');
     }
 };

@@ -13,8 +13,13 @@ class KuartalSeeder extends Seeder
      */
     public function run(): void
     {
-        Kuartal::create([
+        Kuartal::create(
+            [
             'nama_kuartal' => 'Kuartal-1',
-        ]);        
+            ],
+            [
+            'nama_kuartal' => 'Kuartal-2',
+            ],
+        );        
     }
 }

@@ -46,11 +46,6 @@ class GajiController extends Controller
 
     public function detail($id)
     {
-        // $kuartalId = 1; // Ganti sesuai kuartal id yang kamu mau
-        
-        // Ambil data kuartal lengkap dengan presensi dan karyawan
-        // $kuartal = Kuartal::with(['presensis.karyawan', 'tonIkan'])->findOrFail($kuartalId);
-
         $kuartal = Kuartal::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
         
         // Ambil semua tanggal unik
@@ -73,7 +68,14 @@ class GajiController extends Controller
             $gajiPerJam = 0;
         }
 
-        return view('operator.gaji.detailGaji', compact('kuartal', 'tanggalUnik', 'dataKaryawan', 'gajiPerJam'));
+        // Edit Simpan jumlah ton dan harga ikan per ton
+        $jumlahTonHariIni = TonIkan::where('kuartal_id', $kuartal->id)
+            ->value('jumlah_ton');
+
+        $hargaIkanPerTon = TonIkan::where('kuartal_id', $kuartal->id)
+            ->value('harga_ikan_per_ton');
+
+        return view('operator.gaji.detailGaji', compact('kuartal', 'tanggalUnik', 'dataKaryawan', 'gajiPerJam', 'jumlahTonHariIni', 'hargaIkanPerTon'));
     }
 
 }

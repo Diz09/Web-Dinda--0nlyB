@@ -2,7 +2,25 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-4">Detail Gaji</h3>
+
+    <h3 class="mb-4">Detail Gaji {{ $kuartal->nama_kuartal }}</h3>
+    
+    <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
+        @csrf
+        <input type="hidden" name="kuartal_id" value="{{ $kuartal }}">
+        
+        <div class="mb-3">
+            <label for="jumlah_ton">Jumlah Ton Ikan (ton)</label>
+            <input type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $jumlahTonHariIni) }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="harga_ikan_per_ton">Harga Ikan Per Ton (Rp)</label>
+            <input type="number" name="harga_ikan_per_ton" class="form-control" value="{{ old('harga_ikan_per_ton', $hargaIkanPerTon) }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan Data Ton Ikan</button>
+    </form>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

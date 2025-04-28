@@ -214,13 +214,15 @@
 
         <!-- Kategori: Data -->
         <div class="sidebar-category">Data</div>
-        <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/barang" class="sidebar-link">Data Barang</a>
+        <a href="/operator/suplier" class="sidebar-link">Suplier</a>
+        <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/gaji" class="sidebar-link">Gaji</a>
-
+        
         <!-- Kategori: Aktivitas -->
         <div class="sidebar-category">Aktivitas</div>
         <a href="/operator/presensi" class="sidebar-link">Presensi</a>
+        <a href="/operator/transaksi" class="sidebar-link">Transaksi</a>
         <a href="/operator/barang-masuk" class="sidebar-link">Barang Masuk</a>
         <a href="/operator/barang-keluar" class="sidebar-link">Barang Keluar</a>
 
@@ -228,9 +230,10 @@
         {{-- <a href="/logout" class="sidebar-link-out">Logout</a> --}}
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
-        </form>
-        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            Logout
+        </form>        
+        <a href="#" class="sidebar-link-out"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+           Logout
         </a>
     </div>
 

@@ -18,7 +18,7 @@ use App\Http\Controllers\TonIkanController;
 // Route::get('/home', function () {
 //     return view('welcome');
 // })->name('home');
-// Route::get('/home', function () {    return view('operator.gaji.detailGaji');    })->name('home');
+
 
 // Rute untuk login dan logout
 Route::get('/', function () {
@@ -93,5 +93,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
+
+    Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
+    Route::get('/operator/transaksi', function () {    return view('operator.transaksi.index');    })->name('transaksi');
 // });
 

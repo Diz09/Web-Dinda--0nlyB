@@ -44,10 +44,12 @@ class PresensiController extends Controller
             ->keyBy('karyawan_id');
 
         $jumlahTonHariIni = TonIkan::where('kuartal_id', $selectedKuartal->id)
-            // ->whereDate('tanggal', $tanggal)
             ->value('jumlah_ton');
 
-        return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kuartals', 'selectedKuartal', 'jumlahTonHariIni'));
+        $hargaIkanPerTon = TonIkan::where('kuartal_id', $selectedKuartal->id)
+            ->value('harga_ikan_per_ton') ?? 1000000;
+
+        return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kuartals', 'selectedKuartal', 'jumlahTonHariIni', 'hargaIkanPerTon'));
     }
 
     public function inputMasuk(Request $request, $id)

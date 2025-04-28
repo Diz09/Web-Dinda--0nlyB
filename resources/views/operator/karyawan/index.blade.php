@@ -16,8 +16,6 @@
                 <th>No</th>
                 <th>Nama</th>
                 <th>Jenis Kelamin</th>
-                <th>Gaji Belum Dibayar</th>
-                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -26,16 +24,6 @@
                 <td>{{ $i+1 }}</td>
                 <td>{{ $k->nama }}</td>
                 <td>{{ $k->jenis_kelamin }}</td>
-                <td>Rp {{ number_format($k->presensis->sum(function($p) {
-                    return optional($p->gaji)->total_gaji ?? 0;
-                }), 0, ',', '.') }}</td>
-                <td>
-                    <form action="{{ route('karyawan.gaji.bayar', $k->id) }}" method="POST">
-                        @csrf
-                        <input type="text" name="keterangan" placeholder="Keterangan lunas..." class="form-control form-control-sm mb-1" />
-                        <button class="btn btn-sm btn-success">Lunas</button>
-                    </form>
-                </td>
             </tr>
             @endforeach
         </tbody>

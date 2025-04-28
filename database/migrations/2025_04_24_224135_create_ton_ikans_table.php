@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kuartal_id')->nullable()->constrained('kuartals')->onDelete('set null');
             $table->decimal('jumlah_ton', 8, 2); // atau integer sesuai kebutuhanmu
-            // $table->date('tanggal');
+            $table->bigInteger('harga_ikan_per_ton')->default(1000000)->after('jumlah_ton');
             $table->timestamps();
         });
     }

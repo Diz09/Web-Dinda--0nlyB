@@ -16,6 +16,16 @@ class Supplier extends Model
             'no_tlp'
         ];
 
+    public function pemasok()
+    {
+        return $this->hasOne(Pemasok::class);
+    }
+
+    public function konsumen()
+    {
+        return $this->hasOne(Konsumen::class);
+    }
+
     public function transaksis()
     {
         return $this->hasMany(Transaksi::class);

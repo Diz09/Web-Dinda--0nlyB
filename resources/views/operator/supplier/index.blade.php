@@ -17,6 +17,7 @@
             <thead class="table-dark">
                 <tr>
                     <th>No</th>
+                    <th>Kode</th>
                     <th>Nama Supplier</th>
                     <th>Alamat</th>
                     <th>No Telepon</th>
@@ -26,6 +27,15 @@
                 @foreach($suppliers as $i => $supplier)
                 <tr>
                     <td>{{ $i + 1 }}</td>
+                    <td>
+                        @if($supplier->pemasok)
+                            {{ $supplier->pemasok->kode }}
+                        @elseif($supplier->konsumen)
+                            {{ $supplier->konsumen->kode }}
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>{{ $supplier->nama }}</td>
                     <td>{{ $supplier->alamat }}</td>
                     <td>{{ $supplier->no_tlp }}</td>

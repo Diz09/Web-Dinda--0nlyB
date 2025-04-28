@@ -14,9 +14,24 @@ class BarangSeeder extends Seeder
     public function run(): void
     {
         Barang::insert([
-            ['nama_barang' => 'Tepung Terigu', 'qty' => 100, 'exp' => '2025-01-01', 'harga' => 9000],
-            ['nama_barang' => 'Gula Pasir', 'qty' => 200, 'exp' => '2025-06-01', 'harga' => 12000],
-            ['nama_barang' => 'Minyak Goreng', 'qty' => 150, 'exp' => '2025-03-01', 'harga' => 14000],
+            [
+                'nama_barang' => 'Tenggiri', 
+                'qty' => 100, 
+                'exp' => '2025-01-01', 
+                'harga' => 9000
+            ],
+            [
+                'nama_barang' => 'Garam', 
+                'qty' => 200, 
+                'exp' => '2025-06-01', 
+                'harga' => 12000
+            ],
+            [
+                'nama_barang' => 'Teggiri Kering', 
+                'qty' => 150, 
+                'exp' => '2025-03-01', 
+                'harga' => 14000
+            ],
         ]);        
     }
 }

@@ -214,7 +214,7 @@
 
         <!-- Kategori: Data -->
         <div class="sidebar-category">Data</div>
-        <a href="/operator/barang" class="sidebar-link">Data Barang</a>
+        <a href="/operator/barang" class="sidebar-link">Barang</a>
         <a href="/operator/suplier" class="sidebar-link">Suplier</a>
         <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/gaji" class="sidebar-link">Gaji</a>
@@ -223,8 +223,8 @@
         <div class="sidebar-category">Aktivitas</div>
         <a href="/operator/presensi" class="sidebar-link">Presensi</a>
         <a href="/operator/transaksi" class="sidebar-link">Transaksi</a>
-        <a href="/operator/barang-masuk" class="sidebar-link">Barang Masuk</a>
-        <a href="/operator/barang-keluar" class="sidebar-link">Barang Keluar</a>
+        {{-- <a href="/operator/barang-masuk" class="sidebar-link">Barang Masuk</a>
+        <a href="/operator/barang-keluar" class="sidebar-link">Barang Keluar</a> --}}
 
         <!-- Logout -->
         {{-- <a href="/logout" class="sidebar-link-out">Logout</a> --}}

@@ -11,7 +11,7 @@ class BarangController extends Controller
     public function index()
     {
         // $barangs = Barang::all();
-        $barangs = Barang::with('kategori')->orderBy('id')->get();
+        $barangs = Barang::with(['mentah', 'dasar', 'produk'])->get();
 
         return view('operator.barang.index', compact('barangs'));
     }

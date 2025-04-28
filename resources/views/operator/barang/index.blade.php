@@ -23,15 +23,29 @@
             </thead>
             <tbody>
                 @foreach($barangs as $i => $barang)
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $barang->kategori->kode_prefix . 0 . $barang->id ?? '-' }}</td>
-                    <td>{{ $barang->nama }}</td>
-                    <td>{{ $barang->kategori->nama_kategori ?? '-' }}</td>
-                    <td>{{ $barang->qty }}</td>
-                    <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
-                    <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
-                </tr>
+                    @php
+                        $kategori = '-';
+                        $kode = '-';
+                        if ($barang->mentah) {
+                            $kategori = 'Mentah';
+                            $kode = $barang->mentah->kode;
+                        } elseif ($barang->dasar) {
+                            $kategori = 'Dasar';
+                            $kode = $barang->dasar->kode;
+                        } elseif ($barang->produk) {
+                            $kategori = 'Produk';
+                            $kode = $barang->produk->kode;
+                        }
+                    @endphp
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $kode }}</td>
+                        <td>{{ $barang->nama_barang }}</td>
+                        <td>{{ $kategori }}</td>
+                        <td>{{ $barang->qty ?? '-' }}</td>
+                        <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
+                        <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

@@ -18,7 +18,7 @@ class BarangController extends Controller
 
     public function stokPimpinan()
     {
-        $barang = Barang::all();
+        $barang = Barang::with(['mentah', 'dasar', 'produk'])->get();
         return view('pimpinan.stock_barang.index', compact('barang'));
     }
 }

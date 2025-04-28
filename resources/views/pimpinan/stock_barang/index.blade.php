@@ -17,13 +17,27 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($barang as $index => $item)
+        @foreach ($barang as $index => $item)
+            @php
+                $kategori = '-';
+                $kode = '-';
+                if ($item->mentah) {
+                    $kategori = 'Mentah';
+                    $kode = $item->mentah->kode;
+                } elseif ($item->dasar) {
+                    $kategori = 'Dasar';
+                    $kode = $item->dasar->kode;
+                } elseif ($item->produk) {
+                    $kategori = 'Produk';
+                    $kode = $item->produk->kode;
+                }
+            @endphp
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->kode }}</td>
-                    <td>{{ $item->nama }}</td>
+                    <td>{{ $kode }}</td>
+                    <td>{{ $item->nama_barang }}</td>
                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                    <td>{{ $item->stok }}</td>
+                    <td>{{ $item->qty }}</td>
                 </tr>
             @endforeach
         </tbody>

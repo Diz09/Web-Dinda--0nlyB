@@ -46,7 +46,21 @@ class DashboardController extends Controller
         $barangTerbaru = Barang::with(['mentah', 'dasar', 'produk'])->latest()->take(5)->get();
 
         // Ambil 5 transaksi terbaru
-        $transaksiTerbaru = Transaksi::with('barang')->latest()->take(5)->get();
+        $transaksiTerbaru = Transaksi::with(['barang', 'pemasukan', 'pengeluaran'])
+        ->orderBy('waktu_transaksi', 'desc')
+        ->take(5)
+        ->get()
+        ->map(function ($trx) {
+            $kategori = $trx->pengeluaran_id === null ? 'Masuk' : 'Keluar';
+            $harga = ($kategori === 'Masuk' ? '+ ' : '- ') . 'Rp ' . number_format($trx->jumlahRp, 0, ',', '.');
+
+            return [
+                'waktu' => $trx->waktu_transaksi,
+                'nama_barang' => $trx->barang->nama_barang ?? '-',
+                'kategori' => $kategori,
+                'harga' => $harga,
+            ];
+        });
 
         // Jumlah total barang
         $jumlahBarang = Barang::sum('qty');

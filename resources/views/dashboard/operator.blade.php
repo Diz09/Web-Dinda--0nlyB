@@ -60,8 +60,8 @@
                     <thead class="bg-blue-500 text-white">
                         <tr>
                             <th class="p-2 text-left">No</th>
-                            <th class="p-2 text-left">Tanggal</th>
-                            <th class="p-2 text-left">Barang</th>
+                            <th class="p-2 text-left">Waktu</th>
+                            <th class="p-2 text-left">Nama</th>
                             <th class="p-2 text-left">Kategori</th>
                             <th class="p-2 text-left">Harga</th>
                         </tr>
@@ -70,15 +70,15 @@
                         @foreach ($transaksiTerbaru as $i => $trx)
                             <tr>
                                 <td class="p-2">{{ $i + 1 }}</td>
-                                <td class="p-2">{{ \Carbon\Carbon::parse($trx->waktu_transaksi)->format('d-m-Y H:i') }}</td>
-                                <td class="p-2">{{ $trx->barang->nama_barang ?? '-' }}</td>
-                                <td class="p-2">{{ ucfirst($trx->kategori) }}</td>
-                                <td></td>
+                                <td class="p-2">{{ \Carbon\Carbon::parse($trx['waktu'])->format('d-m-Y H:i') }}</td>
+                                <td class="p-2">{{ $trx['nama_barang'] }}</td>
+                                <td class="p-2">{{ $trx['kategori'] }}</td>
+                                <td class="p-2">{{ $trx['harga'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                {{-- <a href="#{{ route('operator.transaksi.index') }}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a> --}}
+                <a href="{{ route('operator.transaksi.index') }}" class="text-blue-500 mt-2 inline-block">Selengkapnya</a>
             </div>
         </div>
 

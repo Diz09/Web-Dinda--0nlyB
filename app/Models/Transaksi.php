@@ -17,7 +17,7 @@ class Transaksi extends Model
 
     public function barang()
     {
-        return $this->belongsTo(BarangProduk::class);
+        return $this->belongsTo(Barang::class);
     }
 
     public function supplier()

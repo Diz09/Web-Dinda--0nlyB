@@ -9,10 +9,10 @@ class Pengeluaran extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_transaksi', 'tanggal', 'jumlah_keluar'];
+    protected $fillable = ['kode'];
 
-    public function transaksi()
+    public function transaksis()
     {
-        return $this->belongsTo(Transaksi::class);
+        return $this->hasMany(Transaksi::class);
     }
 }

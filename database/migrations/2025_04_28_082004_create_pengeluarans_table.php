@@ -9,9 +9,7 @@ return new class extends Migration {
     {
         Schema::create('pengeluarans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_transaksi')->constrained('transaksis')->onDelete('cascade');
-            $table->date('tanggal');
-            $table->integer('jumlah_keluar');
+            $table->string('kode')->unique();
             $table->timestamps();
         });
     }

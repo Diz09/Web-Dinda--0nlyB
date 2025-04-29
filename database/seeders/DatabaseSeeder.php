@@ -31,9 +31,9 @@ class DatabaseSeeder extends Seeder
             PemasokSeeder::class,
 
             // Transaksi
-            TransaksiSeeder::class,
             PengeluaranSeeder::class,
             PemasukanSeeder::class,
+            TransaksiSeeder::class,
         ]);
     }
 }

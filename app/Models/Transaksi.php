@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    protected $fillable = 
-        [
-            'barang_id',
-            'supplier_id',
-            'kategori', 
-            'waktu_transaksi'
-        ];
+    protected $fillable = [
+        'barang_id',
+        'supplier_id',
+        'pengeluaran_id',
+        'pemasukan_id',
+        'jumlahRp',
+        'waktu_transaksi',
+    ];
 
     public function barang()
     {
@@ -24,13 +25,13 @@ class Transaksi extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function pemasukan()
-    {
-        return $this->hasOne(Pemasukan::class);
-    }
-
     public function pengeluaran()
     {
-        return $this->hasOne(Pengeluaran::class);
+        return $this->belongsTo(Pengeluaran::class);
+    }
+
+    public function pemasukan()
+    {
+        return $this->belongsTo(Pemasukan::class);
     }
 }

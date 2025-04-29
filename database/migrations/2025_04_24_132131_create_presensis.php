@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('presensis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('karyawan_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('kuartal_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('karyawan_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('kuartal_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('tanggal');
             $table->time('jam_masuk')->nullable();
             $table->time('jam_pulang')->nullable();

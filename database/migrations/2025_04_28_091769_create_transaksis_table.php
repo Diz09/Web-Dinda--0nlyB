@@ -9,9 +9,11 @@ return new class extends Migration {
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade')->nullable();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade')->nullable();
-            $table->enum('kategori', ['pemasukan', 'pengeluaran']);
+            $table->foreignId('barang_id')->nullable()->constrained('barangs')->onDelete('cascade');
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade');
+            $table->foreignId('pengeluaran_id')->nullable()->constrained('pengeluarans')->onDelete('cascade');
+            $table->foreignId('pemasukan_id')->nullable()->constrained('pemasukans')->onDelete('cascade');
+            $table->integer('jumlahRp');
             $table->dateTime('waktu_transaksi');
             $table->timestamps();
         });

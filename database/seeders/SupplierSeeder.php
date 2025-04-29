@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Supplier;
+
 class SupplierSeeder extends Seeder
 {
     /**
@@ -13,21 +15,8 @@ class SupplierSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('suppliers')->insert([
-            [
-                'nama' => 'Resto canda Kidama',
-                'alamat' => 'Jl. Merdeka No.123, Jakarta',
-                'no_tlp' => '081234567890',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'nama' => 'Abdi Jaya Kusuma Bali',
-                'alamat' => 'Jl. Gatot Subroto No.456, Bali',
-                'no_tlp' => '082345678901',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+        Supplier::create(['nama' => 'PT. Sumber Pangan', 'alamat' => 'Surabaya', 'no_tlp' => '081234567890']);
+        Supplier::create(['nama' => 'CV. Berkah Usaha', 'alamat' => 'Malang', 'no_tlp' => '082223334444']);
+        Supplier::create(['nama' => 'Toko Makmur', 'alamat' => 'Gresik', 'no_tlp' => '083345678900']);
     }
 }

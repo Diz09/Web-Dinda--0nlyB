@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Carbon\CarbonPeriod;
+
 use App\Models\Barang;
 use App\Models\BarangDasar;
 use App\Models\BarangMentah;
@@ -16,25 +19,77 @@ class DashboardController extends Controller
     /**
      * Menampilkan dashboard pimpinan.
      */
-    public function pimpinan()
+    public function pimpinan(Request $request)
     {
-        $keuangan = $this->getKeuangan();
-        $statistikProduksi = $this->getStatistikProduksi();
-        $pengeluaranTerbaru = $this->getPengeluaranTerbaru();
+        $filter = $request->get('filter', 'tahun');
+        $query = Transaksi::query();
 
-        // data dummy grafiks
-        $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'];
-        $pendapatanBulanan = [20000000, 25000000, 15000000, 18000000, 22000000];
-        $pengeluaranBulanan = [10000000, 12000000, 9000000, 11000000, 8000000];
+        if ($filter === 'bulan') {
+            $year = $request->get('year', now()->year);
+            $month = $request->get('month', now()->month);
+            $bulanAktif = \Carbon\Carbon::create($year, $month)->translatedFormat('F Y');
+            $query->whereYear('waktu_transaksi', $year)->whereMonth('waktu_transaksi', $month);
 
-        return view('dashboard.pimpinan', compact(
-            'keuangan',
-            'statistikProduksi',
-            'pengeluaranTerbaru',
-            'labels',
-            'pendapatanBulanan',
-            'pengeluaranBulanan'
-        ));        
+            // Bulan: labels = tanggal 1 - akhir
+            $start = Carbon::create($year, $month, 1);
+            $end = $start->copy()->endOfMonth();
+            $dates = CarbonPeriod::create($start, $end);
+
+            $labels = [];
+            $pendapatanBulanan = [];
+            $pengeluaranBulanan = [];
+
+            foreach ($dates as $date) {
+                $labels[] = $date->format('d');
+                $pendapatan = (clone $query)
+                    ->whereDate('waktu_transaksi', $date)
+                    ->whereNotNull('pemasukan_id')
+                    ->sum('jumlahRp');
+
+                $pengeluaran = (clone $query)
+                    ->whereDate('waktu_transaksi', $date)
+                    ->whereNotNull('pengeluaran_id')
+                    ->sum('jumlahRp');
+
+                $pendapatanBulanan[] = $pendapatan;
+                $pengeluaranBulanan[] = $pengeluaran;
+            }
+        } else { // filter tahun (default)
+            $year = $request->get('year', now()->year);
+            $bulanAktif = "Tahun $year";
+            $query->whereYear('waktu_transaksi', $year);
+
+            $labels = [];
+            $pendapatanBulanan = [];
+            $pengeluaranBulanan = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $labels[] = Carbon::create()->month($i)->format('M');
+
+                $pendapatan = (clone $query)
+                    ->whereMonth('waktu_transaksi', $i)
+                    ->whereNotNull('pemasukan_id')
+                    ->sum('jumlahRp');
+
+                $pengeluaran = (clone $query)
+                    ->whereMonth('waktu_transaksi', $i)
+                    ->whereNotNull('pengeluaran_id')
+                    ->sum('jumlahRp');
+
+                $pendapatanBulanan[] = $pendapatan;
+                $pengeluaranBulanan[] = $pengeluaran;
+            }
+        }
+
+        $totalPendapatan = Transaksi::whereNotNull('pemasukan_id')->sum('jumlahRp');
+        $totalPengeluaran = Transaksi::whereNotNull('pengeluaran_id')->sum('jumlahRp');
+
+        $keuangan = [
+            'pendapatan' => $totalPendapatan,
+            'pengeluaran' => $totalPengeluaran
+        ];
+
+        return view('dashboard.pimpinan', compact('labels', 'pendapatanBulanan', 'pengeluaranBulanan', 'keuangan', 'bulanAktif'));
     }
 
     /**

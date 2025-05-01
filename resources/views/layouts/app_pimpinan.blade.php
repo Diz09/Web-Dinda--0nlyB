@@ -92,20 +92,39 @@
 
         .title-box {
             background-color: #bdbdf2;
-            border: 2px solid #2f80ed;
-            border-radius: 10px;
-            padding: 10px 20px;
-            display: inline-block;
+            /* border: 2px solid #2f80ed; */
             margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 0px 50px;
+            height: auto;
+            font-weight: normal;
+            text-align: left; /* ubah dari center jadi kiri */
+            font-size: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .info-box {
             background-color: #eff0c0;
+            /* border-radius: 10px; */
+            /* padding: 20px; */
+            /* height: 100px; */
+            /* text-align: center; */
+            /* font-weight: bold; */
+
+            font-size: 15px;
             border-radius: 10px;
             padding: 20px;
-            height: 100px;
-            text-align: center;
+            height: auto;
             font-weight: bold;
+            text-align: center; /* ubah dari center jadi kiri */
+
+            display: flex;
+            /* flex-direction: column; */
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .info-row {
@@ -117,6 +136,10 @@
 
         .info-row .info-box {
             flex: 1;
+        }
+
+        .filter-info {
+            width: 60px;
         }
         
         /* style grafiks */
@@ -136,6 +159,14 @@
         .chart-title {
             font-weight: bold;
             color: #333;
+        }
+
+        .chart-c {
+            font-size: 15px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap;
         }
         
         .main-content {
@@ -248,6 +279,12 @@
 
         table a:hover {
             text-decoration: underline;
+        }
+
+        form.flex.items-center.gap-2 select,
+        form.flex.items-center.gap-2 input,
+        form.flex.items-center.gap-2 button {
+            display: inline-block;
         }
 
     </style>

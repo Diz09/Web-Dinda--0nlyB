@@ -77,6 +77,75 @@
             margin-top: 20px;
         }
 
+        .dashboard-container {
+            background-color: #bdbdf2;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .title-box {
+            background-color: #bdbdf2;
+            /* border: 2px solid #2f80ed; */
+            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 0px 50px;
+            height: auto;
+            font-weight: normal;
+            text-align: left; /* ubah dari center jadi kiri */
+            font-size: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .subtitle-box {
+            background-color: #eff0c0;
+
+            font-size: 15px;
+            border-radius: 10px;
+            padding: 20px;
+            height: auto;
+        }
+
+        .info-box {
+            background-color: #eff0c0;
+
+            font-size: 15px;
+            border-radius: 10px;
+            padding: 20px;
+            height: auto;
+            font-weight: bold;
+            text-align: center; /* ubah dari center jadi kiri */
+
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+
+            margin-bottom: 20px
+        }
+
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-all {
+            display: flex;
+            float: right;
+        }
+
+        .info-row .info-box {
+            flex: 1;
+        }
+
+        .filter-info {
+            width: 60px;
+        }
+
         .main-content {
             margin-left: 230px;
             padding: 30px;
@@ -167,7 +236,7 @@
 
         thead th {
             padding: 12px 10px;
-            text-align: left;
+            text-align: center;
         }
 
         tbody td {
@@ -201,6 +270,13 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+            text-align: center;
+        }
+
+        .b-pri {
+            text-align: right;
+            /* padding-right: 25px; */
         }
     </style>
 </head>

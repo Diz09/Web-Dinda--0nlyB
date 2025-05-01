@@ -8,7 +8,7 @@
         <h3 class="fw-bold m-0">Dashboard</h3>
     </div>
 
-    <div class="dashboard-container" style="height: 100%;"y>
+    <div class="dashboard-container" style="height: 100%;">
     <div class="info-row">
         <div class="info-box text-start">
             <div class="fw-bold">Pendapatan</div>

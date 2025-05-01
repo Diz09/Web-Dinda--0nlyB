@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+
+use Carbon\Carbon;
 
 use App\Models\Barang;
 use App\Models\Supplier;
@@ -16,43 +17,29 @@ class TransaksiSeeder extends Seeder
 {
     public function run(): void
     {
-        $barang1 = Barang::firstWhere('nama_barang', 'Tenggiri');
-        $barang2 = Barang::firstWhere('nama_barang', 'Garam');
-        $barang3 = Barang::firstWhere('nama_barang', 'Teggiri Kering');
+        $barang = Barang::all();
+        $supplier = Supplier::all();
+        $pemasukan = Pemasukan::all();
+        $pengeluaran = Pengeluaran::all();
 
-        $supplier1 = Supplier::firstWhere('nama', 'PT. Sumber Pangan');
-        $supplier2 = Supplier::firstWhere('nama', 'CV. Berkah Usaha');
-        $supplier3 = Supplier::firstWhere('nama', 'Toko Makmur');
+        $startDate = Carbon::now()->subYear();
+        $endDate = Carbon::now();
+        
+        for ($i = 0; $i < 12; $i++) {
+            $tipe = $i % 2 === 0 ? 'pemasukan' : 'pengeluaran'; // selang-seling
+            $tanggal = Carbon::create(2025, 1, 1)
+                ->addMonths($i)
+                ->day(rand(1, 28)) // Acak tanggal antara 1 sampai 28 agar aman untuk semua bulan
+                ->setTime(rand(0, 23), rand(0, 59), rand(0, 59)); // Acak waktu dalam hari
 
-        $pemasukan1 = Pemasukan::firstWhere('kode', 'MSK001');
-        $pemasukan2 = Pemasukan::firstWhere('kode', 'MSK002');
-        $pengeluaran1 = Pengeluaran::firstWhere('kode', 'KLR001');
-
-        Transaksi::create([
-            'barang_id' => $barang1->id,
-            'supplier_id' => $supplier1->id,
-            'pemasukan_id' => $pemasukan1->id,
-            'pengeluaran_id' => null,
-            'jumlahRp' => 500000,
-            'waktu_transaksi' => Carbon::now(),
-        ]);
-
-        Transaksi::create([
-            'barang_id' => $barang2->id,
-            'supplier_id' => $supplier2->id,
-            'pemasukan_id' => null,
-            'pengeluaran_id' => $pengeluaran1->id,
-            'jumlahRp' => 300000,
-            'waktu_transaksi' => Carbon::now()->subDays(1),
-        ]);
-
-        Transaksi::create([
-            'barang_id' => $barang3->id,
-            'supplier_id' => $supplier3->id,
-            'pemasukan_id' => $pemasukan2->id,
-            'pengeluaran_id' => null,
-            'jumlahRp' => 700000,
-            'waktu_transaksi' => Carbon::now()->subDays(2),
-        ]);
+            Transaksi::create([
+                'barang_id' => $barang->random()->id,
+                'supplier_id' => $supplier->random()->id,
+                'pemasukan_id' => $tipe === 'pemasukan' ? $pemasukan->random()->id : null,
+                'pengeluaran_id' => $tipe === 'pengeluaran' ? $pengeluaran->random()->id : null,
+                'jumlahRp' => rand(300000, 900000),
+                'waktu_transaksi' => $tanggal,
+            ]);
+        }
     }
 }

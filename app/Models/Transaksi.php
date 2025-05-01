@@ -15,6 +15,15 @@ class Transaksi extends Model
         'waktu_transaksi',
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($transaksi) {
+            if (!($transaksi->pemasukan_id xor $transaksi->pengeluaran_id)) {
+                throw new \Exception('Transaksi harus punya salah satu: pemasukan atau pengeluaran.');
+            }
+        });
+    }
+
     public function barang()
     {
         return $this->belongsTo(Barang::class);

@@ -118,40 +118,10 @@ class DashboardController extends Controller
         });
 
         // Jumlah total barang
-        $jumlahBarang = Barang::sum('qty');
+        $jBarang = Barang::sum('qty');
+        $jumlahBarang = number_format($jBarang, 0, ',', '.') . ' Ton';
 
         return view('dashboard.operator', compact('barangTerbaru', 'transaksiTerbaru', 'jumlahBarang'));
     }
 
-    /**
-     * Fungsi untuk mengambil pengeluaran terbaru.
-     */
-    private function getPengeluaranTerbaru()
-    {
-        return \App\Models\Pengeluaran::latest()->take(5)->get();
-    }
-
-    /**
-     * Fungsi untuk mengambil laporan keuangan.
-     */
-    private function getKeuangan()
-    {
-        return [
-            'pendapatan' => 100000000,
-            'pengeluaran' => 50000000,
-            'laba' => 50000000,
-        ];
-    }
-
-    /**
-     * Fungsi untuk mengambil statistik produksi.
-     */
-    private function getStatistikProduksi()
-    {
-        return [
-            'produk_terjual' => 1000,
-            'produk_diproduksi' => 1500,
-            'stok' => 2000,
-        ];
-    }
 }

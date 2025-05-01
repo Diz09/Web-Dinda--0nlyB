@@ -107,21 +107,15 @@
 
         .info-box {
             background-color: #eff0c0;
-            /* border-radius: 10px; */
-            /* padding: 20px; */
-            /* height: 100px; */
-            /* text-align: center; */
-            /* font-weight: bold; */
 
             font-size: 15px;
             border-radius: 10px;
             padding: 20px;
             height: auto;
             font-weight: bold;
-            text-align: center; /* ubah dari center jadi kiri */
+            text-align: center;
 
             display: flex;
-            /* flex-direction: column; */
             justify-content: space-evenly;
             align-items: center;
             flex-wrap: wrap;
@@ -129,6 +123,7 @@
 
         .info-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             gap: 20px;
             margin-bottom: 20px;

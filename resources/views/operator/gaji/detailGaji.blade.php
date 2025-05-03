@@ -4,6 +4,7 @@
 <div class="container mt-4">
 
     <h3 class="mb-4">Detail Gaji {{ $kuartal->nama_kuartal }}</h3>
+    <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
     
     <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
         @csrf

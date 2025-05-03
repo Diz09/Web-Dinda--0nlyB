@@ -99,7 +99,18 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
     Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('operator.supplier.index');
     
+    // Route::resource('transaksi', TransaksiController::class);
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
-    // Route::get('/operator/transaksi', function () {    return view('operator.transaksi.index');    })->name('transaksi');
+    Route::get('/operator/transaksi/create', [TransaksiController::class, 'create'])->name('operator.transaksi.create');
+    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('operator.transaksi.store');
+
+    Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('operator.transaksi.edit');
+    Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('operator.transaksi.destroy');
+
+    // Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
+    Route::put('/operator/transaksi/{id}', [TransaksiController::class, 'update'])->name('operator.transaksi.update');
+    // Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+
+
 // });
 

@@ -13,6 +13,7 @@ class Transaksi extends Model
         'pemasukan_id',
         'jumlahRp',
         'waktu_transaksi',
+        'qtyHistori',
     ];
 
     protected static function booted()

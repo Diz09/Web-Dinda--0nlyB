@@ -1,31 +1,90 @@
-<!-- resources/views/operator/barang/edit.blade.php -->
-
+{{-- @extends('layouts.app_operator') --}}
 @extends('layouts.app_operator')
 
 @section('content')
-    <div class="container">
-        <h2>Edit Barang</h2>
+<div class="container mt-4">
+    <h3>Edit Barang</h3>
 
-        <form action="{{ route('barang.update', $barang->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            
-            <div class="form-group">
-                <label for="nama">Nama Barang</label>
-                <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $barang->nama) }}" required>
-            </div>
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-            <div class="form-group">
-                <label for="kategori">Kategori Barang</label>
-                <input type="text" class="form-control" name="kategori" id="kategori" value="{{ old('kategori', $barang->kategori) }}" required>
-            </div>
+    <form action="{{ route('barang.update', $barang->id) }}" method="POST" id="formEditBarang">
+        @csrf
+        @method('PUT')
 
-            <div class="form-group">
-                <label for="stok">Stok</label>
-                <input type="number" class="form-control" name="stok" id="stok" value="{{ old('stok', $barang->stok) }}" required>
-            </div>
+        <div class="mb-3">
+            <label for="nama_barang" class="form-label">Nama Barang</label>
+            <input type="text" class="form-control" id="nama_barang" name="nama_barang" value="{{ old('nama_barang', $barang->nama_barang) }}" required>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Update Barang</button>
-        </form>
-    </div>
+        @php
+            $kategori = 'lainnya';
+            if ($barang->produk) $kategori = 'produk';
+            elseif ($barang->mentah) $kategori = 'mentah';
+            elseif ($barang->dasar) $kategori = 'dasar';
+        @endphp
+
+        <div class="mb-3">
+            <label for="kategori" class="form-label">Kategori</label>
+            <select name="kategori" id="kategori" class="form-select" required>
+                <option value="mentah" {{ $kategori == 'mentah' ? 'selected' : '' }}>Mentah</option>
+                <option value="dasar" {{ $kategori == 'dasar' ? 'selected' : '' }}>Dasar</option>
+                <option value="produk" {{ $kategori == 'produk' ? 'selected' : '' }}>Produk</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exp" class="form-label">Tanggal Expired</label>
+            <input type="date" class="form-control" id="exp" name="exp" value="{{ old('exp', $barang->exp ? date('Y-m-d', strtotime($barang->exp)) : '') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="harga" class="form-label">Harga (Rp)</label>
+            <input type="number" class="form-control" id="harga" name="harga" value="{{ old('harga', $barang->harga) }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('barang.index') }}" class="btn btn-secondary">Kembali</a>
+    </form>
+</div>
+
+{{-- SweetAlert2 CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('formEditBarang').addEventListener('submit', function(e) {
+    e.preventDefault(); // Tahan submit dulu
+
+    const form = this; // <- tambahkan ini
+
+    const kategoriLama = '{{ $kategori }}';
+    const kategoriBaru = document.getElementById('kategori').value;
+
+    const melibatkanProduk = (kategoriLama === 'produk' || kategoriBaru === 'produk');
+
+    if (melibatkanProduk && kategoriLama !== kategoriBaru) {
+        Swal.fire({
+            title: 'Peringatan!',
+            text: 'Anda akan mengubah kategori yang melibatkan Produk. Yakin ingin melanjutkan?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lanjutkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let inputConfirm = document.createElement("input");
+                inputConfirm.type = "hidden";
+                inputConfirm.name = "confirm_produk";
+                inputConfirm.value = "1";
+                form.appendChild(inputConfirm);
+                form.submit();
+            }
+        });
+    } else {
+        form.submit(); // Tidak melibatkan produk, langsung submit
+    }
+});
+
+</script>
 @endsection

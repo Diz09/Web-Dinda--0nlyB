@@ -47,7 +47,15 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
     Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
-    Route::get('/operator/barang', [BarangController::class, 'index'])->name('operator.barang.index');
+    Route::get('/operator/barang', [BarangController::class, 'index'])->name('barang.index');
+    Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
+    Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
+    Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
+    Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+    Route::patch('/operator/barang/{id}/update-qty', [BarangController::class, 'updateQty'])->name('barang.updateQty');
+
+
     // // Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
     // // Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
     // // Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
@@ -103,14 +111,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
     Route::get('/operator/transaksi/create', [TransaksiController::class, 'create'])->name('operator.transaksi.create');
     Route::post('/transaksi', [TransaksiController::class, 'store'])->name('operator.transaksi.store');
-
     Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('operator.transaksi.edit');
     Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('operator.transaksi.destroy');
-
-    // Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
     Route::put('/operator/transaksi/{id}', [TransaksiController::class, 'update'])->name('operator.transaksi.update');
-    // Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-
 
 // });
 

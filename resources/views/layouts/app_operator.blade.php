@@ -77,6 +77,21 @@
             margin-top: 20px;
         }
 
+        .sidebar-submenu {
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .sidebar-submenu .sidebar-link {
+            display: block;
+            padding: 4px 0 4px 20px;
+            color: #ccc;
+        }
+
+        .sidebar-submenu .sidebar-link:hover {
+            color: white;
+        }
+
         .dashboard-container {
             background-color: #bdbdf2;
             padding: 20px;
@@ -291,6 +306,11 @@
         <!-- Kategori: Data -->
         <div class="sidebar-category">Data</div>
         <a href="/operator/barang" class="sidebar-link">Barang</a>
+            <div class="sidebar-submenu ms-3">
+                <a href="{{ route('barang.index', ['filter' => 'produk']) }}" class="sidebar-link">Barang Produk</a>
+                <a href="{{ route('barang.index', ['filter' => 'mentah']) }}" class="sidebar-link">Barang Mentah</a>
+                <a href="{{ route('barang.index', ['filter' => 'dasar']) }}" class="sidebar-link">Barang Dasar</a>
+            </div>
         <a href="/operator/suplier" class="sidebar-link">Suplier</a>
         <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/gaji" class="sidebar-link">Gaji</a>

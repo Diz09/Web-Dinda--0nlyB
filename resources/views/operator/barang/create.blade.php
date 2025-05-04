@@ -1,28 +1,41 @@
+@php
+    use Carbon\Carbon;
+    $defaultExp = Carbon::now()->addYear()->toDateString();
+@endphp
+
 @extends('layouts.app_operator')
 
 @section('content')
-<div class="container">
-    <h2>Tambah Barang Baru</h2>
+<h2>Tambah Barang Produk</h2>
 
-    <form action="{{ route('barang.store') }}" method="POST">
-        @csrf
+<form action="{{ route('barang.store') }}" method="POST">
+    @csrf
 
-        <div class="mb-3">
-            <label for="nama" class="form-label">Nama Barang</label>
-            <input type="text" name="nama" class="form-control" id="nama" required>
-        </div>
+    <div>
+        <label>Kode Produk</label>
+        <input type="text" name="kode" value="{{ $newKode }}" readonly>
+    </div>
 
-        <div class="mb-3">
-            <label for="kategori" class="form-label">Kategori</label>
-            <input type="text" name="kategori" class="form-control" id="kategori" required>
-        </div>
+    <div>
+        <label>Nama Barang</label>
+        <input type="text" name="nama_barang" value="{{ old('nama_barang') }}" required>
+    </div>
 
-        <div class="mb-3">
-            <label for="stok" class="form-label">Stok</label>
-            <input type="number" name="stok" class="form-control" id="stok" value="0" required>
-        </div>
+    <div>
+        <label>Qty (Stok)</label>
+        <input type="number" name="qty" value="{{ old('qty') ?? 0 }}" min="0" required>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
-    </form>
-</div>
+    <div>
+        <label>Harga (Rp)</label>
+        <input type="number" name="harga" value="{{ old('harga') }}" min="0" required>
+    </div>
+
+    <div>
+        <label>Expired</label>
+        <input type="date" name="exp" value="{{ old('exp', $defaultExp) }}" required>
+    </div>
+
+    <button type="submit">Simpan</button>
+</form>
 @endsection

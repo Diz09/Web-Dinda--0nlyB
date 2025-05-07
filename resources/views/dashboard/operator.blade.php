@@ -54,7 +54,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <a href="{{ route('operator.barang.index') }}" class="info-all text-blue-500 mt-2 inline-block">Selengkapnya</a>
+                <a href="{{ route('barang.index') }}" class="info-all text-blue-500 mt-2 inline-block">Selengkapnya</a>
             </div>
 
             <!-- Tabel Transaksi -->

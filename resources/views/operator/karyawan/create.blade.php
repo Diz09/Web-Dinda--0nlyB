@@ -4,11 +4,11 @@
 <div class="container mt-4">
     <h3 class="mb-4">Tambah Karyawan</h3>
 
-    @if($errors->any())
+    @if ($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
-                @foreach($errors->all() as $e)
-                    <li>{{ $e }}</li>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -18,22 +18,25 @@
         @csrf
 
         <div class="mb-3">
-            <label class="form-label">Nama</label>
+            <label for="nama" class="form-label">Nama Karyawan</label>
             <input type="text" name="nama" class="form-control" required value="{{ old('nama') }}">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Jabatan</label>
-            <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}">
+            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+            <select name="jenis_kelamin" class="form-control" required>
+                <option value="L" {{ old('jenis_kelamin', $karyawan->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="P" {{ old('jenis_kelamin', $karyawan->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+            </select>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Gaji per Jam</label>
-            <input type="number" name="gaji_per_jam" class="form-control" required value="{{ old('gaji_per_jam') }}">
+            <label for="no_telepon" class="form-label">No Telepon</label>
+            <input type="text" name="no_telepon" class="form-control" value="{{ old('no_telepon') }}">
         </div>
 
-        <button class="btn btn-success">Simpan</button>
-        <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">Kembali</a>
+        <button type="submit" class="btn btn-success">Simpan</button>
+        <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

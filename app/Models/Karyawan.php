@@ -12,8 +12,8 @@ class Karyawan extends Model
 
     protected $fillable = [
         'nama',
-        'jabatan',
-        'gaji_per_jam',
+        'jenis_kelamin',
+        'no_telepon',
     ];
 
     public function presensis()

@@ -16,6 +16,8 @@
                 <th>No</th>
                 <th>Nama</th>
                 <th>Jenis Kelamin</th>
+                <th>No Telepon</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +26,21 @@
                 <td>{{ $i+1 }}</td>
                 <td>{{ $k->nama }}</td>
                 <td>{{ $k->jenis_kelamin }}</td>
+                <td>
+                    @if($k->no_telepon)
+                        {{ $k->no_telepon }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>
+                    <a href="{{ route('karyawan.edit', $k->id) }}" class="btn btn-warning">Edit</a>
+                    <form action="{{ route('karyawan.destroy', $k->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus karyawan ini?')">Hapus</button>
+                    </form>
+                </td>
             </tr>
             @endforeach
         </tbody>

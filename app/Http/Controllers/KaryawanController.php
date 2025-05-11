@@ -22,13 +22,17 @@ class KaryawanController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'jabatan' => 'nullable|string|max:255',
-            'gaji_per_jam' => 'required|numeric|min:0',
+            'jenis_kelamin' => 'required|in:L,P',
+            'no_telepon' => 'nullable|string|max:20',
         ]);
 
-        Karyawan::create($request->only(['nama', 'jabatan', 'gaji_per_jam']));
+        Karyawan::create([
+            'nama' => $request->nama,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_telepon' => $request->no_telepon,
+        ]);
 
-        return redirect()->route('operator.karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
+        return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -41,14 +45,18 @@ class KaryawanController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'jabatan' => 'nullable|string|max:255',
-            'gaji_per_jam' => 'required|numeric|min:0',
+            'jenis_kelamin' => 'required|in:L,P',
+            'no_telepon' => 'nullable|string|max:20',
         ]);
 
         $karyawan = Karyawan::findOrFail($id);
-        $karyawan->update($request->only(['nama', 'jabatan', 'gaji_per_jam']));
+        $karyawan->update([
+            'nama' => $request->nama,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_telepon' => $request->no_telepon,
+        ]);
 
-        return redirect()->route('operator.karyawan.index')->with('success', 'Data karyawan berhasil diperbarui.');
+        return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -56,6 +64,6 @@ class KaryawanController extends Controller
         $karyawan = Karyawan::findOrFail($id);
         $karyawan->delete();
 
-        return redirect()->route('operator.karyawan.index')->with('success', 'Karyawan berhasil dihapus.');
+        return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil dihapus.');
     }
 }

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->enum('jenis_kelamin', ['L', 'P'])->default('L');
-            // $table->string('jabatan')->nullable();
-            // $table->integer('gaji_per_jam');
+            $table->string('no_telepon')->nullable();
             $table->timestamps();
         });
     }

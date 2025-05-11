@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('nama');
             $table->text('alamat');
             $table->string('no_tlp');
+            $table->string('no_rekening')->nullable();
             $table->timestamps();
         });
     }

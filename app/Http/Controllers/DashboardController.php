@@ -7,8 +7,7 @@ use Illuminate\Support\Carbon;
 use Carbon\CarbonPeriod;
 
 use App\Models\Barang;
-use App\Models\BarangDasar;
-use App\Models\BarangMentah;
+use App\Models\BarangPendukung;
 use App\Models\BarangProduk;
 use App\Models\Transaksi;
 // use App\Models\BarangMasuk;
@@ -98,7 +97,7 @@ class DashboardController extends Controller
     public function operator()
     {
         // Ambil 5 data barang terbaru
-        $barangTerbaru = Barang::with(['mentah', 'dasar', 'produk'])->latest()->take(5)->get();
+        $barangTerbaru = Barang::with(['produk', 'pendukung'])->latest()->take(5)->get();
 
         // Ambil 5 transaksi terbaru
         $transaksiTerbaru = Transaksi::with(['barang', 'pemasukan', 'pengeluaran'])

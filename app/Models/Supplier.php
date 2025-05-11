@@ -13,7 +13,8 @@ class Supplier extends Model
         [
             'nama', 
             'alamat', 
-            'no_tlp'
+            'no_tlp',
+            'no_rekening',
         ];
 
     public function pemasok()

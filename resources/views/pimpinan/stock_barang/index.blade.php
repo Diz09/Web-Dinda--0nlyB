@@ -21,12 +21,9 @@
             @php
                 $kategori = '-';
                 $kode = '-';
-                if ($item->mentah) {
-                    $kategori = 'Mentah';
-                    $kode = $item->mentah->kode;
-                } elseif ($item->dasar) {
-                    $kategori = 'Dasar';
-                    $kode = $item->dasar->kode;
+                if ($item->pendukung) {
+                    $kategori = 'Pendukung';
+                    $kode = $item->pendukung->kode;
                 } elseif ($item->produk) {
                     $kategori = 'Produk';
                     $kode = $item->produk->kode;

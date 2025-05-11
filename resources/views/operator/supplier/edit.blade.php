@@ -1,31 +1,53 @@
-<!-- resources/views/operator/barang/edit.blade.php -->
-
 @extends('layouts.app_operator')
 
 @section('content')
-    <div class="container">
-        <h2>Edit Barang</h2>
+<div class="container mt-4">
+    <h3 class="mb-4">Edit Supplier</h3>
 
-        <form action="{{ route('barang.update', $barang->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            
-            <div class="form-group">
-                <label for="nama">Nama Barang</label>
-                <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $barang->nama) }}" required>
-            </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-            <div class="form-group">
-                <label for="kategori">Kategori Barang</label>
-                <input type="text" class="form-control" name="kategori" id="kategori" value="{{ old('kategori', $barang->kategori) }}" required>
-            </div>
+    <form action="{{ route('supplier.update', $supplier->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-            <div class="form-group">
-                <label for="stok">Stok</label>
-                <input type="number" class="form-control" name="stok" id="stok" value="{{ old('stok', $barang->stok) }}" required>
-            </div>
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama Supplier</label>
+            <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', $supplier->nama) }}" required>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Update Barang</button>
-        </form>
-    </div>
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <textarea class="form-control" id="alamat" name="alamat" required>{{ old('alamat', $supplier->alamat) }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="no_tlp" class="form-label">No Telepon</label>
+            <input type="text" class="form-control" id="no_tlp" name="no_tlp" value="{{ old('no_tlp', $supplier->no_tlp) }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="no_rekening" class="form-label">No Rekening</label>
+            <input type="text" class="form-control" id="no_rekening" name="no_rekening" value="{{ old('no_rekening', $supplier->no_rekening) }}">
+        </div>
+
+       <div class="mb-3">
+            <label for="kategori" class="form-label">Kategori</label>
+            <select name="kategori" id="kategori" class="form-control" required>
+                <option value="pemasok" {{ $supplier->pemasok ? 'selected' : '' }}>Pemasok</option>
+                <option value="konsumen" {{ $supplier->konsumen ? 'selected' : '' }}>Konsumen</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('supplier.index') }}" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
 @endsection

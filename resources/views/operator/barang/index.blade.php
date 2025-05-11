@@ -41,12 +41,9 @@
                         @php
                             $kategori = '-';
                             $kode = '-';
-                            if ($barang->mentah) {
-                                $kategori = 'Mentah';
-                                $kode = $barang->mentah->kode;
-                            } elseif ($barang->dasar) {
-                                $kategori = 'Dasar';
-                                $kode = $barang->dasar->kode;
+                            if ($barang->pendukung) {
+                                $kategori = 'Pendukung';
+                                $kode = $barang->pendukung->kode;
                             } elseif ($barang->produk) {
                                 $kategori = 'Produk';
                                 $kode = $barang->produk->kode;
@@ -90,7 +87,7 @@
                 <tbody>
                     @foreach($barangs as $barang)
                         @php
-                            $kode = $barang->produk->kode ?? $barang->mentah->kode ?? $barang->dasar->kode ?? '-';
+                            $kode = $barang->produk->kode ?? $barang->pendukung->kode ?? '-';
                         @endphp
                         <tr>
                             <td>{{ $kode }}</td>

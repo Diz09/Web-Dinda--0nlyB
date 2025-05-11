@@ -19,7 +19,7 @@
 
     <!-- Aktivitas Terbaru -->
     <div class="subtitle-box bg-yellow-100 p-6 rounded shadow">
-        <h2 class="font-bold mb-4">Aktivitas Terbaru</h2>
+        {{-- <h2 class="font-bold mb-4">Aktivitas Terbaru</h2> --}}
 
         <div class="info-row">
             <div class="box-custom">
@@ -58,7 +58,7 @@
             </div>
 
             <!-- Tabel Transaksi -->
-            <div class="box-custom">
+            {{-- <div class="box-custom">
                 <h3>Aktivitas Transaksi</h3>
                 <table class="w-full text-sm bg-white rounded shadow">
                     <thead class="bg-blue-500 text-white">
@@ -83,7 +83,7 @@
                     </tbody>
                 </table>
                 <a href="{{ route('operator.transaksi.index') }}" class="info-all text-blue-500 mt-2 inline-block">Selengkapnya</a>
-            </div>
+            </div> --}}
         </div>
 
     </div>

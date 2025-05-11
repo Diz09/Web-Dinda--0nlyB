@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\BarangProduk;
-use App\Models\BarangDasar;
-use App\Models\BarangMentah;
+use App\Models\BarangPendukung;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
@@ -15,7 +14,7 @@ class BarangController extends Controller
     {
         $filter = $request->query('filter');
 
-        $barangs = Barang::with(['produk', 'mentah', 'dasar'])->get();
+        $barangs = Barang::with(['produk', 'pendukung'])->get();
 
         if ($filter) {
             $barangs = $barangs->filter(function ($barang) use ($filter) {
@@ -30,17 +29,11 @@ class BarangController extends Controller
 
     public function create()
     {
-        // Ambil kode terakhir dari barangproduk
-        // $lastKode = \App\Models\BarangProduk::orderBy('id', 'desc')->first();
-
-        // // Ambil angka terakhir, jika ada
-        // $lastNumber = $lastKode ? (int)substr($lastKode->kode, 3) : 0;
-
-        // Format kode baru
         $newKode = $this->generateKodeBaru('produk');
 
         return view('operator.barang.create', compact('newKode'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -70,13 +63,13 @@ class BarangController extends Controller
     
     public function edit($id)
     {
-        $barang = Barang::with(['produk', 'mentah', 'dasar'])->findOrFail($id);
+        $barang = Barang::with(['produk', 'pendukung'])->findOrFail($id);
         return view('operator.barang.edit', compact('barang'));
     }
 
     public function update(Request $request, $id)
     {
-        $barang = Barang::with(['produk', 'mentah', 'dasar'])->findOrFail($id);
+        $barang = Barang::with(['produk', 'pendukung'])->findOrFail($id);
 
         $request->validate([
             'nama_barang' => 'required|string|max:255',
@@ -85,7 +78,7 @@ class BarangController extends Controller
             'harga' => 'required|numeric|min:0',
         ]);
 
-        $kategori_lama = $barang->produk ? 'produk' : ($barang->mentah ? 'mentah' : 'dasar');
+        $kategori_lama = $barang->produk ? 'produk' : 'pendukung';
         $kategori_baru = $request->kategori;
 
         // Cek apakah melibatkan 'produk'
@@ -114,18 +107,13 @@ class BarangController extends Controller
         // Tambah relasi baru sesuai kategori
         $kodeBaru = $this->generateKodeBaru($kategori_baru);
 
-        if ($kategori_baru === 'mentah') {
-            BarangMentah::create([
-                'barang_id' => $barang->id,
-                'kode' => $kodeBaru,
-            ]);
-        } elseif ($kategori_baru === 'dasar') {
-            BarangDasar::create([
-                'barang_id' => $barang->id,
-                'kode' => $kodeBaru,
-            ]);
-        } elseif ($kategori_baru === 'produk') {
+        if ($kategori_baru === 'produk') {
             BarangProduk::create([
+                'barang_id' => $barang->id,
+                'kode' => $kodeBaru,
+            ]);
+        } else {
+            BarangPendukung::create([
                 'barang_id' => $barang->id,
                 'kode' => $kodeBaru,
             ]);
@@ -150,14 +138,12 @@ class BarangController extends Controller
 
     public function destroy($id)
     {
-        $barang = Barang::with(['produk', 'mentah', 'dasar'])->findOrFail($id);
+        $barang = Barang::with(['produk', 'pendukung'])->findOrFail($id);
 
         if ($barang->produk) {
             $barang->produk->delete();
-        } elseif ($barang->mentah) {
-            $barang->mentah->delete();
-        } elseif ($barang->dasar) {
-            $barang->dasar->delete();
+        } elseif ($barang->pendukung) {
+            $barang->pendukung>delete();
         }
 
         $barang->delete();
@@ -167,7 +153,7 @@ class BarangController extends Controller
 
     public function stokPimpinan()
     {
-        $barang = Barang::with(['mentah', 'dasar', 'produk'])->get();
+        $barang = Barang::with(['produk', 'pendukung'])->get();
         return view('pimpinan.stock_barang.index', compact('barang'));
     }
 
@@ -178,13 +164,9 @@ class BarangController extends Controller
                 $prefix = 'PRD';
                 $model = BarangProduk::class;
                 break;
-            case 'mentah':
-                $prefix = 'MNT';
-                $model = BarangMentah::class;
-                break;
-            case 'dasar':
-                $prefix = 'DSR';
-                $model = BarangDasar::class;
+            case 'pendukung':
+                $prefix = 'PDN';
+                $model = BarangPendukung::class;
                 break;
             default:
                 throw new \Exception("Kategori tidak valid");

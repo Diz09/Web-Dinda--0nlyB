@@ -43,10 +43,12 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
 // Operator
 // Route::middleware(['auth', 'role:operator'])->group(function () {
+    // Route untuk Dashboard
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
     // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
     Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
+    // route untuk data barang
     Route::get('/operator/barang', [BarangController::class, 'index'])->name('barang.index');
     Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
     Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
@@ -55,32 +57,24 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::patch('/operator/barang/{id}/update-qty', [BarangController::class, 'updateQty'])->name('barang.updateQty');
 
-
-    // // Route::get('/operator/barang/create', [BarangController::class, 'create'])->name('barang.create');
-    // // Route::post('/operator/barang', [BarangController::class, 'store'])->name('barang.store');
-    // // Route::get('/operator/barang/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
-    // // Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
-    // // Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
-
-    // // Route::post('/barang/{id}/tambah', [BarangController::class, 'tambahStok'])->name('barang.tambah');
-    // // Route::post('/barang/{id}/kurang', [BarangController::class, 'kurangStok'])->name('barang.kurang');
-
-
-    // Route::get('/operator/barang-masuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index'); 
-    // Route::get('/operator/barang-masuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
-    // Route::post('/operator/barang-masuk', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
-    
-    // Route::get('/operator/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index'); 
-    // Route::get('/operator/barang-keluar/create', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
-    // Route::post('/operator/barang-keluar', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
-
+    // route untuk tindak presensi
     Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
     
     Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
     Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
+
+    // route untuk data supplier
+    // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
+    Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('supplier.index');
+    Route::get('/operator/suplier/create', [SupplierController::class, 'create'])->name('supplier.create');
+    Route::post('/operator/suplier', [SupplierController::class, 'store'])->name('supplier.store');
+    Route::get('/operator/suplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
+    Route::put('/operator/suplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
+    Route::delete('/operator/suplier/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
     
+    // route untuk data karyawan
     Route::get('/operator/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
     Route::get('/operator/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
     Route::post('/operator/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
@@ -90,9 +84,13 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     
     Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
     
+    // route untuk data ton ikan yang akan diurus pekerja
     Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
     Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
     
+    Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
+
+    // route untuk data gaji per kuartal
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
 
     Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
@@ -101,12 +99,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     
     // Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
 
-    Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
-
-
-    // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
-    Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('operator.supplier.index');
-    
+    // route untuk transaksi
     // Route::resource('transaksi', TransaksiController::class);
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
     Route::get('/operator/transaksi/create', [TransaksiController::class, 'create'])->name('operator.transaksi.create');

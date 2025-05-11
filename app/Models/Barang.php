@@ -15,20 +15,15 @@ class Barang extends Model
         'exp',
         'harga',
     ];
-
-    public function mentah()
-    {
-        return $this->hasOne(BarangMentah::class);
-    }
-
-    public function dasar()
-    {
-        return $this->hasOne(BarangDasar::class);
-    }
-
+    
     public function produk()
     {
         return $this->hasOne(BarangProduk::class);
+    }
+
+    public function pendukung()
+    {
+        return $this->hasOne(BarangPendukung::class);
     }
 
     public function transaksis()

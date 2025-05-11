@@ -21,12 +21,15 @@
             flex-direction: column;
             align-items: center;
             padding-top: 30px;
+            overflow: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
 
         .sidebar img {
             width: 50px;
             height: 50px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .sidebar-link{
@@ -57,7 +60,7 @@
             display: block;
             transition: 0.3s ease;
             box-sizing: border-box;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         .sidebar-link-out:hover{
@@ -74,7 +77,7 @@
             text-transform: uppercase;
             font-size: 12px;
             text-align: start;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .sidebar-submenu {
@@ -307,9 +310,9 @@
         <div class="sidebar-category">Data</div>
         <a href="/operator/barang" class="sidebar-link">Barang</a>
             <div class="sidebar-submenu ms-3">
-                <a href="{{ route('barang.index', ['filter' => 'produk']) }}" class="sidebar-link">Barang Produk</a>
-                <a href="{{ route('barang.index', ['filter' => 'mentah']) }}" class="sidebar-link">Barang Mentah</a>
-                <a href="{{ route('barang.index', ['filter' => 'dasar']) }}" class="sidebar-link">Barang Dasar</a>
+                <a href="{{ route('barang.index', ['filter' => 'produk']) }}" class="sidebar-link">Produk</a>
+                <a href="{{ route('barang.index', ['filter' => 'pendukung']) }}" class="sidebar-link">Pendukung</a>
+                {{-- <a href="{{ route('barang.index', ['filter' => 'dasar']) }}" class="sidebar-link">Barang Dasar</a> --}}
             </div>
         <a href="/operator/suplier" class="sidebar-link">Suplier</a>
         <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>

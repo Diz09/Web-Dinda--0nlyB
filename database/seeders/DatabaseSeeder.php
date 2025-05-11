@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
 
             // Gudang Barang
             BarangSeeder::class,
-            BarangDasarSeeder::class,
-            BarangMentahSeeder::class,
+            BarangPendukungSeeder::class,
             BarangProdukSeeder::class,
 
             // Suppliers

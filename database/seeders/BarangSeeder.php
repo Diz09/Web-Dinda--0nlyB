@@ -16,12 +16,6 @@ class BarangSeeder extends Seeder
     {
         Barang::insert([
             [
-                'nama_barang' => 'Tenggiri', 
-                'qty' => 100, 
-                'exp' => '2025-01-01', 
-                'harga' => 9000
-            ],
-            [
                 'nama_barang' => 'Garam', 
                 'qty' => 200, 
                 'exp' => '2025-06-01', 

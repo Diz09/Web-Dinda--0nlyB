@@ -10,16 +10,16 @@ class KaryawanSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['nama' => 'Andi',     'jenis_kelamin' => 'L'],
-            ['nama' => 'Budi',     'jenis_kelamin' => 'L'],
-            ['nama' => 'Citra',    'jenis_kelamin' => 'P'],
-            ['nama' => 'Dewi',     'jenis_kelamin' => 'P'],
-            ['nama' => 'Eka',      'jenis_kelamin' => 'L'],
-            ['nama' => 'Fajar',    'jenis_kelamin' => 'L'],
-            ['nama' => 'Gita',     'jenis_kelamin' => 'P'],
-            ['nama' => 'Hana',     'jenis_kelamin' => 'P'],
-            ['nama' => 'Iwan',     'jenis_kelamin' => 'L'],
-            ['nama' => 'Joko',     'jenis_kelamin' => 'L'],
+            ['nama' => 'Andi',     'jenis_kelamin' => 'L', 'no_telepon' => '081234567890'],
+            ['nama' => 'Budi',     'jenis_kelamin' => 'L', 'no_telepon' => '081234567891'],
+            ['nama' => 'Citra',    'jenis_kelamin' => 'P', 'no_telepon' => '081234567892'],
+            ['nama' => 'Dewi',     'jenis_kelamin' => 'P', 'no_telepon' => '081234567893'],
+            ['nama' => 'Eka',      'jenis_kelamin' => 'L', 'no_telepon' => '081234567894'],
+            ['nama' => 'Fajar',    'jenis_kelamin' => 'L', 'no_telepon' => '081234567895'],
+            ['nama' => 'Gita',     'jenis_kelamin' => 'P', 'no_telepon' => '081234567896'],
+            ['nama' => 'Hana',     'jenis_kelamin' => 'P', 'no_telepon' => '085123456732'],
+            ['nama' => 'Iwan',     'jenis_kelamin' => 'L',  'no_telepon' => '085123456712'],
+            ['nama' => 'Joko',      'jenis_kelamin' => 'L',  'no_telepon' => '085123456129'],
         ];
 
         foreach ($data as $item) {

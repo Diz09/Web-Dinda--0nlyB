@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\BarangMentah;
+use App\Models\BarangPendukung;
 
 class BarangMentahSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class BarangMentahSeeder extends Seeder
      */
     public function run(): void
     {
-        BarangMentah::insert([
+        BarangPendukung::insert([
             ['barang_id' => 1, 'kode' => 'MNT001'],
         ]);
     }

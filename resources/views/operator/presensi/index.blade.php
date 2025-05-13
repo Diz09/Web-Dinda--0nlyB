@@ -1,3 +1,31 @@
+@if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
+{{-- <script>
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session("success") }}',
+            timer: 5000,
+            timerProgressBar: true,
+            confirmButtonText: 'Oke',
+        });
+    @elseif (session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '{{ session("error") }}',
+            timer: 5000,
+            timerProgressBar: true,
+            confirmButtonText: 'Oke',
+        });
+    @endif
+</script> --}}
+
+
+
 @extends('layouts.app_operator')
 
 @section('content')
@@ -11,7 +39,7 @@
     {{-- Pilih Kuartal --}}
     <form id="formKuartal" class="mb-3">
         <label for="kuartal_id">Pilih Kuartal</label>
-        <div class="input-group">
+        <div class="input-group i-g">
             <select name="kuartal_id" id="kuartal_id" class="form-control">
                 @foreach($kuartals as $k)
                     <option value="{{ $k->id }}" {{ $selectedKuartal->id == $k->id ? 'selected' : '' }}>
@@ -19,58 +47,18 @@
                     </option>
                 @endforeach
             </select>
+            <!-- Tombol untuk membuka Modal -->
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editKuartalModal">Edit Kuartal</button>
             <button type="button" class="btn btn-outline-primary" id="btnLihatKuartal">Lihat</button>
+            @include('operator.presensi.edit')
         </div>
     </form>
 
-    {{-- Script: Pilih Kuartal Redirect ke Presensi --}}
-    <script>
-        document.getElementById('kuartal_id').addEventListener('change', function () {
-            const id = this.value;
-            if (id) {
-                window.location.href = `/operator/presensi/${id}`;
-            }
-        });
-
-        document.getElementById('btnLihatKuartal').addEventListener('click', function () {
-            const select = document.getElementById('kuartal_id');
-            const id = select.value;
-
-            if (id) {
-                window.location.href = `/operator/gaji/${id}`;
-            } else {
-                alert('Pilih kuartal terlebih dahulu');
-            }
-        });
-    </script>
-    
-    {{-- Tombol Buat Kuartal Baru --}}
-    <form method="GET" class="mb-4">
-        <input type="hidden" name="buat_kuartal" value="1">
-        <button class="btn btn-success">+ Buat Kuartal Baru</button>
-    </form>
-
-    {{-- Form Simpan Ton Ikan --}}
-    <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
-        @csrf
-        <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
-        
-        <div class="mb-3">
-            <label for="jumlah_ton">Jumlah Ton Ikan (Kuartal {{ $selectedKuartal->nama_kuartal }})</label>
-            <input type="number" name="jumlah_ton" class="form-control"
-                value="{{ old('jumlah_ton', $selectedKuartal->tonIkan->jumlah_ton ?? '') }}" required>
-        </div>
-        
-        <div class="mb-3">
-            <label for="harga_ikan_per_ton">Harga Ikan Per Ton (Rp)</label>
-            <input type="number" name="harga_ikan_per_ton" class="form-control"
-                value="{{ old('harga_ikan_per_ton', $selectedKuartal->tonIkan->harga_ikan_per_ton ?? 1000000) }}" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Simpan Data Ton Ikan</button>
-    </form>
-
-
+    {{-- checkbox fitur otomatis --}}
+    <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="modeOtomatis">
+        <label class="form-check-label" for="modeOtomatis">Mode Otomatis (Gunakan Waktu Saat Ini)</label>
+    </div>
 
     {{-- Tabel Presensi --}}
     <table class="table table-bordered">
@@ -78,7 +66,7 @@
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Jenis Kelamin</th>
+                {{-- <th>Jenis Kelamin</th> --}}
                 <th>Aksi Masuk</th>
                 <th>Jam Masuk</th>
                 <th>Aksi Pulang</th>
@@ -98,15 +86,16 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $k->nama }}</td>
-                <td>{{ $k->jenis_kelamin }}</td>
                 {{-- Aksi Masuk --}}
                 <td>
                     @if(!$p || !$p->jam_masuk)
-                        <form method="POST" action="{{ route('presensi.masuk', $k->id) }}">
+                        <form method="POST" action="{{ route('presensi.masuk', $k->id) }}" class="formPresensi">
                             @csrf
                             <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
                             <input type="hidden" name="tanggal" value="{{ $tanggal }}">
-                            <button class="btn btn-success btn-sm">✓ Masuk</button>
+                            <input type="hidden" name="jam" class="inputJam">
+                            <input type="time" class="form-control inputManualJam d-none" name="jam_manual">
+                            <button class="btn btn-success btn-sm btnSubmitMasuk mt-1">✓ Masuk</button>
                         </form>
                     @else
                         <span class="text-success">✓</span>
@@ -119,11 +108,13 @@
                 {{-- Aksi Pulang --}}
                 <td>
                     @if($p && !$p->jam_pulang)
-                        <form method="POST" action="{{ route('presensi.pulang', $k->id) }}">
+                        <form method="POST" action="{{ route('presensi.pulang', $k->id) }}" class="formPresensi">
                             @csrf
                             <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
                             <input type="hidden" name="tanggal" value="{{ $tanggal }}">
-                            <button class="btn btn-warning btn-sm">✓ Pulang</button>
+                            <input type="hidden" name="jam" class="inputJam">
+                            <input type="time" class="form-control inputManualJam d-none" name="jam_manual">
+                            <button class="btn btn-warning btn-sm btnSubmitPulang mt-1">✓ Pulang</button>
                         </form>
                     @elseif($p)
                         <span class="text-warning">✓</span>
@@ -142,4 +133,9 @@
         </tbody>
     </table>
 </div>
+
+<!-- Tambahkan ini di dalam <head> atau sebelum </body> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="{{ asset('js/presensi.js') }}"></script>
 @endsection

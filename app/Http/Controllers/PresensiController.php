@@ -56,6 +56,13 @@ class PresensiController extends Controller
     {
         $kuartalId = $request->input('kuartal_id');
         $tanggal = now()->toDateString();
+        $jamInput = $request->input('jam') ?? Carbon::now()->format('H:i:s'); // <- ambil jam dari request jika ada
+
+        // Validasi: jam tidak boleh lebih dari waktu sekarang
+        $sekarang = now()->format('H:i:s');
+        if ($jamInput > $sekarang) {
+            return redirect()->back()->with('error', 'Jam masuk tidak boleh lebih dari waktu saat ini.');
+        }
 
         $presensi = Presensi::where('karyawan_id', $id)
             ->whereDate('tanggal', $tanggal)
@@ -66,10 +73,10 @@ class PresensiController extends Controller
                 'karyawan_id' => $id,
                 'kuartal_id' => $kuartalId,
                 'tanggal' => $tanggal,
-                'jam_masuk' => Carbon::now()->format('H:i:s')
+                'jam_masuk' => $jamInput
             ]);
         } elseif (!$presensi->jam_masuk) {
-            $presensi->jam_masuk = Carbon::now()->format('H:i:s');
+            $presensi->jam_masuk = $jamInput;
             $presensi->kuartal_id = $kuartalId;
             $presensi->save();
         }
@@ -79,12 +86,23 @@ class PresensiController extends Controller
 
     public function inputPulang(Request $request, $id)
     {
+        $kuartalId = $request->input('kuartal_id');
+        $tanggal = now()->toDateString();
+        $jamInput = $request->input('jam') ?? Carbon::now()->format('H:i:s');
+
+        // Validasi: jam tidak boleh lebih dari waktu sekarang
+        $sekarang = now()->format('H:i:s');
+        if ($jamInput > $sekarang) {
+            return redirect()->back()->with('error', 'Jam pulang tidak boleh lebih dari waktu saat ini.');
+        }
+
         $presensi = Presensi::where('karyawan_id', $id)
-            ->where('tanggal', now()->toDateString())
+            ->whereDate('tanggal', $tanggal)
             ->first();
 
         if ($presensi && !$presensi->jam_pulang) {
-            $presensi->jam_pulang = Carbon::now()->format('H:i:s');
+            $presensi->jam_pulang = $jamInput;
+            $presensi->kuartal_id = $kuartalId;
             $presensi->save();
         }
 
@@ -95,13 +113,14 @@ class PresensiController extends Controller
     {
         $request->validate([
             'kuartal_id' => 'required|exists:kuartals,id',
-            // 'tanggal' => 'required|date',
-            'jumlah_ton' => 'required|numeric'
+            'jumlah_ton' => 'required|numeric',
+            'harga_ikan_per_ton' => 'required|numeric',
         ]);
 
         TonIkan::updateOrCreate(
             ['kuartal_id' => $request->kuartal_id/*, 'tanggal' => $request->tanggal*/],
-            ['jumlah_ton' => $request->jumlah_ton]
+            ['jumlah_ton' => $request->jumlah_ton,
+            'harga_ikan_per_ton' => $request->harga_ikan_per_ton],
         );
 
         return redirect()->route('presensi.index', ['kuartal_id' => $request->kuartal_id])->with('success', 'Data ton ikan berhasil disimpan.');

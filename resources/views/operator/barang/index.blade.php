@@ -18,11 +18,13 @@
     @endif
 
     {{-- Tombol untuk membuka modal --}}
-    @if(request('filter') == 'produk')
-        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Produk</button>
-    @endif
+    @if(request('filter') == 'produk' || request('filter') == 'pendukung')
+        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
+            Tambah {{ ucfirst(request('filter')) }}
+        </button>
 
-    @include('operator.barang.create')
+        @include('operator.barang.create', ['filter' => request('filter')])
+    @endif
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -33,7 +35,7 @@
                         <th>Kode</th>
                         <th>Nama Barang</th>
                         <th>Kategori</th>
-                        <th>Qty</th>
+                        {{-- <th>Qty</th> --}}
                         <th>Exp</th>
                         <th>Harga</th>
                         <th>Update Stock</th> {{-- Tambahan --}}
@@ -45,12 +47,12 @@
                         @php
                             $kategori = '-';
                             $kode = '-';
-                            if ($barang->pendukung) {
-                                $kategori = 'Pendukung';
-                                $kode = $barang->pendukung->kode;
-                            } elseif ($barang->produk) {
+                            if ($barang->produk) {
                                 $kategori = 'Produk';
                                 $kode = $barang->produk->kode;
+                            } elseif ($barang->pendukung) {
+                                $kategori = 'Pendukung';
+                                $kode = $barang->pendukung->kode;
                             }
                         @endphp
                         <tr>
@@ -58,7 +60,7 @@
                             <td>{{ $kode }}</td>
                             <td>{{ $barang->nama_barang }}</td>
                             <td>{{ $kategori }}</td>
-                            <td>{{ $barang->qty ?? '-' }}</td>
+                            {{-- <td>{{ $barang->qty ?? '-' }}</td> --}}
                             <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
                             <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
                             <td>
@@ -75,11 +77,6 @@
                                 <!-- Modal Edit Barang -->
                                 @include('operator.barang.edit', ['barang' => $barang])
                                 {{-- Hapus --}}
-                                {{-- <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                                </form> --}}
                                 <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" class="formDeleteBarang" data-id="{{ $barang->id }}" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')

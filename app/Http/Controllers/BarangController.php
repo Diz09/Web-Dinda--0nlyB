@@ -16,24 +16,31 @@ class BarangController extends Controller
 
         $barangs = Barang::with(['produk', 'pendukung'])->get();
 
-        if ($filter) {
+        // Filter hanya jika $filter ada dan valid
+        if (in_array($filter, ['produk', 'pendukung'])) {
             $barangs = $barangs->filter(function ($barang) use ($filter) {
-                return $barang->{$filter};
+                return $barang->{$filter}; // hanya tampilkan yang memiliki relasi produk/pendukung
             });
+            $newKode = $this->generateKodeBaru($filter);
+        } else {
+            // Jika tidak ada filter atau tidak valid, tampilkan semua data dan jangan generate kode
+            $newKode = null;
         }
-        
-        // $barangs = $query->get();
-        $newKode = $this->generateKodeBaru('produk');
+
+        // Urutkan: produk (kode PRD) lebih dulu, lalu pendukung (kode PND)
+        $barangs = $barangs->sortBy(function ($barang) {
+        if ($barang->produk) {
+            return '1' . $barang->produk->kode; // angka kecil = prioritas lebih tinggi
+        } elseif ($barang->pendukung) {
+            return '2' . $barang->pendukung->kode;
+        } else {
+            return '9'; // untuk jaga-jaga
+        }
+    })->values();
 
         return view('operator.barang.index', compact('barangs', 'filter', 'newKode'));
     }
 
-    public function create()
-    {
-        $newKode = $this->generateKodeBaru('produk');
-
-        return view('operator.barang.create', compact('newKode'));
-    }
 
     public function store(Request $request)
     {
@@ -42,6 +49,7 @@ class BarangController extends Controller
             'qty' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
             'exp' => 'required|date|after:today',
+            'filter' => 'required|in:produk,pendukung'
         ]);
 
         $barang = Barang::create([
@@ -52,22 +60,27 @@ class BarangController extends Controller
         ]);
 
         // Tambahkan sebagai produk dengan kode auto
-        $kodeBaru = $this->generateKodeBaru('produk');
+        $kodeBaru = $this->generateKodeBaru($request->filter);
 
-        BarangProduk::create([
-            'barang_id' => $barang->id,
-            'kode' => $kodeBaru,
-        ]);
+        if ($request->filter === 'produk') {
+            BarangProduk::create([
+                'barang_id' => $barang->id,
+                'kode' => $kodeBaru,
+            ]);
+        } else {
+            BarangPendukung::create([
+                'barang_id' => $barang->id,
+                'kode' => $kodeBaru,
+            ]);
+        }
 
-        return redirect()->route('barang.index')->with('success', 'Barang produk berhasil ditambahkan');
+        // return redirect()->route('barang.index')->with('success', 'Barang produk berhasil ditambahkan');
+        // return redirect()->route('barang.index')->with('success', 'Barang ' . $request->filter . ' berhasil ditambahkan');
+        return redirect()->route('barang.index', ['filter' => $request->filter])
+            ->with('success', 'Barang ' . $request->filter . ' berhasil ditambahkan');
+
     }
     
-    public function edit($id)
-    {
-        $barang = Barang::with(['produk', 'pendukung'])->findOrFail($id);
-        return view('operator.barang.edit', compact('barang'));
-    }
-
     public function update(Request $request, $id)
     {
         $barang = Barang::with(['produk', 'pendukung'])->findOrFail($id);

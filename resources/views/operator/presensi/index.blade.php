@@ -33,8 +33,19 @@
     <h3 class="mb-4">Presensi Harian Pekerja</h3>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: '{{ session('success') }}',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        </script>
     @endif
+
 
     {{-- Pilih Kuartal --}}
     <form id="formKuartal" class="mb-3">

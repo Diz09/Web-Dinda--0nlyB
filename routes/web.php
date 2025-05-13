@@ -57,14 +57,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::patch('/operator/barang/{id}/update-qty', [BarangController::class, 'updateQty'])->name('barang.updateQty');
 
-    // route untuk tindak presensi
-    Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
-    Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
-    Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
     
-    Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
-    Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
-
     // route untuk data supplier
     // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
     Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('supplier.index');
@@ -83,6 +76,15 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::delete('/operator/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
     
     Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
+    
+    // route untuk tindak presensi
+    // Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
+    Route::get('/operator/presensi/{kuartal_id}', [PresensiController::class, 'index'])->name('presensi.index');
+    Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
+    Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+    
+    Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
+    Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
     
     // route untuk data ton ikan yang akan diurus pekerja
     Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
@@ -103,10 +105,11 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::resource('transaksi', TransaksiController::class);
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
     Route::get('/operator/transaksi/create', [TransaksiController::class, 'create'])->name('operator.transaksi.create');
-    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('operator.transaksi.store');
+    Route::post('/operator/transaksi', [TransaksiController::class, 'store'])->name('operator.transaksi.store');
     Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('operator.transaksi.edit');
     Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('operator.transaksi.destroy');
     Route::put('/operator/transaksi/{id}', [TransaksiController::class, 'update'])->name('operator.transaksi.update');
+    
 
 // });
 

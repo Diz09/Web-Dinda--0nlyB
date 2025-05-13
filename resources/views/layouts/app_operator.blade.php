@@ -320,7 +320,13 @@
         
         <!-- Kategori: Aktivitas -->
         <div class="sidebar-category">Aktivitas</div>
-        <a href="/operator/presensi" class="sidebar-link">Presensi</a>
+        {{-- <a href="/operator/presensi" class="sidebar-link">Presensi</a> --}}
+        
+        @php
+            $latestKuartalId = \App\Models\Kuartal::max('id');
+        @endphp
+        <a href="{{ route('presensi.index', ['kuartal_id' => $latestKuartalId]) }}" class="sidebar-link">Presensi</a>
+
         <a href="/operator/transaksi" class="sidebar-link">Transaksi</a>
         {{-- <a href="/operator/barang-masuk" class="sidebar-link">Barang Masuk</a>
         <a href="/operator/barang-keluar" class="sidebar-link">Barang Keluar</a> --}}
@@ -341,5 +347,13 @@
     </div>
 </body>
 
+<!-- Tambahkan di dalam tag <head> untuk CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Tambahkan di bagian bawah sebelum penutup tag </body> untuk JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> Sweetalert --}}
+{{-- <script src="{{ asset('js/barang.js') }}"></script> --}}
 
 </html>

@@ -8,12 +8,13 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    {{-- Pilih Kuartal --}}
     <form id="formKuartal" class="mb-3">
         <label for="kuartal_id">Pilih Kuartal</label>
         <div class="input-group">
             <select name="kuartal_id" id="kuartal_id" class="form-control">
                 @foreach($kuartals as $k)
-                    <option value="{{ $k->id }}">
+                    <option value="{{ $k->id }}" {{ $selectedKuartal->id == $k->id ? 'selected' : '' }}>
                         {{ $k->nama_kuartal }}
                     </option>
                 @endforeach
@@ -21,12 +22,20 @@
             <button type="button" class="btn btn-outline-primary" id="btnLihatKuartal">Lihat</button>
         </div>
     </form>
-    
+
+    {{-- Script: Pilih Kuartal Redirect ke Presensi --}}
     <script>
+        document.getElementById('kuartal_id').addEventListener('change', function () {
+            const id = this.value;
+            if (id) {
+                window.location.href = `/operator/presensi/${id}`;
+            }
+        });
+
         document.getElementById('btnLihatKuartal').addEventListener('click', function () {
             const select = document.getElementById('kuartal_id');
             const id = select.value;
-    
+
             if (id) {
                 window.location.href = `/operator/gaji/${id}`;
             } else {
@@ -48,16 +57,19 @@
         
         <div class="mb-3">
             <label for="jumlah_ton">Jumlah Ton Ikan (Kuartal {{ $selectedKuartal->nama_kuartal }})</label>
-            <input type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $jumlahTonHariIni) }}" required>
+            <input type="number" name="jumlah_ton" class="form-control"
+                value="{{ old('jumlah_ton', $selectedKuartal->tonIkan->jumlah_ton ?? '') }}" required>
         </div>
         
         <div class="mb-3">
             <label for="harga_ikan_per_ton">Harga Ikan Per Ton (Rp)</label>
-            <input type="number" name="harga_ikan_per_ton" class="form-control" value="{{ old('harga_ikan_per_ton', $hargaIkanPerTon) }}" required>
+            <input type="number" name="harga_ikan_per_ton" class="form-control"
+                value="{{ old('harga_ikan_per_ton', $selectedKuartal->tonIkan->harga_ikan_per_ton ?? 1000000) }}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan Data Ton Ikan</button>
     </form>
+
 
 
     {{-- Tabel Presensi --}}

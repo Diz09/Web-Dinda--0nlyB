@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 use App\Models\Transaksi;
 use App\Models\Barang;
-use App\Models\BarangDasar;
-use App\Models\BarangMentah;
 use App\Models\BarangProduk;
+use App\Models\BarangPendukung;
 use App\Models\Supplier;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
@@ -16,7 +17,7 @@ class TransaksiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Transaksi::with(['barang.mentah', 'barang.dasar', 'barang.produk', 'supplier', 'pemasukan', 'pengeluaran']);
+        $query = Transaksi::with(['barang.produk', 'barang.pendukung', 'supplier', 'pemasukan', 'pengeluaran']);
 
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('waktu_transaksi', [
@@ -38,7 +39,7 @@ class TransaksiController extends Controller
         $totalSebelumnya = 0;
 
         $data = $transaksis->map(function ($trx) use (&$totalSebelumnya) {
-            $kodeBarang = $trx->barang->mentah->kode ?? $trx->barang->dasar->kode ?? $trx->barang->produk->kode ?? '-';
+            $kodeBarang = $trx->barang->produk->kode ?? $trx->barang->pendukung->kode ?? '-';
             $masuk = $trx->pemasukan_id ? $trx->jumlahRp : 0;
             $keluar = $trx->pengeluaran_id ? $trx->jumlahRp : 0;
 
@@ -65,31 +66,15 @@ class TransaksiController extends Controller
     public function create(Request $request)
     {
         $kategori = $request->input('kategori', 'pemasukan');
-        $tipe = $request->input('tipe_barang', 'mentah');
+        $tipe = $kategori === 'pengeluaran' ? 'pendukung' : 'produk'; // otomatis
 
-        $suppliers = Supplier::all();
+        $suppliers = Supplier::with(['pemasok', 'konsumen'])->get(); // pastikan relasi di-load
         $barangs = collect();
 
         if ($kategori === 'pemasukan') {
-            $barangs = Barang::whereHas('produk')
-                ->with(['produk' => function ($query) {
-                    $query->select('id', 'barang_id', 'kode');
-                }])
-                ->get();
+            $barangs = Barang::whereHas('produk')->with('produk')->get();
         } else {
-            if ($tipe === 'dasar') {
-                $barangs = Barang::whereHas('dasar')
-                    ->with(['dasar' => function ($query) {
-                        $query->select('id', 'barang_id', 'kode');
-                    }])
-                    ->get();
-            } else {
-                $barangs = Barang::whereHas('mentah')
-                    ->with(['mentah' => function ($query) {
-                        $query->select('id', 'barang_id', 'kode');
-                    }])
-                    ->get();
-            }
+            $barangs = Barang::whereHas('pendukung')->with('pendukung')->get();
         }
 
         return view('operator.transaksi.create', compact('barangs', 'suppliers', 'kategori', 'tipe'));
@@ -99,87 +84,88 @@ class TransaksiController extends Controller
     {
         $request->validate([
             'kategori' => 'required|in:pemasukan,pengeluaran',
+            'barang_id' => 'required|exists:barangs,id',
             'supplier_id' => 'required|exists:suppliers,id',
-            'qty' => 'required|numeric|min:1',  // qty histori dan stok
-            'jumlahRp' => 'nullable|numeric|min:1',
-            'waktu_transaksi' => 'nullable|date',
-            'nama_barang' => 'required|string|max:255',
-            'tipe_barang' => 'nullable|in:mentah,dasar',
+            'qtyHistori' => 'required|numeric|min:1',
+            'jumlahRp' => 'nullable|numeric|min:0',
+            'satuan' => 'required|in:ton,kg,g,liter,paket',
         ]);
 
-        $barangNama = trim(preg_replace('/\s*\(.*?\)$/', '', $request->nama_barang));
-        $barang = Barang::where('nama_barang', $barangNama)->first();
+        DB::beginTransaction();
+        try {
+            $barang = Barang::findOrFail($request->barang_id);
+            $kategori = $request->kategori;
+            $qty = $request->qtyHistori;
+            $jumlahRp = $request->jumlahRp;
+            $satuan = $request->satuan;
+            $waktu = Carbon::now();
 
-        if (!$barang) {
-            // Barang baru
-            $barang = Barang::create([
-                'nama_barang' => $barangNama,
-                'qty' => 0,
-                'exp' => null,
-                'harga' => 0,
+            // Konversi satuan ke KG
+            $qty_kg = match($satuan) {
+                'ton' => $qty * 1000,
+                'kg' => $qty,
+                'g' => $qty / 1000,
+                default => $qty // liter dan paket tidak dikonversi
+            };
+
+            // Variabel untuk ID
+            $pemasukan_id = null;
+            $pengeluaran_id = null;
+
+            if ($kategori === 'pemasukan') {
+                // Buat kode pemasukan
+                $last = Pemasukan::latest('id')->first();
+                $nextNumber = $last ? $last->id + 1 : 1;
+                $kode = 'MSK' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+                $pemasukan = Pemasukan::create(['kode' => $kode]);
+                $pemasukan_id = $pemasukan->id;
+
+                // Barang dikurangi
+                $barang->qty -= $qty;
+                $barang->save();
+
+                // Hitung jumlahRp jika kosong
+                $jumlahRp = $jumlahRp ?: ($barang->harga * $qty);
+
+            } elseif ($kategori === 'pengeluaran') {
+                // Buat kode pengeluaran
+                $last = Pengeluaran::latest('id')->first();
+                $nextNumber = $last ? $last->id + 1 : 1;
+                $kode = 'KLR' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+                $pengeluaran = Pengeluaran::create(['kode' => $kode]);
+                $pengeluaran_id = $pengeluaran->id;
+
+                // Barang dikurangi
+                $barang->qty += $qty;
+                $barang->save();
+
+                // Hitung harga satuan untuk update barang
+                $harga_satuan = $qty_kg > 0 ? $jumlahRp / $qty_kg : 0;
+                $barang->harga = $harga_satuan;
+                $barang->save();
+            }
+
+            // Simpan transaksi
+            Transaksi::create([
+                'kategori' => $kategori,
+                'barang_id' => $barang->id,
+                'supplier_id' => $request->supplier_id,
+                'pemasukan_id' => $pemasukan_id,
+                'pengeluaran_id' => $pengeluaran_id,
+                'qtyHistori' => $qty,
+                'jumlahRp' => $jumlahRp,
+                'satuan' => $satuan,
+                'waktu_transaksi' => $waktu,
             ]);
 
-            // Relasi barang mentah/dasar jika kategori pengeluaran
-            if ($request->kategori === 'pengeluaran') {
-                if ($request->tipe_barang === 'mentah') {
-                    BarangMentah::create([
-                        'barang_id' => $barang->id,
-                        'kode' => 'MNT' . str_pad(BarangMentah::count() + 1, 3, '0', STR_PAD_LEFT),
-                    ]);
-                } elseif ($request->tipe_barang === 'dasar') {
-                    BarangDasar::create([
-                        'barang_id' => $barang->id,
-                        'kode' => 'DSR' . str_pad(BarangDasar::count() + 1, 3, '0', STR_PAD_LEFT),
-                    ]);
-                }
-            }
+            DB::commit();
+            return redirect()->route('operator.transaksi.index')->with('success', 'Transaksi berhasil disimpan.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan transaksi: ' . $th->getMessage()]);
         }
-
-        // ✅ Logika stok TERBALIK karena dilihat dari sisi transaksi
-        if ($request->kategori === 'pengeluaran') {
-            // uang keluar -> beli barang -> stok barang bertambah
-            $barang->qty += $request->qty;
-        } else {
-            // uang masuk -> barang dijual/terpakai -> stok barang berkurang
-            if ($barang->qty < $request->qty) {
-                return back()->withErrors(['qty' => 'Stok barang tidak mencukupi untuk pemasukan.']);
-            }
-            $barang->qty -= $request->qty;
-
-            // opsional update harga
-            if ($request->jumlahRp) {
-                $barang->harga = $request->jumlahRp;
-            }
-        }
-
-        $barang->save();
-
-        // Buat pemasukan/pengeluaran
-        if ($request->kategori === 'pemasukan') {
-            $kode = 'MSK' . str_pad(Pemasukan::count() + 1, 3, '0', STR_PAD_LEFT);
-            $pemasukan = Pemasukan::create(['kode' => $kode]);
-            $pemasukanId = $pemasukan->id;
-            $pengeluaranId = null;
-        } else {
-            $kode = 'KLR' . str_pad(Pengeluaran::count() + 1, 3, '0', STR_PAD_LEFT);
-            $pengeluaran = Pengeluaran::create(['kode' => $kode]);
-            $pengeluaranId = $pengeluaran->id;
-            $pemasukanId = null;
-        }
-
-        // ✅ Tambahkan qtyHistori ke dalam transaksi
-        Transaksi::create([
-            'barang_id' => $barang->id,
-            'supplier_id' => $request->supplier_id,
-            'pemasukan_id' => $pemasukanId,
-            'pengeluaran_id' => $pengeluaranId,
-            'jumlahRp' => $request->jumlahRp ?? 0,
-            'qtyHistori' => $request->qty, // <- ini ditambahkan
-            'waktu_transaksi' => $request->waktu_transaksi ?? now(),
-        ]);
-
-        return redirect()->route('operator.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
     }
+
 
     public function edit($id)
     {
@@ -199,7 +185,7 @@ class TransaksiController extends Controller
             'jumlahRp' => 'nullable|numeric|min:1',
             'waktu_transaksi' => 'nullable|date',
             'nama_barang' => 'required|string|max:255',
-            'tipe_barang' => 'nullable|in:mentah,dasar',
+            'tipe_barang' => 'nullable|in:pendukung',
         ]);
 
         $transaksi = Transaksi::findOrFail($id);
@@ -217,15 +203,10 @@ class TransaksiController extends Controller
             ]);
 
             if ($request->kategori === 'pengeluaran') {
-                if ($request->tipe_barang === 'mentah') {
-                    BarangMentah::create([
+                if ($request->tipe_barang === 'pendukung') {
+                    BarangPendukung::create([
                         'barang_id' => $barang->id,
-                        'kode' => 'MNT' . str_pad(BarangMentah::count() + 1, 3, '0', STR_PAD_LEFT),
-                    ]);
-                } elseif ($request->tipe_barang === 'dasar') {
-                    BarangDasar::create([
-                        'barang_id' => $barang->id,
-                        'kode' => 'DSR' . str_pad(BarangDasar::count() + 1, 3, '0', STR_PAD_LEFT),
+                        'kode' => 'MNT' . str_pad(BarangPendukung::count() + 1, 3, '0', STR_PAD_LEFT),
                     ]);
                 }
             }

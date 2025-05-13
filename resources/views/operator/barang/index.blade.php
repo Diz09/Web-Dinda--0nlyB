@@ -1,5 +1,7 @@
 @extends('layouts.app_operator')
 
+
+
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-4">
@@ -15,10 +17,12 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- <a href="{{ route('barang.create') }}" class="btn btn-sm btn-primary mb-3">Tambah Produk</a> --}}
+    {{-- Tombol untuk membuka modal --}}
     @if(request('filter') == 'produk')
-        <a href="{{ route('barang.create') }}" class="btn btn-sm btn-primary mb-3">Tambah Produk</a>
+        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Produk</button>
     @endif
+
+    @include('operator.barang.create')
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -66,11 +70,20 @@
                                 </form>
                             </td>
                             <td>
-                                <a href="{{ route('barang.edit', $barang->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline-block;">
+                                <!-- Tombol untuk membuka modal edit -->
+                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $barang->id }}">Edit</button>
+                                <!-- Modal Edit Barang -->
+                                @include('operator.barang.edit', ['barang' => $barang])
+                                {{-- Hapus --}}
+                                {{-- <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
+                                </form> --}}
+                                <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" class="formDeleteBarang" data-id="{{ $barang->id }}" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
                             </td>                            
                         </tr>
@@ -101,4 +114,8 @@
     </div>
     
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {{-- Sweetalert--}}
+<script src="{{ asset('js/barang.js') }}"></script>
+
 @endsection

@@ -21,10 +21,11 @@ class BarangController extends Controller
                 return $barang->{$filter};
             });
         }
-
+        
         // $barangs = $query->get();
+        $newKode = $this->generateKodeBaru('produk');
 
-        return view('operator.barang.index', compact('barangs', 'filter'));
+        return view('operator.barang.index', compact('barangs', 'filter', 'newKode'));
     }
 
     public function create()
@@ -73,7 +74,7 @@ class BarangController extends Controller
 
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            'kategori' => 'required|in:produk,mentah,dasar',
+            'kategori' => 'required|in:produk,pendukung',
             'exp' => 'nullable|date',
             'harga' => 'required|numeric|min:0',
         ]);
@@ -96,10 +97,8 @@ class BarangController extends Controller
         $barang->save();
 
         // Hapus relasi lama
-        if ($kategori_lama === 'mentah' && $barang->mentah) {
-            $barang->mentah->delete();
-        } elseif ($kategori_lama === 'dasar' && $barang->dasar) {
-            $barang->dasar->delete();
+        if ($kategori_lama === 'pendukung' && $barang->pendukung) {
+            $barang->pendukung->delete();
         } elseif ($kategori_lama === 'produk' && $barang->produk) {
             $barang->produk->delete();
         }
@@ -143,7 +142,7 @@ class BarangController extends Controller
         if ($barang->produk) {
             $barang->produk->delete();
         } elseif ($barang->pendukung) {
-            $barang->pendukung>delete();
+            $barang->pendukung->delete();
         }
 
         $barang->delete();

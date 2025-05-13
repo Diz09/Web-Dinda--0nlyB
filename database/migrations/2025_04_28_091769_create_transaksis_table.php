@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->foreignId('pengeluaran_id')->nullable()->constrained('pengeluarans')->onDelete('cascade');
             $table->foreignId('pemasukan_id')->nullable()->constrained('pemasukans')->onDelete('cascade');
             $table->integer('jumlahRp');
+            $table->integer('qtyHistori')->default(0);
+            $table->string('satuan')->default('kg');
             $table->dateTime('waktu_transaksi');
             $table->timestamps();
         });

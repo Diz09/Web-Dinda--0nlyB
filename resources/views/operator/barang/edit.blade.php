@@ -1,5 +1,5 @@
 {{-- @extends('layouts.app_operator') --}}
-@extends('layouts.app_operator')
+{{-- @extends('layouts.app_operator')
 
 @section('content')
 <div class="container mt-4">
@@ -47,44 +47,56 @@
         <button type="submit" class="btn btn-primary">Simpan</button>
         <a href="{{ route('barang.index') }}" class="btn btn-secondary">Kembali</a>
     </form>
+</div> --}}
+
+<div class="modal fade" id="editModal{{ $barang->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $barang->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ $barang->id }}">Edit Barang</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form class="formEditBarang" method="POST" action="{{ route('barang.update', $barang->id) }}">
+            @csrf
+            @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Barang</label>
+                        <input type="text" class="form-control" name="nama_barang" value="{{ old('nama_barang', $barang->nama_barang) }}" required>
+                    </div>
+
+                    @php
+                        $kategori = 'lainnya';
+                        if ($barang->produk) $kategori = 'produk';
+                        elseif ($barang->pendukung) $kategori = 'pendukung'; // Sesuaikan jika hanya ada pendukung
+                    @endphp
+
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="kategori" class="form-select kategori-select" required>
+                            <option value="pendukung" {{ $kategori == 'pendukung' ? 'selected' : '' }}>Pendukung</option>
+                            <option value="produk" {{ $kategori == 'produk' ? 'selected' : '' }}>Produk</option>
+                        </select>
+                        <input type="hidden" class="kategori-lama" value="{{ $kategori }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Expired</label>
+                        <input type="date" class="form-control" name="exp" value="{{ old('exp', $barang->exp ? date('Y-m-d', strtotime($barang->exp)) : '') }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Harga (Rp)</label>
+                        <input type="number" class="form-control" name="harga" value="{{ old('harga', $barang->harga) }}" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-{{-- SweetAlert2 CDN --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-document.getElementById('formEditBarang').addEventListener('submit', function(e) {
-    e.preventDefault(); // Tahan submit dulu
-
-    const form = this; // <- tambahkan ini
-
-    const kategoriLama = '{{ $kategori }}';
-    const kategoriBaru = document.getElementById('kategori').value;
-
-    const melibatkanProduk = (kategoriLama === 'produk' || kategoriBaru === 'produk');
-
-    if (melibatkanProduk && kategoriLama !== kategoriBaru) {
-        Swal.fire({
-            title: 'Peringatan!',
-            text: 'Anda akan mengubah kategori yang melibatkan Produk. Yakin ingin melanjutkan?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Lanjutkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let inputConfirm = document.createElement("input");
-                inputConfirm.type = "hidden";
-                inputConfirm.name = "confirm_produk";
-                inputConfirm.value = "1";
-                form.appendChild(inputConfirm);
-                form.submit();
-            }
-        });
-    } else {
-        form.submit(); // Tidak melibatkan produk, langsung submit
-    }
-});
-
-</script>
-@endsection

@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class PresensiController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $kuartal_id = null)
     {
         $tanggal = now()->toDateString();
         $kuartals = Kuartal::orderBy('id', 'desc')->get();
@@ -25,9 +25,9 @@ class PresensiController extends Controller
             return redirect()->route('presensi.index', ['kuartal_id' => $selectedKuartal->id]);
         }
 
-        $selectedKuartalId = $request->get('kuartal_id');
-        $selectedKuartal = $selectedKuartalId
-            ? Kuartal::with('tonIkan')->find($selectedKuartalId)
+        // Tombol pilih kuartal
+        $selectedKuartal = $kuartal_id
+            ? Kuartal::with('tonIkan')->find($kuartal_id)
             : Kuartal::latest()->first();
 
         if (!$selectedKuartal) {

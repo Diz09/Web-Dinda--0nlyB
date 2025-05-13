@@ -1,119 +1,71 @@
 @extends('layouts.app_operator')
 
 @section('content')
-<div class="container mt-4">
-    <h3 class="mb-4 d-flex justify-between items-center">
-        <span>Tambah Transaksi</span>
-        <a href="{{ route('operator.transaksi.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
-    </h3>
+    <h3>Buat Transaksi</h3>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    {{-- Form untuk memilih kategori transaksi --}}
+    <form method="GET" action="{{ route('operator.transaksi.create') }}">
+        <label for="kategori">Kategori Transaksi</label>
+        <select name="kategori" id="kategori" onchange="this.form.submit()">
+            <option value="pemasukan" {{ $kategori == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+            <option value="pengeluaran" {{ $kategori == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+        </select>
+    </form>
 
-    {{-- Form dropdown kategori dan tipe_barang --}}
-    <div class="mb-3 d-flex gap-2 align-items-end">
-        <div>
-            <label for="kategori" class="form-label">Kategori Transaksi</label>
-            <select name="kategori" id="kategori" class="form-control">
-                <option value="pemasukan" {{ $kategori === 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
-                <option value="pengeluaran" {{ $kategori === 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
-            </select>
-        </div>
+    <br>
 
-        @if ($kategori === 'pengeluaran')
-        <div>
-            <label for="tipe_barang" class="form-label">Tipe Barang</label>
-            <select name="tipe_barang" id="tipe_barang" class="form-control">
-                <option value="mentah" {{ $tipe === 'mentah' ? 'selected' : '' }}>Mentah</option>
-                <option value="dasar" {{ $tipe === 'dasar' ? 'selected' : '' }}>Dasar</option>
-            </select>
-        </div>
-        @endif
-    </div>
-
-    {{-- Form utama transaksi --}}
+    {{-- Form untuk menyimpan transaksi --}}
     <form method="POST" action="{{ route('operator.transaksi.store') }}">
         @csrf
 
-        {{-- Input autocomplete nama barang --}}
-        <div class="mb-3">
-            <label class="form-label">Pilih / Tambah Barang</label>
-            <input list="daftar-barang" name="nama_barang" id="nama_barang" class="form-control" value="{{ old('nama_barang') }}" required>
-            <datalist id="daftar-barang">
-                @foreach ($barangs as $barang)
-                    <option data-id="{{ $barang->id }}" value="{{ $barang->nama_barang }}"></option>
-                @endforeach
-            </datalist>
-            <input type="hidden" name="barang_id" id="barang_id" value="{{ old('barang_id') }}">
-        </div>
-
-        @if ($kategori === 'pengeluaran')
-            <input type="hidden" name="tipe_barang" value="{{ $tipe }}">
-        @endif
+        {{-- Hidden input agar tetap membawa kategori ke POST --}}
         <input type="hidden" name="kategori" value="{{ $kategori }}">
 
-        <div class="mb-3">
-            <label class="form-label">Supplier</label>
-            <select name="supplier_id" class="form-control">
-                <option value="">-- Pilih Supplier --</option>
-                @foreach($suppliers as $supplier)
-                    <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
-                        {{ $supplier->nama }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        {{-- Pilih Barang --}}
+        <label for="barang_id">Pilih Barang</label>
+        <select name="barang_id" id="barang_id" required>
+            <option value="">-- Pilih Barang --</option>
+            @foreach ($barangs as $barang)
+                <option value="{{ $barang->id }}" data-harga="{{ $barang->harga }}">{{ $barang->nama_barang }}</option>
+            @endforeach
+        </select>
 
-        <div class="form-group">
-            <label for="qty">Qty</label>
-            <input type="number" name="qty" class="form-control" required min="1">
-        </div>        
+        {{-- Pilih Supplier --}}
+        <label for="supplier_id">Pilih Supplier</label>
+        <select name="supplier_id" id="supplier_id" required>
+            <option value="">-- Pilih Supplier --</option>
+            @foreach ($suppliers as $supplier)
+                {{-- Filter berdasarkan kategori --}}
+                @if(($kategori === 'pemasukan' && $supplier->konsumen) || ($kategori === 'pengeluaran' && $supplier->pemasok))
+                    <option value="{{ $supplier->id }}">{{ $supplier->nama }}</option>
+                @endif
+            @endforeach
+        </select>
 
-        <div class="mb-3">
-            <label class="form-label">Jumlah (Rp)</label>
-            <input type="number" name="jumlahRp" class="form-control" value="{{ old('jumlahRp') }}">
-        </div>
+        {{-- Jumlah (Qty) --}}
+        <label for="qtyHistori">Jumlah (Qty)</label>
+        <input type="number" name="qtyHistori" id="qtyHistori" required>
 
-        <div class="mb-3">
-            <label class="form-label">Waktu Transaksi</label>
-            <input type="datetime-local" name="waktu_transaksi" class="form-control" value="{{ old('waktu_transaksi', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}">
-        </div>
+        {{-- Satuan --}}
+        <label for="satuan">Satuan</label>
+        <select name="satuan" id="satuan" required>
+            <option value="">-- Pilih Satuan --</option>
+            <option value="ton">Ton</option>
+            <option value="kg">Kg</option>
+            <option value="g">Gram</option>
+        </select>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        {{-- Jumlah Harga (Rp) --}}
+        <label for="jumlahRp">Jumlah Harga (Rp)</label>
+        <input type="number" name="jumlahRp" id="jumlahRp" {{ $kategori == 'pemasukan' ? '' : 'required' }}>
+
+        {{-- Tampilkan waktu transaksi --}}
+        <label for="waktu">Waktu Transaksi</label>
+        <input id='waktu' type="text" readonly value="{{ \Carbon\Carbon::now()->format('d F Y H:i') }}">
+
+        <br><br>
+        <button type="submit">Simpan Transaksi</button>
     </form>
-</div>
 
-{{-- JavaScript untuk reload otomatis --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const kategoriSelect = document.getElementById('kategori');
-        const tipeSelect = document.getElementById('tipe_barang');
-
-        function reloadWithParams() {
-            const kategori = kategoriSelect.value;
-            const tipe = tipeSelect?.value || '';
-            const params = new URLSearchParams();
-
-            if (kategori) params.set('kategori', kategori);
-            if (kategori === 'pengeluaran' && tipe) {
-                params.set('tipe_barang', tipe);
-            }
-
-            window.location.href = `{{ route('operator.transaksi.create') }}?${params.toString()}`;
-        }
-
-        kategoriSelect.addEventListener('change', reloadWithParams);
-        if (tipeSelect) {
-            tipeSelect.addEventListener('change', reloadWithParams);
-        }
-    });
-</script>
-
+    <script src="{{ asset('js/transaksi.js') }}"></script>
 @endsection

@@ -34,7 +34,7 @@
                         <th>No</th>
                         <th>Kode</th>
                         <th>Nama Barang</th>
-                        <th>Kategori</th>
+                        {{-- <th>Kategori</th> --}}
                         {{-- <th>Qty</th> --}}
                         <th>Exp</th>
                         <th>Harga</th>
@@ -59,7 +59,7 @@
                             <td>{{ $i + 1 }}</td>
                             <td>{{ $kode }}</td>
                             <td>{{ $barang->nama_barang }}</td>
-                            <td>{{ $kategori }}</td>
+                            {{-- <td>{{ $kategori }}</td> --}}
                             {{-- <td>{{ $barang->qty ?? '-' }}</td> --}}
                             <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
                             <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>

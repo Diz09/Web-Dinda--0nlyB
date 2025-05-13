@@ -30,10 +30,22 @@
                         <label for="harga" class="form-label">Harga (Rp)</label>
                         <input type="number" class="form-control" name="harga" value="{{ old('harga') }}" min="0" required>
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="exp" class="form-label">Expired</label>
                         <input type="date" class="form-control" name="exp" value="{{ old('exp', $defaultExp) }}" required>
-                    </div>
+                    </div> --}}
+                    @if ($filter === 'produk')
+                        <div class="mb-3">
+                            <label for="exp" class="form-label">Expired</label>
+                            <input type="date" class="form-control" name="exp" value="{{ old('exp', $defaultExp) }}" required>
+                        </div>
+                    @else
+                        <div class="mb-3">
+                            <label for="exp" class="form-label">Expired</label>
+                            <input type="date" class="form-control" name="exp"  required>
+                        </div>
+                    @endif
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>

@@ -45,11 +45,11 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'filter' => 'required|in:produk,pendukung',
             'nama_barang' => 'required|string|max:255',
             'qty' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
-            'exp' => 'required|date|after:today',
-            'filter' => 'required|in:produk,pendukung'
+            'exp' => $request->filter === 'produk' ? 'required|date|after:today' : 'nullable|date',
         ]);
 
         $barang = Barang::create([

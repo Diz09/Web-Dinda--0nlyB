@@ -18,6 +18,10 @@
             width: 50%;
         }
 
+        .modal-ct{
+            align-content: center;
+        }
+
         .sidebar {
             width: 230px;
             background-color: #2c3e50;

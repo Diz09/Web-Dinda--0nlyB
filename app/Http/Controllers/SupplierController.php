@@ -12,8 +12,11 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::with(['pemasok', 'konsumen'])->get();
+        // $pemasoks = Pemasok::all();
+        // $konsumens = Konsumen::all();
         
         return view('operator.supplier.index', compact('suppliers'));
+        // return view('operator.supplier.index', compact('suppliers', 'pemasoks', 'konsumens'));
     }
     public function create()
     {
@@ -60,14 +63,14 @@ class SupplierController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        $supplier = Supplier::findOrFail($id);
-        $pemasoks = Pemasok::all();
-        $konsumens = Konsumen::all();
+    // public function edit($id)
+    // {
+    //     $supplier = Supplier::findOrFail($id);
+    //     $pemasoks = Pemasok::all();
+    //     $konsumens = Konsumen::all();
 
-        return view('operator.supplier.edit', compact('supplier', 'pemasoks', 'konsumens'));
-    }
+    //     return view('operator.supplier.edit', compact('supplier', 'pemasoks', 'konsumens'));
+    // }
 
     public function update(Request $request, $id)
     {

@@ -1,7 +1,5 @@
 @extends('layouts.app_operator')
 
-
-
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-4">
@@ -12,11 +10,6 @@
         @endif
     </h3>
     
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
     {{-- Tombol untuk membuka modal --}}
     @if(request('filter') == 'produk' || request('filter') == 'pendukung')
         <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
@@ -112,7 +105,30 @@
     
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {{-- Sweetalert--}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // SweetAlert sukses
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: @json(session('success')),
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // SweetAlert error validasi
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+        });
+    @endif
+</script>
+
 <script src="{{ asset('js/barang.js') }}"></script>
 
 @endsection

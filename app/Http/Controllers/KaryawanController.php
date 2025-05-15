@@ -13,11 +13,6 @@ class KaryawanController extends Controller
         return view('operator.karyawan.index', compact('karyawans'));
     }
 
-    public function create()
-    {
-        return view('operator.karyawan.create');
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -33,12 +28,6 @@ class KaryawanController extends Controller
         ]);
 
         return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
-    }
-
-    public function edit($id)
-    {
-        $karyawan = Karyawan::findOrFail($id);
-        return view('operator.karyawan.edit', compact('karyawan'));
     }
 
     public function update(Request $request, $id)

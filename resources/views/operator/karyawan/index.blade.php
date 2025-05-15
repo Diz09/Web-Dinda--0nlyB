@@ -4,11 +4,12 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Karyawan</h3>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <button class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
+        Tambah Karyawan
+    </button>
 
-    <a href="{{ route('karyawan.create') }}" class="btn btn-primary mb-3">+ Tambah Karyawan</a>
+    {{-- Modal Create --}}
+    @include('operator.karyawan.create')
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -23,27 +24,52 @@
         <tbody>
             @foreach($karyawans as $i => $k)
             <tr>
-                <td>{{ $i+1 }}</td>
+                <td>{{ $i + 1 }}</td>
                 <td>{{ $k->nama }}</td>
                 <td>{{ $k->jenis_kelamin }}</td>
+                <td>{{ $k->no_telepon ?? '-' }}</td>
                 <td>
-                    @if($k->no_telepon)
-                        {{ $k->no_telepon }}
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>
-                    <a href="{{ route('karyawan.edit', $k->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('karyawan.destroy', $k->id) }}" method="POST" style="display:inline;">
+                    {{-- Tombol Edit --}}
+                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $k->id }}">
+                        Edit
+                    </button>
+
+                    {{-- Modal Edit --}}
+                    @include('operator.karyawan.edit', ['karyawan' => $k])
+
+                    {{-- Tombol Hapus --}}
+                    <form action="{{ route('karyawan.destroy', $k->id) }}" method="POST" class="d-inline formDelete">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus karyawan ini?')">Hapus</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                     </form>
                 </td>
             </tr>
             @endforeach
         </tbody>
-    </table>    
+    </table>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // SweetAlert sukses
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: @json(session('success')),
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // SweetAlert error validasi
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+        });
+    @endif
+</script>
+<script src="{{ asset('js/karyawan.js') }}"></script>
 @endsection

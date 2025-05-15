@@ -71,6 +71,7 @@
 
 <!-- SweetAlert & Script -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   // SweetAlert untuk session
   @if(session('success'))
@@ -80,9 +81,6 @@
       text: '{{ session('success') }}',
       showConfirmButton: false,
       timer: 2000
-    });
-      timer: 2000,
-      showConfirmButton: false
     });
   @endif
 
@@ -94,5 +92,7 @@
     });
   @endif
 </script>
+
 <script src="{{ asset('js/supplier.js') }}"></script>
+
 @endsection

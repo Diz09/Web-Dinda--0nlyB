@@ -58,7 +58,7 @@
             </div>
 
             <!-- Tabel Transaksi -->
-            {{-- <div class="box-custom">
+            <div class="box-custom">
                 <h3>Aktivitas Transaksi</h3>
                 <table class="w-full text-sm bg-white rounded shadow">
                     <thead class="bg-blue-500 text-white">
@@ -83,7 +83,7 @@
                     </tbody>
                 </table>
                 <a href="{{ route('operator.transaksi.index') }}" class="info-all text-blue-500 mt-2 inline-block">Selengkapnya</a>
-            </div> --}}
+            </div>
         </div>
 
     </div>

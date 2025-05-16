@@ -3,30 +3,16 @@
 @section('content')
 <div class="container mt-4">
 
-    <h3 class="mb-4">Detail Gaji {{ $kuartal->nama_kuartal }}</h3>
-    <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-4">Detail Gaji {{ $kuartal->nama_kuartal }}</h3>
+        <div class="btn-group" role="group" aria-label="Tombol Edit dan Kembali">
+            <button type="button" class="btn btn-warning rounded-start rounded-end-0" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-end rounded-start-0">Kembali</a>
+        </div>
+    </div>
     
-    <form method="POST" action="{{ route('presensi.tonikan.store') }}" class="mb-4">
-        @csrf
-        <input type="hidden" name="kuartal_id" value="{{ $kuartal }}">
-        
-        <div class="mb-3">
-            <label for="jumlah_ton">Jumlah Ton Ikan (ton)</label>
-            <input type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $jumlahTonHariIni) }}" required>
-        </div>
-        
-        <div class="mb-3">
-            <label for="harga_ikan_per_ton">Harga Ikan Per Ton (Rp)</label>
-            <input type="number" name="harga_ikan_per_ton" class="form-control" value="{{ old('harga_ikan_per_ton', $hargaIkanPerTon) }}" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Simpan Data Ton Ikan</button>
-    </form>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+    @include('operator.gaji.modal-edit')
+    
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
@@ -75,4 +61,27 @@
         </table>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // SweetAlert sukses
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: @json(session('success')),
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // SweetAlert error validasi
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+        });
+    @endif
+</script>
+{{-- <script src="{{ asset('js/karyawan.js') }}"></script> --}}
 @endsection

@@ -2,51 +2,12 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
 
-{{-- <script>
-    @if (session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '{{ session("success") }}',
-            timer: 5000,
-            timerProgressBar: true,
-            confirmButtonText: 'Oke',
-        });
-    @elseif (session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: '{{ session("error") }}',
-            timer: 5000,
-            timerProgressBar: true,
-            confirmButtonText: 'Oke',
-        });
-    @endif
-</script> --}}
-
-
-
 @extends('layouts.app_operator')
 
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-4">Presensi Harian Pekerja</h3>
-
-    @if(session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: '{{ session('success') }}',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            });
-        </script>
-    @endif
-
-
+    
     {{-- Pilih Kuartal --}}
     <form id="formKuartal" class="mb-3">
         <label for="kuartal_id">Pilih Kuartal</label>
@@ -144,9 +105,28 @@
         </tbody>
     </table>
 </div>
-
-<!-- Tambahkan ini di dalam <head> atau sebelum </body> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // SweetAlert sukses
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: @json(session('success')),
+            showConfirmButton: false,
+            timer: 2000
+        });
+    @endif
+
+    // SweetAlert error validasi
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+        });
+    @endif
+</script>
 
 <script src="{{ asset('js/presensi.js') }}"></script>
 @endsection

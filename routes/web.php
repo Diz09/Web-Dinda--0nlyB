@@ -82,15 +82,18 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/operator/presensi/{kuartal_id}', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+
+    Route::post('/operator/gaji/{kuartal_id}', [PresensiController::class, 'store'])->name('presensi.gaji.store');
     
     Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
     Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
     
     // route untuk data ton ikan yang akan diurus pekerja
-    Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
-    Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
+    // Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
+    // Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
     
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
+    // Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
     // route untuk data gaji per kuartal
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
@@ -110,6 +113,16 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('operator.transaksi.destroy');
     Route::put('/operator/transaksi/{id}', [TransaksiController::class, 'update'])->name('operator.transaksi.update');
     
+    
+    Route::get('/operator/get-barang', function (Request $request) {    // Mengambil kategori dari request
+        $kategori = $request->input('kategori', 'pemasukan');
+        $tipe = $kategori === 'pengeluaran' ? 'pendukung' : 'produk';
+
+        $barangs = Barang::with($tipe)->whereHas($tipe)->get();
+
+        return response()->json($barangs);
+    });
+
 
 // });
 

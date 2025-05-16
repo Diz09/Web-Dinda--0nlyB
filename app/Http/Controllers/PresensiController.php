@@ -123,6 +123,6 @@ class PresensiController extends Controller
             'harga_ikan_per_ton' => $request->harga_ikan_per_ton],
         );
 
-        return redirect()->route('presensi.index', ['kuartal_id' => $request->kuartal_id])->with('success', 'Data ton ikan berhasil disimpan.');
+        return redirect()->back()->with('success', 'Data ton ikan berhasil disimpan.');
     }
 }

@@ -3,11 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Kuartal Gaji</h3>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+    
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">

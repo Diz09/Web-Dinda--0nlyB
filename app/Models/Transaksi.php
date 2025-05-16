@@ -26,6 +26,12 @@ class Transaksi extends Model
         });
     }
 
+    public function getKategoriAttribute()
+    {
+        return $this->pemasukan_id ? 'pemasukan' : 'pengeluaran';
+    }
+
+
     public function barang()
     {
         return $this->belongsTo(Barang::class);

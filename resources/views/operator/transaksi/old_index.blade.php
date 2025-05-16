@@ -4,6 +4,8 @@
 <div class="container">
     <h1 class="mb-4">Transaksi</h1>
     
+    {{-- <a href="#" class="btn btn-primary mb-3">Tambah Transaksi</a> --}}
+    {{-- <a href="{{ route('operator.transaksi.create') }}" class="btn btn-sm btn-primary mb-3">Tambah Transaksi</a> --}}
     <!-- Tombol Tambah -->
     <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
         Tambah Transaksi
@@ -37,7 +39,7 @@
                 @foreach($data as $i => $trx)
                 <tr>
                     <td class="p-2">{{ $i + 1 }}</td>
-                    <td class="p-2">{{ \Carbon\Carbon::parse($trx['waktu_transaksi'])->format('d-m-Y H:i') }}</td>
+                    <td class="p-2">{{ \Carbon\Carbon::parse($trx['waktu'])->format('d-m-Y H:i') }}</td>
                     <td class="p-2">{{ $trx['kode_transaksi'] }}</td>
                     <td class="p-2">{{ $trx['kode_barang'] }}</td>
                     <td class="p-2">{{ $trx['supplier'] }}</td>
@@ -47,12 +49,10 @@
                     <td class="b-pri">Rp {{ number_format($trx['keluar'], 0, ',', '.') }}</td>
                     <td class="b-pri">Rp {{ number_format($trx['total'], 0, ',', '.') }}</td>
                     <td> 
+                        {{-- <a href="{{ route('operator.transaksi.edit', $trx['id']) }}" class="btn btn-warning btn-sm">Edit</a> --}}
                         <!-- Tombol Edit -->
                         <button 
-                            type="button"
                             class="btn btn-primary btn-edit" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#editModal"
                             data-id="{{ $trx['id'] }}"
                             data-kategori="{{ $trx['kategori'] }}"
                             data-barang_id="{{ $trx['barang_id'] }}"
@@ -60,8 +60,8 @@
                             data-qty="{{ $trx['qty'] }}"
                             data-satuan="{{ $trx['satuan'] }}"
                             data-jumlahrp="{{ $trx['jumlahRp'] }}"
-                            data-waktu="{{ \Carbon\Carbon::parse($trx['waktu_transaksi'])->format('Y-m-d\TH:i') }}"
-                        >
+                            data-waktu="{{ $trx['waktu_transaksi'] }}"
+                            >
                             Edit
                         </button>
 
@@ -101,18 +101,11 @@
             html: `{!! implode('<br>', $errors->all()) !!}`,
         });
     @endif
-
-    window.barangsData = {
-        produk: @json($barangs->whereNotNull('produk')->map(fn($b) => ['id' => $b->id, 'nama' => $b->nama_barang, 'harga' => $b->harga])->values()),
-        pendukung: @json($barangs->whereNotNull('pendukung')->map(fn($b) => ['id' => $b->id, 'nama' => $b->nama_barang, 'harga' => $b->harga])->values())
-    };
-    window.suppliersData = {
-        pemasok: @json($pemasoks->whereNotNull('pemasok')->map(fn($s) => ['id' => $s->id, 'nama' => $s->nama])->values()),
-        konsumen: @json($konsumens->whereNotNull('konsumen')->map(fn($s) => ['id' => $s->id, 'nama' => $s->nama])->values())
-    };
 </script>
 
 @include('operator.transaksi.create')
 @include('operator.transaksi.edit')
+<script const semuaBarang = @json($barangs); ></script>
 <script src="{{ asset('js/transaksi.js') }}"></script>
+
 @endsection

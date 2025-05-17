@@ -28,33 +28,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($dataKaryawan as $karyawanId => $presensis)
-                    @php
-                        $karyawan = $presensis->first()->karyawan;
-                        $totalJam = 0;
-                    @endphp
+                @foreach ($karyawanWithGaji as $data)
                     <tr>
-                        <td>{{ $karyawan->nama }}</td>
-                        <td>{{ $karyawan->jenis_kelamin }}</td>
-        
+                        <td>{{ $data['karyawan']->nama }}</td>
+                        <td>{{ $data['karyawan']->jenis_kelamin }}</td>
                         @foreach ($tanggalUnik as $tanggal)
-                            @php
-                                $presensiTanggal = $presensis->where('tanggal', $tanggal)->first();
-                                if ($presensiTanggal) {
-                                    $jamMasuk = strtotime($presensiTanggal->jam_masuk);
-                                    $jamPulang = strtotime($presensiTanggal->jam_pulang);
-                                    $jamKerja = ($jamPulang - $jamMasuk) / 3600;
-                                } else {
-                                    $jamKerja = 0;
-                                }
-                                $totalJam += $jamKerja;
-                            @endphp
-                            <td>{{ number_format($jamKerja, 2) }}</td>
+                            <td>{{ number_format($data['jam_per_tanggal'][$tanggal], 2) }}</td>
                         @endforeach
-        
-                        <td>{{ number_format($totalJam, 2) }}</td>
-                        <td>{{ number_format($gajiPerJam, 0, ',', '.') }}</td>
-                        <td>{{ number_format($gajiPerJam * $totalJam, 0, ',', '.') }}</td>
+                        <td>{{ number_format($data['total_jam'], 2) }}</td>
+                        <td>{{ number_format($data['gaji_per_jam'], 0, ',', '.') }}</td>
+                        <td>{{ number_format($data['total_gaji'], 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>

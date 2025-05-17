@@ -42,12 +42,44 @@ class GajiController extends Controller
         // Hitung gaji per jam
         $gajiPerJam = $banyakPekerja > 0 ? ($jumlahTon * $hargaPerTon) / $banyakPekerja : 0;
 
-        // Edit Simpan jumlah ton dan harga ikan per ton
-        // $jumlahTonHariIni = TonIkan::where('kuartal_id', $kuartal->id)
-        //     ->value('jumlah_ton');
+        // Siapkan array untuk data karyawan yang sudah diproses lengkap
+        $karyawanWithGaji = [];
 
-        // $hargaIkanPerTon = TonIkan::where('kuartal_id', $kuartal->id)
-        //     ->value('harga_ikan_per_ton');
+        foreach ($dataKaryawan as $karyawanId => $presensis) {
+            $karyawan = $presensis->first()->karyawan;
+
+            $jamPerTanggal = [];
+            $totalJam = 0;
+
+            // Hitung jam kerja per tanggal
+            foreach ($tanggalUnik as $tanggal) {
+                $presensiTanggal = $presensis->where('tanggal', $tanggal)->first();
+                if ($presensiTanggal) {
+                    $jamMasuk = strtotime($presensiTanggal->jam_masuk);
+                    $jamPulang = strtotime($presensiTanggal->jam_pulang);
+                    $jamKerja = ($jamPulang - $jamMasuk) / 3600;
+                } else {
+                    $jamKerja = 0;
+                }
+                $jamPerTanggal[$tanggal] = $jamKerja;
+                $totalJam += $jamKerja;
+            }
+
+            // Hitung total gaji dengan potongan 20% jika jenis kelamin P
+            $totalGaji = $gajiPerJam * $totalJam;
+            if ($karyawan->jenis_kelamin === 'P') {
+                $totalGaji *= 0.8; // diskon 20%
+            }
+
+            // Tambahkan data lengkap karyawan ke array
+            $karyawanWithGaji[] = [
+                'karyawan' => $karyawan,
+                'jam_per_tanggal' => $jamPerTanggal,
+                'total_jam' => $totalJam,
+                'gaji_per_jam' => $gajiPerJam,
+                'total_gaji' => $totalGaji,
+            ];
+        }
 
         return view('operator.gaji.detailGaji', compact(
             'kuartal', 
@@ -57,6 +89,7 @@ class GajiController extends Controller
             'jumlahTon', 
             'hargaPerTon',
             'selectedKuartal',
+            'karyawanWithGaji'
 
             // 'jumlahTonHariIni',
             // 'hargaIkanPerTon'

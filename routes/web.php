@@ -36,9 +36,13 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-    Route::get('/pimpinan/laporan-karyawan', [LaporanController::class, 'karyawan'])->name('laporan.karyawan');
     Route::get('/pimpinan/stok-barang', [BarangController::class, 'stokPimpinan'])->name('pimpinan.stock_barang.index');
-    Route::get('/pimpinan/laporan-keuangan', [DataKeuanganController::class, 'index'])->name('pimpinan.laporan_keuangan.index');
+    
+    // fix
+    Route::get('/pimpinan/laporan-karyawan', [LaporanController::class, 'karyawan'])->name('laporan.karyawan');
+    Route::get('/pimpinan/laporan-keuangan', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
+    // Route::get('/laporan/transaksi', [TransaksiController::class, 'laporanPimpinan'])->name('pimpinan.laporan.transaksi');
+
 // });
 
 // Operator

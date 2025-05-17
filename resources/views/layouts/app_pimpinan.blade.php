@@ -283,6 +283,9 @@
         }
 
     </style>
+
+    {{-- jQuery CDN --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 </head>
 
 <body>
@@ -291,12 +294,12 @@
         {{-- jumlah (rp) pendapatan (barang keluar) dan pengeluaran (barang masuk dan gaji) --}}
         {{-- serta berisikan tabel dengan grafiks garis yang mena garis merah berupa pengeluaran dan garis biru pendapatan --}}
         <a href="/pimpinan/dashboard" class="sidebar-link">Dashboard</a>
-        {{-- tabel laporan para pekerja --}}
-        <a href="/pimpinan/laporan-karyawan" class="sidebar-link">Laporan Pekerja</a>
         {{-- tabel stok barang --}}
         <a href="/pimpinan/stok-barang" class="sidebar-link">Stok Barang</a> 
         {{-- <a href="#" class="sidebar-link">Supplier</a> --}}
         {{-- <a href="#" class="sidebar-link">Pembelian</a> --}}
+        {{-- tabel laporan para pekerja --}}
+        <a href="/pimpinan/laporan-karyawan" class="sidebar-link">Laporan Pekerja</a>
         {{-- tabel laporan pembelian --}}
         <a href="/pimpinan/laporan-keuangan" class="sidebar-link">Laporan Keuangan</a>
         
@@ -311,6 +314,7 @@
         </a>
         
     </div>
+    
     <div class="main-content">
         @yield('content')
     </div>
@@ -321,5 +325,6 @@
 
 <!-- Tambahkan di bagian bawah sebelum penutup tag </body> untuk JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </html>

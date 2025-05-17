@@ -22,12 +22,7 @@ class Presensi extends Model
     {
         return $this->belongsTo(Karyawan::class);
     }
-
-    public function gaji()
-    {
-        return $this->hasOne(Gaji::class);
-    }
-
+    
     public function kuartal()
     {
         return $this->belongsTo(Kuartal::class);

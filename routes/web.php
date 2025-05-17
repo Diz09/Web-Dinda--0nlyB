@@ -12,7 +12,7 @@ use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\gajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KaryawanController;
-use App\Http\Controllers\LaporanKaryawanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DataKeuanganController;
 use App\Http\Controllers\TonIkanController;
 use App\Http\Controllers\TransaksiController;
@@ -36,7 +36,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-    Route::get('/pimpinan/laporan-karyawan', [LaporanKaryawanController::class, 'index'])->name('pimpinan.laporan_karyawan.index');
+    Route::get('/pimpinan/laporan-karyawan', [LaporanController::class, 'karyawan'])->name('laporan.karyawan');
     Route::get('/pimpinan/stok-barang', [BarangController::class, 'stokPimpinan'])->name('pimpinan.stock_barang.index');
     Route::get('/pimpinan/laporan-keuangan', [DataKeuanganController::class, 'index'])->name('pimpinan.laporan_keuangan.index');
 // });

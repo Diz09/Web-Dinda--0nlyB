@@ -61,17 +61,7 @@ class SupplierController extends Controller
 
         return redirect()->route('supplier.index')->with('success', 'Supplier berhasil ditambahkan.');
     }
-
-
-    // public function edit($id)
-    // {
-    //     $supplier = Supplier::findOrFail($id);
-    //     $pemasoks = Pemasok::all();
-    //     $konsumens = Konsumen::all();
-
-    //     return view('operator.supplier.edit', compact('supplier', 'pemasoks', 'konsumens'));
-    // }
-
+    
     public function update(Request $request, $id)
     {
         $request->validate([

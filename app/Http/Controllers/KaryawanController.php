@@ -10,6 +10,7 @@ class KaryawanController extends Controller
     public function index()
     {
         $karyawans = Karyawan::all();
+
         return view('operator.karyawan.index', compact('karyawans'));
     }
 

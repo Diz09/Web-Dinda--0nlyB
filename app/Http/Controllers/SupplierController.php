@@ -12,12 +12,10 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::with(['pemasok', 'konsumen'])->get();
-        // $pemasoks = Pemasok::all();
-        // $konsumens = Konsumen::all();
         
         return view('operator.supplier.index', compact('suppliers'));
-        // return view('operator.supplier.index', compact('suppliers', 'pemasoks', 'konsumens'));
     }
+    
     public function create()
     {
         $pemasoks = Pemasok::all();

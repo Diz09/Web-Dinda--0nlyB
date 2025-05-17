@@ -35,13 +35,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 // Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
-    Route::get('/pimpinan/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-    Route::get('/pimpinan/stok-barang', [BarangController::class, 'stokPimpinan'])->name('pimpinan.stock_barang.index');
-    
-    // fix
+    Route::get('/pimpinan/laporan-barang', [LaporanController::class, 'barang'])->name('laporan.barang');
     Route::get('/pimpinan/laporan-karyawan', [LaporanController::class, 'karyawan'])->name('laporan.karyawan');
-    Route::get('/pimpinan/laporan-keuangan', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
-    // Route::get('/laporan/transaksi', [TransaksiController::class, 'laporanPimpinan'])->name('pimpinan.laporan.transaksi');
+    Route::get('/pimpinan/laporan-supplier', [LaporanController::class, 'supplier'])->name('laporan.supplier');
+    Route::get('/pimpinan/laporan-transaksi', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
 
 // });
 

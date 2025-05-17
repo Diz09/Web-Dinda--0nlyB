@@ -7,17 +7,60 @@ use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Models\Barang;
+use App\Models\Supplier;
+// use App\Models\Produk;
 use App\Models\Karyawan;
 use App\Models\Presensi;
 use App\Models\Kuartal;
 use App\Models\TonIkan;
 use App\Models\Transaksi;
 
+use App\Exports\LaporanBarangExport;
 use App\Exports\LaporanKaryawanExport;
+use App\Exports\LaporanSupplierExport;
 use App\Exports\LaporanTransaksiExport;
 
 class LaporanController extends Controller
 {
+    public function barang(Request $request)
+    {
+        $filter = $request->query('filter');
+        $nama = $request->query('nama');
+        $isAjax = $request->ajax();
+        $isExport = $request->query('export') === 'excel';
+
+        $barangs = Barang::with(['produk', 'pendukung']);
+
+        if (in_array($filter, ['produk', 'pendukung'])) {
+            $barangs->whereHas($filter);
+        }
+
+        if ($nama) {
+            $barangs->where('nama_barang', 'like', '%' . $nama . '%');
+        }
+
+        $barangs = $barangs->get()->sortBy(function ($barang) {
+            if ($barang->produk) {
+                return '1' . $barang->produk->kode;
+            } elseif ($barang->pendukung) {
+                return '2' . $barang->pendukung->kode;
+            } else {
+                return '9';
+            }
+        })->values();
+
+        if ($isExport) {
+            return Excel::download(new LaporanBarangExport($barangs), 'laporan-barang.xlsx');
+        }
+
+        if ($isAjax) {
+            return view('pimpinan.laporan_barang._table', compact('barangs'))->render();
+        }
+
+        return view('pimpinan.laporan_barang.index', compact('barangs', 'filter', 'nama'));
+    }
+
     public function karyawan(Request $request)
     {
         $filter = $request->input('filter', 'minggu_ini');
@@ -159,6 +202,39 @@ class LaporanController extends Controller
         }
 
         return view('pimpinan.laporan_karyawan.index', compact('data', 'filter', 'nama'));
+    }
+
+    public function supplier(Request $request)
+    {
+        $query = Supplier::with(['pemasok', 'konsumen']);
+
+        if ($request->filled('keyword')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->keyword . '%')
+                ->orWhere('alamat', 'like', '%' . $request->keyword . '%');
+            });
+        }
+
+
+        if ($request->filled('kategori')) {
+            if ($request->kategori === 'pemasok') {
+                $query->whereHas('pemasok');
+            } elseif ($request->kategori === 'konsumen') {
+                $query->whereHas('konsumen');
+            }
+        }
+
+        $suppliers = $query->get();
+
+        if ($request->has('export') && $request->export === 'excel') {
+            return Excel::download(new LaporanSupplierExport($suppliers), 'laporan_supplier.xlsx');
+        }
+
+        if ($request->ajax()) {
+            return view('pimpinan.laporan_supplier._table', compact('suppliers'))->render();
+        }
+
+        return view('pimpinan.laporan_supplier.index', compact('suppliers'));
     }
 
     public function transaksi(Request $request)

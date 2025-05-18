@@ -20,7 +20,7 @@
                     <tr>
                         <td>{{ $i + 1 }}</td>
                         <td>
-                            <a href="{{ route('gaji.kuartal', $kuartal->id) }}">
+                            <a href="{{ route('gaji.kuartal.detail', $kuartal->id) }}">
                                 {{ $kuartal->nama_kuartal }}
                             </a>
                         </td>

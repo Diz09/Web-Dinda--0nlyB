@@ -32,7 +32,7 @@ Route::post('/', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Pimpinan
-// Route::middleware(['auth', 'role:pimpinan'])->group(function () {
+Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/laporan-barang', [LaporanController::class, 'barang'])->name('laporan.barang');
@@ -40,13 +40,11 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::get('/pimpinan/laporan-supplier', [LaporanController::class, 'supplier'])->name('laporan.supplier');
     Route::get('/pimpinan/laporan-transaksi', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
 
-// });
+});
 
 // Operator
-// Route::middleware(['auth', 'role:operator'])->group(function () {
+Route::middleware(['auth', 'role:operator'])->group(function () {
     // Route untuk Dashboard
-    // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->name('dashboard.operator');
-    // Route::get('/dashboard-operator', [DashboardController::class, 'operator'])->middleware('auth');
     Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
     // route untuk data barang
@@ -60,7 +58,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
     
     // route untuk data supplier
-    // Route::get('/operator/suplier', function () {    return view('operator.supplier.index');    })->name('suplier');
     Route::get('/operator/suplier', [SupplierController::class, 'index'])->name('supplier.index');
     Route::get('/operator/suplier/create', [SupplierController::class, 'create'])->name('supplier.create');
     Route::post('/operator/suplier', [SupplierController::class, 'store'])->name('supplier.store');
@@ -79,7 +76,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
     
     // route untuk tindak presensi
-    // Route::get('/operator/presensi', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/{kuartal_id}', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
@@ -89,10 +85,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
     Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
     
-    // route untuk data ton ikan yang akan diurus pekerja
-    // Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
-    // Route::post('/operator/tonikan', [TonIkanController::class, 'store'])->name('tonikan.store');
-    
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
     // Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
@@ -100,21 +92,16 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
 
     Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
-    Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kuartal');
-    // Route::get('/operator/gaji', [GajiController::class, 'detail'])->name('gaji.kuartal.detail');
-    
-    // Route::get('/operator/rekap-gaji', [GajiController::class, 'rekap'])->name('gaji.rekap');
+    Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kuartal.detail');
 
     // route untuk transaksi
-    // Route::resource('transaksi', TransaksiController::class);
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
     Route::get('/operator/transaksi/create', [TransaksiController::class, 'create'])->name('operator.transaksi.create');
     Route::post('/operator/transaksi', [TransaksiController::class, 'store'])->name('operator.transaksi.store');
     Route::get('/operator/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('operator.transaksi.edit');
     Route::delete('/operator/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('operator.transaksi.destroy');
     Route::put('/operator/transaksi/{id}', [TransaksiController::class, 'update'])->name('operator.transaksi.update');
-    
-    
+
     Route::get('/operator/get-barang', function (Request $request) {    // Mengambil kategori dari request
         $kategori = $request->input('kategori', 'pemasukan');
         $tipe = $kategori === 'pengeluaran' ? 'pendukung' : 'produk';
@@ -123,7 +110,5 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
         return response()->json($barangs);
     });
-
-
-// });
+});
 

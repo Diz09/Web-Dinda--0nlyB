@@ -76,9 +76,12 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
     
     // route untuk tindak presensi
+    Route::post('/presensi/pilih-karyawan', [PresensiController::class, 'pilihKaryawan'])->name('presensi.pilih-karyawan');
+    
     Route::get('/operator/presensi/{kloter_id}', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+
 
     Route::post('/operator/gaji/{kloter_id}', [PresensiController::class, 'store'])->name('presensi.gaji.store');
     

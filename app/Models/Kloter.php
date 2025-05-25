@@ -19,7 +19,10 @@ class Kloter extends Model
         return $this->hasOne(TonIkan::class);
     }
 
-
+    public function kloterKaryawans()
+    {
+        return $this->hasMany(KloterKaryawan::class);
+    }
 
     public function getTanggalMulaiAttribute()
     {

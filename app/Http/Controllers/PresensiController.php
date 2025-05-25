@@ -7,6 +7,7 @@ use App\Models\Kloter;
 use App\Models\Karyawan;
 use App\Models\Presensi;
 use App\Models\TonIkan;
+use App\Models\KloterKaryawan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -36,7 +37,12 @@ class PresensiController extends Controller
             ]);
         }
 
-        $karyawans = Karyawan::all();
+        $semuaKaryawan = Karyawan::all();
+
+        $karyawanIds = KloterKaryawan::where('kloter_id', $selectedKloter->id)
+            ->pluck('karyawan_id');
+        
+        $karyawans = Karyawan::whereIn('id', $karyawanIds)->get();
 
         $presensis = Presensi::where('kloter_id', $selectedKloter->id)
             ->whereDate('tanggal', $tanggal)
@@ -49,7 +55,9 @@ class PresensiController extends Controller
         $hargaIkanPerTon = TonIkan::where('kloter_id', $selectedKloter->id)
             ->value('harga_ikan_per_ton') ?? 1000000;
 
-        return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kloters', 'selectedKloter', 'jumlahTonHariIni', 'hargaIkanPerTon'));
+        return view('operator.presensi.index', 
+            compact('karyawans', 'presensis', 'tanggal', 'kloters', 'selectedKloter', 'jumlahTonHariIni', 'hargaIkanPerTon', 'semuaKaryawan')
+        );
     }
 
     public function inputMasuk(Request $request, $id)
@@ -127,4 +135,27 @@ class PresensiController extends Controller
 
         return redirect()->back()->with('success', 'Data ton ikan berhasil disimpan.');
     }
+
+    public function pilihKaryawan(Request $request)
+    {
+        $request->validate([
+            'kloter_id' => 'required|exists:kloters,id',
+            'karyawan_ids' => 'array'
+        ]);
+
+        // Hapus dulu data lama
+        KloterKaryawan::where('kloter_id', $request->kloter_id)->delete();
+
+        // Simpan baru
+        foreach ($request->karyawan_ids ?? [] as $id) {
+            KloterKaryawan::create([
+                'kloter_id' => $request->kloter_id,
+                'karyawan_id' => $id
+            ]);
+        }
+
+        return redirect()->route('presensi.index', ['kloter_id' => $request->kloter_id])
+            ->with('success', 'Karyawan berhasil dipilih untuk kloter ini.');
+    }
+
 }

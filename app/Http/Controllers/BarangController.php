@@ -16,6 +16,9 @@ class BarangController extends Controller
 
         $barangs = Barang::with(['produk', 'pendukung'])->get();
 
+        $barangSudahAda = session('barangSudahAda', false);
+        $namaBarang = session('nama_barang', '');
+
         // Filter hanya jika $filter ada dan valid
         if (in_array($filter, ['produk', 'pendukung'])) {
             $barangs = $barangs->filter(function ($barang) use ($filter) {
@@ -29,16 +32,18 @@ class BarangController extends Controller
 
         // Urutkan: produk (kode PRD) lebih dulu, lalu pendukung (kode PND)
         $barangs = $barangs->sortBy(function ($barang) {
-        if ($barang->produk) {
-            return '1' . $barang->produk->kode; // angka kecil = prioritas lebih tinggi
-        } elseif ($barang->pendukung) {
-            return '2' . $barang->pendukung->kode;
-        } else {
-            return '9'; // untuk jaga-jaga
-        }
-    })->values();
+            if ($barang->produk) {
+                return '1' . $barang->produk->kode; // angka kecil = prioritas lebih tinggi
+            } elseif ($barang->pendukung) {
+                return '2' . $barang->pendukung->kode;
+            } else {
+                return '9'; // untuk jaga-jaga
+            }
+        })->values();
 
-        return view('operator.barang.index', compact('barangs', 'filter', 'newKode'));
+        return view('operator.barang.index', 
+            compact('barangs', 'filter', 'newKode', 'barangSudahAda', 'namaBarang')
+        );
     }
 
 
@@ -52,6 +57,27 @@ class BarangController extends Controller
             'exp' => $request->filter === 'produk' ? 'required|date|after:today' : 'nullable|date',
         ]);
 
+        // Cari apakah barang dengan nama dan kategori yang sama sudah ada
+        $existingBarang = Barang::whereRaw('LOWER(nama_barang) = ?', [strtolower($request->nama_barang)]) // case-insensitive search
+            ->whereHas($request->filter) // produk atau pendukung
+            ->first();
+
+        $barangSudahAda = $existingBarang !== null;
+
+        if ($existingBarang) {
+            // Update qty dan harga terakhir
+            $existingBarang->qty += $request->qty;
+            $existingBarang->harga = $request->harga;
+            $existingBarang->exp = $request->filter === 'produk' ? $request->exp : null;
+            $existingBarang->save();
+
+            return redirect()->route('barang.index', [
+                    'filter' => $request->filter, 
+                ])->with('warning', 'Barang sudah ada, data akan digabungkan!') // flash session
+                ->with('barangSudahAda', true)
+                ->with('nama_barang', $request->nama_barang);
+        }
+        
         $barang = Barang::create([
             'nama_barang' => $request->nama_barang,
             'qty' => $request->qty,
@@ -59,9 +85,10 @@ class BarangController extends Controller
             'exp' => $request->exp,
         ]);
 
-        // Tambahkan sebagai produk dengan kode auto
+        // Generate kode baru untuk produk atau pendukung
         $kodeBaru = $this->generateKodeBaru($request->filter);
-
+        
+        // Tambahkan sebagai produk dengan kode auto
         if ($request->filter === 'produk') {
             BarangProduk::create([
                 'barang_id' => $barang->id,
@@ -74,8 +101,6 @@ class BarangController extends Controller
             ]);
         }
 
-        // return redirect()->route('barang.index')->with('success', 'Barang produk berhasil ditambahkan');
-        // return redirect()->route('barang.index')->with('success', 'Barang ' . $request->filter . ' berhasil ditambahkan');
         return redirect()->route('barang.index', ['filter' => $request->filter])
             ->with('success', 'Barang ' . $request->filter . ' berhasil ditambahkan');
 

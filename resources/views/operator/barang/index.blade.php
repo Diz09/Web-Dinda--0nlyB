@@ -4,9 +4,8 @@
 <div class="container mt-4">
     <h3 class="mb-4">
         Data Barang 
-        @if($filter === 'produk') - Produk
-        @elseif($filter === 'mentah') - Mentah
-        @elseif($filter === 'dasar') - Dasar
+        @if($filter === 'produk') - Stock Produk Jadi
+        @elseif($filter === 'pendukung') - Hal-hal Pendukung
         @endif
     </h3>
     
@@ -29,7 +28,9 @@
                         <th>Nama Barang</th>
                         {{-- <th>Kategori</th> --}}
                         {{-- <th>Qty</th> --}}
-                        <th>Exp</th>
+                        @if(request('filter') != 'pendukung')
+                            <th>Exp</th>
+                        @endif
                         <th>Harga</th>
                         <th>Update Stock</th> {{-- Tambahan --}}
                         <th>Aksi</th> {{-- Kolom edit & hapus --}} 
@@ -51,10 +52,12 @@
                         <tr>
                             <td>{{ $i + 1 }}</td>
                             <td>{{ $kode }}</td>
-                            <td>{{ $barang->nama_barang }}</td>
+                            <td>{{ \Illuminate\Support\Str::title($barang->nama_barang) }}</td>
                             {{-- <td>{{ $kategori }}</td> --}}
                             {{-- <td>{{ $barang->qty ?? '-' }}</td> --}}
-                            <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
+                            @if(request('filter') != 'pendukung')
+                                <td>{{ $barang->exp ? \Carbon\Carbon::parse($barang->exp)->format('d-m-Y') : '-' }}</td>
+                            @endif
                             <td>Rp {{ number_format($barang->harga, 0, ',', '.') }}</td>
                             <td>
                                 <form action="{{ route('barang.updateQty', $barang->id) }}" method="POST" class="d-flex">
@@ -108,6 +111,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
     // SweetAlert sukses
     @if(session('success'))
         Swal.fire({

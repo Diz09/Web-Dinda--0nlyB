@@ -20,5 +20,10 @@ class Karyawan extends Model
     {
         return $this->hasMany(Presensi::class);
     }
+    
+    public function kloterKaryawans()
+    {
+        return $this->hasMany(KloterKaryawan::class);
+    }
 }
 ?>

@@ -26,7 +26,7 @@
                                 {{ $kloter->nama_kloter }}
                             </a>
                         </td>
-                        <td>{{ number_format($kloter->jumlah_ton, 2) }} Ton</td>
+                        <td>{{ number_format($kloter->jumlah_ton, 2) }} Kg</td>
                         <td>
                             {{ $kloter->presensis->min('tanggal') 
                                 ? \Carbon\Carbon::parse($kloter->presensis->min('tanggal'))->format('d-m-Y') 

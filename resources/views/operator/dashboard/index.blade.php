@@ -37,10 +37,8 @@
                         @foreach ($barangTerbaru as $i => $brg)
                             @php
                                 $kode = '-';
-                                if ($brg->mentah) {
-                                    $kode = $brg->mentah->kode;
-                                } elseif ($brg->dasar) {
-                                    $kode = $brg->dasar->kode;
+                                if ($brg->pendukung) {
+                                    $kode = $brg->pendukung->kode;
                                 } elseif ($brg->produk) {
                                     $kode = $brg->produk->kode;
                                 }

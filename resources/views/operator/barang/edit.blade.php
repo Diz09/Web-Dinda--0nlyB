@@ -31,15 +31,18 @@
                         <input type="hidden" class="kategori-lama" value="{{ $kategori }}">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Tanggal Expired</label>
-                        <input type="date" class="form-control" name="exp" value="{{ old('exp', $barang->exp ? date('Y-m-d', strtotime($barang->exp)) : '') }}">
-                    </div>
+                    @if(request('filter') != 'pendukung')
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Expired</label>
+                            <input type="date" class="form-control" name="exp" value="{{ old('exp', $barang->exp ? date('Y-m-d', strtotime($barang->exp)) : '') }}">
+                        </div>
+                    @endif
 
                     <div class="mb-3">
                         <label class="form-label">Harga (Rp)</label>
                         <input type="number" class="form-control" name="harga" value="{{ old('harga', $barang->harga) }}" required>
                     </div>
+                    
                 </div>
 
                 <div class="modal-footer">

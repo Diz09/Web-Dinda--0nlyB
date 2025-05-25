@@ -3,6 +3,7 @@
     $defaultExp = Carbon::now()->addYear()->toDateString();
 @endphp
 
+{{-- isi modal create --}}
 <div class="modal modal-ct fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,11 +17,14 @@
                     <input type="hidden" name="filter" value="{{ $filter }}">
                     <div class="mb-3">
                         <label for="kode" class="form-label">Kode {{ ucfirst($filter) }}</label>
-                        <input id="kode" type="text" class="form-control" name="kode" value="{{ $newKode }}" readonly>
+                        <input type="hidden" id="barangSudahAda" value="{{ $barangSudahAda ? '1' : '0' }}">
+                        <input type="hidden" id="namaBarang" value="{{ $namaBarang ?? '' }}">
+                        <input type="hidden" id="newKode" value="{{ $newKode }}">
                     </div>
                     <div class="mb-3">
                         <label for="nama_barang" class="form-label">Nama Barang</label>
-                        <input id="nama_barang" type="text" class="form-control" name="nama_barang" value="{{ old('nama_barang') }}" required>
+                        <input id="nama_barang" type="text" class="form-control" name="nama_barang" 
+                            value="{{ old('nama_barang', $namaBarang ?? '') }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="qty" class="form-label">Qty (Stok)</label>
@@ -30,22 +34,13 @@
                         <label for="harga" class="form-label">Harga (Rp)</label>
                         <input id="harga" type="number" class="form-control" name="harga" value="{{ old('harga') }}" min="0" required>
                     </div>
-                    {{-- <div class="mb-3">
-                        <label for="exp" class="form-label">Expired</label>
-                        <input type="date" class="form-control" name="exp" value="{{ old('exp', $defaultExp) }}" required>
-                    </div> --}}
-                    @if ($filter === 'produk')
+                    @if ($filter !== 'pendukung')
                         <div class="mb-3">
                             <label for="exp" class="form-label">Expired</label>
-                            <input id="exp" type="date" class="form-control" name="exp" value="{{ old('exp', $defaultExp) }}" required>
-                        </div>
-                    @else
-                        <div class="mb-3">
-                            <label for="exp" class="form-label">Expired</label>
-                            <input id="exp" type="date" class="form-control" name="exp"  required>
+                            <input id="exp" type="date" class="form-control" name="exp"
+                                value="{{ old('exp', $defaultExp ?? '') }}" required>
                         </div>
                     @endif
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>

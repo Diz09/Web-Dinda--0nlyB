@@ -37,10 +37,8 @@
                         @foreach ($barangTerbaru as $i => $brg)
                             @php
                                 $kode = '-';
-                                if ($brg->mentah) {
-                                    $kode = $brg->mentah->kode;
-                                } elseif ($brg->dasar) {
-                                    $kode = $brg->dasar->kode;
+                                if ($brg->pendukung) {
+                                    $kode = $brg->pendukung->kode;
                                 } elseif ($brg->produk) {
                                     $kode = $brg->produk->kode;
                                 }
@@ -49,7 +47,7 @@
                                 <td class="p-2">{{ $i + 1 }}</td>
                                 <td class="p-2">{{ $kode }}</td>
                                 <td class="p-2">{{ $brg->nama_barang }}</td>
-                                <td class="p-2">{{ number_format($brg->qty, 0, ',', '.') }} Ton</td>
+                                <td class="p-2">{{ number_format($brg->qty, 0, ',', '.') }} Kg</td>
                             </tr>
                         @endforeach
                     </tbody>

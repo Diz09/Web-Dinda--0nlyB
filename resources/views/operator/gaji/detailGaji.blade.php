@@ -4,7 +4,7 @@
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="mb-4">Detail Gaji {{ $kuartal->nama_kuartal }}</h3>
+        <h3 class="mb-4">Detail Gaji {{ $kloter->nama_kloter }}</h3>
         <div class="btn-group" role="group" aria-label="Tombol Edit dan Kembali">
             <button type="button" class="btn btn-warning rounded-start rounded-end-0" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
             <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-end rounded-start-0">Kembali</a>

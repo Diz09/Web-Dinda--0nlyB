@@ -13,7 +13,7 @@
         <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="border px-2 py-1 rounded">
         <span>s/d</span>
         <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="border px-2 py-1 rounded">
-        <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded">Filter</button>
+        <button type="submit" class="button-success px-3 py-1 rounded" style="background: aqua">Filter</button>
     </form>    
 
     <div class="table-responsive">

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ton_ikans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kuartal_id')->nullable()->constrained('kuartals')->onDelete('set null');
+            $table->foreignId('kloter_id')->nullable()->constrained('kloters')->onDelete('set null');
             $table->decimal('jumlah_ton', 8, 2);
             $table->bigInteger('harga_ikan_per_ton')->default(1000000);
             $table->timestamps();

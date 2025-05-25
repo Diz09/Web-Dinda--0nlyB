@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kuartal;
+use App\Models\Kloter;
 use App\Models\Karyawan;
 use App\Models\Presensi;
 use App\Models\TonIkan;
@@ -12,49 +12,49 @@ use Carbon\Carbon;
 
 class PresensiController extends Controller
 {
-    public function index(Request $request, $kuartal_id = null)
+    public function index(Request $request, $kloter_id = null)
     {
         $tanggal = now()->toDateString();
-        $kuartals = Kuartal::orderBy('id', 'desc')->get();
+        $kloters = Kloter::orderBy('id', 'desc')->get();
 
-        // Tombol buat kuartal baru
-        if ($request->get('buat_kuartal')) {
-            $selectedKuartal = Kuartal::create([
-                'nama_kuartal' => 'Kuartal-' . (Kuartal::count() + 1)
+        // Tombol buat kloter baru
+        if ($request->get('buat_kloter')) {
+            $selectedKloter = Kloter::create([
+                'nama_kloter' => 'Kloter-' . (Kloter::count() + 1)
             ]);
-            return redirect()->route('presensi.index', ['kuartal_id' => $selectedKuartal->id]);
+            return redirect()->route('presensi.index', ['kloter_id' => $selectedKloter->id]);
         }
 
-        // Tombol pilih kuartal
-        $selectedKuartal = $kuartal_id
-            ? Kuartal::with('tonIkan')->find($kuartal_id)
-            : Kuartal::latest()->first();
+        // Tombol pilih kloter
+        $selectedKloter = $kloter_id
+            ? Kloter::with('tonIkan')->find($kloter_id)
+            : Kloter::latest()->first();
 
-        if (!$selectedKuartal) {
-            $selectedKuartal = Kuartal::create([
-                'nama_kuartal' => 'Kuartal-' . (Kuartal::count() + 1)
+        if (!$selectedKloter) {
+            $selectedKloter = Kloter::create([
+                'nama_kloter' => 'Kloter-' . (Kloter::count() + 1)
             ]);
         }
 
         $karyawans = Karyawan::all();
 
-        $presensis = Presensi::where('kuartal_id', $selectedKuartal->id)
+        $presensis = Presensi::where('kloter_id', $selectedKloter->id)
             ->whereDate('tanggal', $tanggal)
             ->get()
             ->keyBy('karyawan_id');
 
-        $jumlahTonHariIni = TonIkan::where('kuartal_id', $selectedKuartal->id)
-            ->value('jumlah_ton');
+        $jumlahTonHariIni = TonIkan::where('kloter_id', $selectedKloter->id)
+            ->value('jumlah_ton') ?? 0;
 
-        $hargaIkanPerTon = TonIkan::where('kuartal_id', $selectedKuartal->id)
+        $hargaIkanPerTon = TonIkan::where('kloter_id', $selectedKloter->id)
             ->value('harga_ikan_per_ton') ?? 1000000;
 
-        return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kuartals', 'selectedKuartal', 'jumlahTonHariIni', 'hargaIkanPerTon'));
+        return view('operator.presensi.index', compact('karyawans', 'presensis', 'tanggal', 'kloters', 'selectedKloter', 'jumlahTonHariIni', 'hargaIkanPerTon'));
     }
 
     public function inputMasuk(Request $request, $id)
     {
-        $kuartalId = $request->input('kuartal_id');
+        $kloterId = $request->input('kloter_id');
         $tanggal = now()->toDateString();
         $jamInput = $request->input('jam') ?? Carbon::now()->format('H:i:s'); // <- ambil jam dari request jika ada
 
@@ -71,13 +71,13 @@ class PresensiController extends Controller
         if (!$presensi) {
             $presensi = Presensi::create([
                 'karyawan_id' => $id,
-                'kuartal_id' => $kuartalId,
+                'kloter_id' => $kloterId,
                 'tanggal' => $tanggal,
                 'jam_masuk' => $jamInput
             ]);
         } elseif (!$presensi->jam_masuk) {
             $presensi->jam_masuk = $jamInput;
-            $presensi->kuartal_id = $kuartalId;
+            $presensi->kloter_id = $kloterId;
             $presensi->save();
         }
 
@@ -86,7 +86,7 @@ class PresensiController extends Controller
 
     public function inputPulang(Request $request, $id)
     {
-        $kuartalId = $request->input('kuartal_id');
+        $kloterId = $request->input('kloter_id');
         $tanggal = now()->toDateString();
         $jamInput = $request->input('jam') ?? Carbon::now()->format('H:i:s');
 
@@ -102,7 +102,7 @@ class PresensiController extends Controller
 
         if ($presensi && !$presensi->jam_pulang) {
             $presensi->jam_pulang = $jamInput;
-            $presensi->kuartal_id = $kuartalId;
+            $presensi->kloter_id = $kloterId;
             $presensi->save();
         }
 
@@ -112,15 +112,17 @@ class PresensiController extends Controller
     public function simpanTonIkan(Request $request)
     {
         $request->validate([
-            'kuartal_id' => 'required|exists:kuartals,id',
+            'kloter_id' => 'required|exists:kloters,id',
             'jumlah_ton' => 'required|numeric',
             'harga_ikan_per_ton' => 'required|numeric',
         ]);
 
         TonIkan::updateOrCreate(
-            ['kuartal_id' => $request->kuartal_id/*, 'tanggal' => $request->tanggal*/],
-            ['jumlah_ton' => $request->jumlah_ton,
-            'harga_ikan_per_ton' => $request->harga_ikan_per_ton],
+            ['kloter_id' => $request->kloter_id/*, 'tanggal' => $request->tanggal*/],
+            [
+                'jumlah_ton' => $request->jumlah_ton ?? 0,
+                'harga_ikan_per_ton' => $request->harga_ikan_per_ton
+            ],
         );
 
         return redirect()->back()->with('success', 'Data ton ikan berhasil disimpan.');

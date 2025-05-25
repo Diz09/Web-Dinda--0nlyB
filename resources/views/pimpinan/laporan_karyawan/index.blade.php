@@ -15,7 +15,7 @@
                     <option value="minggu_ini">Minggu Ini</option>
                     <option value="hari_ini">Hari Ini</option>
                     <option value="bulan_ini">Bulan Ini</option>
-                    <option value="kuartal_terbaru">Kuartal Terbaru</option>
+                    <option value="kloter_terbaru">Kloter Terbaru</option>
                     <option value="semua">Semua</option>
                 </select>
             </div>

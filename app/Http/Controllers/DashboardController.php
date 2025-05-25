@@ -118,7 +118,7 @@ class DashboardController extends Controller
 
         // Jumlah total barang
         $jBarang = Barang::sum('qty');
-        $jumlahBarang = number_format($jBarang, 0, ',', '.') . ' Ton';
+        $jumlahBarang = number_format($jBarang, 0, ',', '.') . ' kg';
 
         return view('dashboard.operator', compact('barangTerbaru', 'transaksiTerbaru', 'jumlahBarang'));
     }

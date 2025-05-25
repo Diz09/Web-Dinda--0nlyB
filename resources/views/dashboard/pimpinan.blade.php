@@ -39,7 +39,7 @@
                     class="filter-info border px-2 py-1 rounded w-20 text-sm">
                 <input type="number" name="month" placeholder="Bulan" value="{{ request('month', now()->month) }}"
                     class="filter-info border px-2 py-1 rounded w-16 text-sm">
-                <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Terapkan</button>
+                <button type="submit" class="bg-blue-500 text-black px-3 py-1 rounded text-sm" style="background: #bdbdf2">Terapkan</button>
             </form>
         </div>
     

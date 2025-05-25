@@ -43,7 +43,7 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
 });
 
 // Operator
-Route::middleware(['auth', 'role:operator'])->group(function () {
+// Route::middleware(['auth', 'role:operator'])->group(function () {
     // Route untuk Dashboard
     Route::get('/operator/dashboard', [DashboardController::class, 'operator'])->name('dashboard.operator');
     
@@ -76,11 +76,11 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::post('/operator/karyawan/{id}/gaji-bayar', [KaryawanController::class, 'gajiLunas'])->name('karyawan.gaji.bayar');
     
     // route untuk tindak presensi
-    Route::get('/operator/presensi/{kuartal_id}', [PresensiController::class, 'index'])->name('presensi.index');
+    Route::get('/operator/presensi/{kloter_id}', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
 
-    Route::post('/operator/gaji/{kuartal_id}', [PresensiController::class, 'store'])->name('presensi.gaji.store');
+    Route::post('/operator/gaji/{kloter_id}', [PresensiController::class, 'store'])->name('presensi.gaji.store');
     
     Route::post('/presensi/{id}/masuk', [PresensiController::class, 'inputMasuk'])->name('presensi.masuk');
     Route::post('/presensi/{id}/pulang', [PresensiController::class, 'inputPulang'])->name('presensi.pulang');
@@ -88,11 +88,11 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
     // Route::post('/presensi/tonikan/store', [PresensiController::class, 'simpanTonIkan'])->name('presensi.tonikan.store');
 
-    // route untuk data gaji per kuartal
+    // route untuk data gaji per kloter
     Route::post('/operator/gaji/{id}/lunas', [GajiController::class, 'bayar'])->name('gaji.lunas');
 
-    Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kuartal');
-    Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kuartal.detail');
+    Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kloter');
+    Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kloter.detail');
 
     // route untuk transaksi
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');
@@ -110,5 +110,5 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
 
         return response()->json($barangs);
     });
-});
+// });
 

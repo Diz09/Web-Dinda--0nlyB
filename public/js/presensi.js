@@ -1,19 +1,19 @@
-// pilih kuartal
-document.getElementById('kuartal_id').addEventListener('change', function () {
+// pilih kloter
+document.getElementById('kloter_id').addEventListener('change', function () {
     const id = this.value;
     if (id) {
         window.location.href = `/operator/presensi/${id}`;
     }
 });
 
-document.getElementById('btnLihatKuartal').addEventListener('click', function () {
-    const select = document.getElementById('kuartal_id');
+document.getElementById('btnLihatKloter').addEventListener('click', function () {
+    const select = document.getElementById('kloter_id');
     const id = select.value;
 
     if (id) {
         window.location.href = `/operator/gaji/${id}`;
     } else {
-        alert('Pilih kuartal terlebih dahulu');
+        alert('Pilih kloter terlebih dahulu');
     }
 });
 

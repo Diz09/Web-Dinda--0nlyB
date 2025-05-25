@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kuartal extends Model
+class Kloter extends Model
 {
-    protected $fillable = ['nama_kuartal'];
+    protected $fillable = ['nama_kloter'];
 
     public function presensis()
     {

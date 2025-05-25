@@ -8,7 +8,7 @@ use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 
 use App\Models\Karyawan;
-use App\Models\Kuartal;
+use App\Models\Kloter;
 use App\Models\Presensi;
 use App\Models\TonIkan;
 
@@ -16,28 +16,28 @@ class GajiController extends Controller
 {
     public function index()
     {
-        $kuartals = Kuartal::with(['presensis', 'tonIkan'])->orderBy('id', 'desc')->get();
+        $kloters = Kloter::with(['presensis', 'tonIkan'])->orderBy('id', 'desc')->get();
 
-        return view('operator.gaji.index', compact('kuartals'));
+        return view('operator.gaji.index', compact('kloters'));
     }
 
     public function detail($id)
     {
-        $kuartal = Kuartal::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
-        $selectedKuartal = Kuartal::with('tonIkan')->find($kuartal->id);
+        $kloter = Kloter::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
+        $selectedKloter = Kloter::with('tonIkan')->find($kloter->id);
 
         // Ambil semua tanggal unik
-        $tanggalUnik = $kuartal->presensis->pluck('tanggal')->unique()->sort()->values();
+        $tanggalUnik = $kloter->presensis->pluck('tanggal')->unique()->sort()->values();
 
         // Group presensi berdasarkan karyawan
-        $dataKaryawan = $kuartal->presensis->groupBy('karyawan_id');
+        $dataKaryawan = $kloter->presensis->groupBy('karyawan_id');
 
         // Hitung banyak pekerja yang presensi
         $banyakPekerja = $dataKaryawan->count();
 
         // Ambil jumlah ton dan harga per ton langsung dari relasi
-        $jumlahTon = $kuartal->tonIkan->jumlah_ton ?? 0;
-        $hargaPerTon = $kuartal->tonIkan->harga_ikan_per_ton ?? 1000000;
+        $jumlahTon = $kloter->tonIkan->jumlah_ton ?? 0;
+        $hargaPerTon = $kloter->tonIkan->harga_ikan_per_ton ?? 1000000;
 
         // Hitung gaji per jam
         $gajiPerJam = $banyakPekerja > 0 ? ($jumlahTon * $hargaPerTon) / $banyakPekerja : 0;
@@ -82,13 +82,13 @@ class GajiController extends Controller
         }
 
         return view('operator.gaji.detailGaji', compact(
-            'kuartal', 
+            'kloter', 
             'tanggalUnik', 
             'dataKaryawan', 
             'gajiPerJam', 
             'jumlahTon', 
             'hargaPerTon',
-            'selectedKuartal',
+            'selectedKloter',
             'karyawanWithGaji'
 
             // 'jumlahTonHariIni',

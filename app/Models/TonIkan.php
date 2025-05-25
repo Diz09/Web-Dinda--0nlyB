@@ -9,14 +9,14 @@ class TonIkan extends Model
 {
     protected $fillable = [
         // 'tanggal',
-        'kuartal_id',
+        'kloter_id',
         'jumlah_ton', 
         'harga_ikan_per_ton'
     ];
 
-    public function kuartal()
+    public function kloter()
     {
-        return $this->belongsTo(Kuartal::class);
+        return $this->belongsTo(Kloter::class);
     }
 
 }

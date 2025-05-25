@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
 
             // fungsi presensi dan penggajian
             KaryawanSeeder::class,
-            KuartalSeeder::class,
+            KloterSeeder::class,
             TonIkanSeeder::class,
             PresensiSeeder::class,
 

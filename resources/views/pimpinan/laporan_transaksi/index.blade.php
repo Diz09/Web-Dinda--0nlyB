@@ -12,7 +12,7 @@
         <span>s/d</span>
         <input type="date" name="tanggal_akhir" id="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="border px-2 py-1 rounded">
 
-        <button type="submit" name="export" value="excel" class="bg-green-600 text-white px-3 py-1 rounded" id="downloadExcel">
+        <button type="submit" name="export" value="excel" class="btn btn-success" id="downloadExcel">
             Unduh Excel
         </button>
     </form>

@@ -17,8 +17,8 @@ class LaporanKaryawanExport implements FromCollection, WithHeadings
     public function collection()
     {
         return collect($this->data)->map(function ($item, $index) {
-            $gajiPerKuartal = collect($item['gaji_per_kuartal'])->map(function ($gpk) {
-                return "Kuartal ID {$gpk['kuartal_id']}: Rp " . number_format($gpk['gaji'], 0, ',', '.') . " ({$gpk['total_jam']} jam)";
+            $gajiPerKloter = collect($item['gaji_per_kloter'])->map(function ($gpk) {
+                return "Kloter ID {$gpk['kloter_id']}: Rp " . number_format($gpk['gaji'], 0, ',', '.') . " ({$gpk['total_jam']} jam)";
             })->implode("\n"); // dipisah baris di Excel
 
             return [
@@ -27,7 +27,7 @@ class LaporanKaryawanExport implements FromCollection, WithHeadings
                 'Jenis Kelamin' => $item['karyawan']->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
                 'No Telepon' => $item['karyawan']->no_telepon,
                 'Total Jam Kerja' => $item['total_jam_kerja'] . ' Jam',
-                'Gaji per Kuartal' => $gajiPerKuartal,
+                'Gaji per Kloter' => $gajiPerKloter,
                 'Total Gaji' => 'Rp ' . number_format($item['total_gaji'], 0, ',', '.'),
             ];
         });
@@ -41,7 +41,7 @@ class LaporanKaryawanExport implements FromCollection, WithHeadings
             'Jenis Kelamin',
             'No Telepon',
             'Total Jam Kerja',
-            'Gaji per Kuartal',
+            'Gaji per Kloter',
             'Total Gaji',
         ];
     }

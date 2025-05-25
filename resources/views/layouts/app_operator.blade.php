@@ -34,9 +34,9 @@
         <div class="sidebar-category">Aktivitas</div>
         
         @php
-            $latestKuartalId = \App\Models\Kuartal::max('id');
+            $latestKloterId = \App\Models\Kloter::max('id');
         @endphp
-        <a href="{{ route('presensi.index', ['kuartal_id' => $latestKuartalId]) }}" class="sidebar-link">Presensi</a>
+        <a href="{{ route('presensi.index', ['kloter_id' => $latestKloterId]) }}" class="sidebar-link">Presensi</a>
 
         <a href="/operator/transaksi" class="sidebar-link">Transaksi</a>
 

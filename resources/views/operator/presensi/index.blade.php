@@ -8,20 +8,26 @@
 <div class="container mt-4">
     <h3 class="mb-4">Presensi Harian Pekerja</h3>
     
-    {{-- Pilih Kuartal --}}
-    <form id="formKuartal" class="mb-3">
-        <label for="kuartal_id">Pilih Kuartal</label>
+    {{-- Pilih Kloter --}}
+    <form id="formKloter" class="mb-3">
+        <label for="kloter_id">Pilih Kloter</label>
         <div class="input-group i-g">
-            <select name="kuartal_id" id="kuartal_id" class="form-control">
-                @foreach($kuartals as $k)
-                    <option value="{{ $k->id }}" {{ $selectedKuartal->id == $k->id ? 'selected' : '' }}>
-                        {{ $k->nama_kuartal }}
+            <select name="kloter_id" id="kloter_id" class="form-control">
+                @foreach($kloters as $k)
+                    {{-- kode untuk --}}
+                    <option value="{{ $k->id }}" {{ $selectedKloter->id == $k->id ? 'selected' : '' }}>
+                        {{ $k->nama_kloter }}
                     </option>
                 @endforeach
             </select>
             <!-- Tombol untuk membuka Modal -->
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editKuartalModal">Edit Kuartal</button>
-            <button type="button" class="btn btn-outline-primary" id="btnLihatKuartal">Lihat</button>
+            {{-- <button type="button" class="btn btn-success">Buat Kloter Baru</button> --}}
+            <form method="GET" class="mb-3" action="">
+                <input type="hidden" name="buat_kloter" value="1">
+                <button class="btn btn-success">Buat Kloter</button>
+            </form>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editKloterModal">Edit Kloter</button>
+            <button type="button" class="btn btn-outline-primary" id="btnLihatKloter">Lihat</button>
             @include('operator.presensi.edit')
         </div>
     </form>
@@ -63,7 +69,7 @@
                     @if(!$p || !$p->jam_masuk)
                         <form method="POST" action="{{ route('presensi.masuk', $k->id) }}" class="formPresensi">
                             @csrf
-                            <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+                            <input type="hidden" name="kloter_id" value="{{ $selectedKloter->id }}">
                             <input type="hidden" name="tanggal" value="{{ $tanggal }}">
                             <input type="hidden" name="jam" class="inputJam">
                             <input type="time" class="form-control inputManualJam d-none" name="jam_manual">
@@ -82,7 +88,7 @@
                     @if($p && !$p->jam_pulang)
                         <form method="POST" action="{{ route('presensi.pulang', $k->id) }}" class="formPresensi">
                             @csrf
-                            <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+                            <input type="hidden" name="kloter_id" value="{{ $selectedKloter->id }}">
                             <input type="hidden" name="tanggal" value="{{ $tanggal }}">
                             <input type="hidden" name="jam" class="inputJam">
                             <input type="time" class="form-control inputManualJam d-none" name="jam_manual">

@@ -12,7 +12,7 @@ class Presensi extends Model
 
     protected $fillable = [
         'karyawan_id',
-        'kuartal_id',
+        'kloter_id',
         'tanggal',
         'jam_masuk',
         'jam_pulang',
@@ -23,9 +23,9 @@ class Presensi extends Model
         return $this->belongsTo(Karyawan::class);
     }
     
-    public function kuartal()
+    public function kloter()
     {
-        return $this->belongsTo(Kuartal::class);
+        return $this->belongsTo(Kloter::class);
     }
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\BarangPendukung;
 
-class BarangMentahSeeder extends Seeder
+class BarangPendukungSeeder extends Seeder
 {
     /**
      * Run the database seeds.

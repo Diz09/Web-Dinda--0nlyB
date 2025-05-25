@@ -4,7 +4,7 @@
         <div class="modal-content">
         <form method="POST" action="{{ route('presensi.tonikan.store') }}">
             @csrf
-            <input type="hidden" name="kuartal_id" value="{{ $selectedKuartal->id }}">
+            <input type="hidden" name="kloter_id" value="{{ $selectedKloter->id }}">
 
             <div class="modal-header">
             <h5 class="modal-title" id="editModalLabel">Edit Jumlah Ton Ikan</h5>
@@ -14,12 +14,12 @@
             <div class="modal-body">
             <div class="mb-3">
                 <label for="jumlah_ton" class="form-label">Jumlah Ton Ikan (ton)</label>
-                <input id="jumlah_ton" type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $selectedKuartal->tonIkan->jumlah_ton) }}" required>
+                <input id="jumlah_ton" type="number" name="jumlah_ton" class="form-control" value="{{ old('jumlah_ton', $selectedKloter->tonIkan->jumlah_ton) }}" required>
             </div>
 
             <div class="mb-3">
                 <label for="harga_ikan_per_ton" class="form-label">Harga Ikan Per Ton (Rp)</label>
-                <input id="harga_ikan_per_ton" type="number" name="harga_ikan_per_ton" class="form-control" value="{{ old('harga_ikan_per_ton', $selectedKuartal->tonIkan->harga_ikan_per_ton) }}" required>
+                <input id="harga_ikan_per_ton" type="number" name="harga_ikan_per_ton" class="form-control" value="{{ old('harga_ikan_per_ton', $selectedKloter->tonIkan->harga_ikan_per_ton) }}" required>
             </div>
             </div>
 

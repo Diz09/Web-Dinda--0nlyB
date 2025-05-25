@@ -12,7 +12,7 @@ use App\Models\Supplier;
 // use App\Models\Produk;
 use App\Models\Karyawan;
 use App\Models\Presensi;
-use App\Models\Kuartal;
+use App\Models\Kloter;
 use App\Models\TonIkan;
 use App\Models\Transaksi;
 
@@ -67,16 +67,16 @@ class LaporanController extends Controller
         $nama = $request->input('nama');
 
         switch ($filter) {
-            case 'kuartal_terbaru':
-                // Ambil kuartal yang memiliki presensi dengan tanggal paling akhir
+            case 'kloter_terbaru':
+                // Ambil kloter yang memiliki presensi dengan tanggal paling akhir
                 $presensiTerbaru = Presensi::latest('tanggal')->first();
 
-                if ($presensiTerbaru && $presensiTerbaru->kuartal) {
-                    $kuartalTerbaru = $presensiTerbaru->kuartal;
+                if ($presensiTerbaru && $presensiTerbaru->kloter) {
+                    $kloterTerbaru = $presensiTerbaru->kloter;
 
-                    // Gunakan accessor dari model Kuartal
-                    $startDate = Carbon::parse($kuartalTerbaru->tanggal_mulai);
-                    $endDate = Carbon::parse($kuartalTerbaru->tanggal_akhir);
+                    // Gunakan accessor dari model Kloter
+                    $startDate = Carbon::parse($kloterTerbaru->tanggal_mulai);
+                    $endDate = Carbon::parse($kloterTerbaru->tanggal_akhir);
                 } else {
                     $startDate = $endDate = null;
                 }
@@ -100,34 +100,34 @@ class LaporanController extends Controller
                 break;
         }
 
-        // Ambil semua kuartal yang memiliki ton ikan
-        $kuartals = Kuartal::with(['tonIkan', 'presensis'])
+        // Ambil semua kloter yang memiliki ton ikan
+        $kloters = Kloter::with(['tonIkan', 'presensis'])
             ->get()
-            ->filter(fn($kuartal) => $kuartal->tonIkan);
+            ->filter(fn($kloter) => $kloter->tonIkan);
 
-        // Hitung gaji per jam tiap kuartal
-        // $gajiPerJamKuartal = [];
+        // Hitung gaji per jam tiap kloter
+        // $gajiPerJamKloter = [];
 
-        $gajiPerHariKuartal = [];
+        $gajiPerHariKloter = [];
 
-        foreach ($kuartals as $kuartal) {
-            $tonIkan = $kuartal->tonIkan;
+        foreach ($kloters as $kloter) {
+            $tonIkan = $kloter->tonIkan;
             $jumlahTon = $tonIkan->jumlah_ton ?? 0;
             $hargaPerTon = $tonIkan->harga_ikan_per_ton ?? 0;
 
-            $karyawanUnik = Presensi::where('kuartal_id', $kuartal->id)
+            $karyawanUnik = Presensi::where('kloter_id', $kloter->id)
                 ->distinct('karyawan_id')
                 ->pluck('karyawan_id');
 
-            $jumlahPekerjaKuartal = $karyawanUnik->count();
+            $jumlahPekerjaKloter = $karyawanUnik->count();
 
-            $gajiPerHariKuartal[$kuartal->id] = $jumlahPekerjaKuartal > 0
-                ? ($jumlahTon * $hargaPerTon) / $jumlahPekerjaKuartal
+            $gajiPerHariKloter[$kloter->id] = $jumlahPekerjaKloter > 0
+                ? ($jumlahTon * $hargaPerTon) / $jumlahPekerjaKloter
                 : 0;
         }
 
 
-        $karyawans = Karyawan::with('presensis.kuartal')
+        $karyawans = Karyawan::with('presensis.kloter')
             ->when($nama, fn($query) => $query->where('nama', 'like', '%' . $nama . '%'))
             ->get();
 
@@ -140,44 +140,44 @@ class LaporanController extends Controller
             // Ambil semua presensi karyawan, filter sesuai tanggal (misal filter minggu ini/hari ini)
             $presensis = $karyawan->presensis()
                 ->when($startDate && $endDate, fn($query) => $query->whereBetween('tanggal', [$startDate, $endDate]))
-                ->with('kuartal')
+                ->with('kloter')
                 ->get();
 
-            // Kelompokkan presensi per kuartal
-            $presensiPerKuartal = $presensis->groupBy('kuartal_id');
+            // Kelompokkan presensi per kloter
+            $presensiPerKloter = $presensis->groupBy('kloter_id');
 
-            $gajiPerKuartal = []; // Hitung gaji per kuartal
+            $gajiPerKloter = []; // Hitung gaji per kloter
 
-            foreach ($presensiPerKuartal as $kuartalId => $presensiKuartal) {
-                // Hitung total jam kerja karyawan di kuartal ini
-                $totalJamKerjaKuartal = 0;
-                foreach ($presensiKuartal as $presensi) {
+            foreach ($presensiPerKloter as $kloterId => $presensiKloter) {
+                // Hitung total jam kerja karyawan di kloter ini
+                $totalJamKerjaKloter = 0;
+                foreach ($presensiKloter as $presensi) {
                     $jamMasuk = Carbon::parse($presensi->jam_masuk);
                     $jamPulang = Carbon::parse($presensi->jam_pulang);
                     $jamKerja = $jamPulang->diffInSeconds($jamMasuk) / 3600;
-                    $totalJamKerjaKuartal += $jamKerja;
+                    $totalJamKerjaKloter += $jamKerja;
                 }
 
-                $totalJamKerja += $totalJamKerjaKuartal;
+                $totalJamKerja += $totalJamKerjaKloter;
 
-                // Gaji per hari kuartal (dari hasil sebelumnya)
-                $gajiPerHari = $gajiPerHariKuartal[$kuartalId] ?? 0;  // Variabel ini perlu kamu hitung sebelum loop karyawan
+                // Gaji per hari kloter (dari hasil sebelumnya)
+                $gajiPerHari = $gajiPerHariKloter[$kloterId] ?? 0;  // Variabel ini perlu kamu hitung sebelum loop karyawan
 
-                // Hitung gaji per jam untuk karyawan di kuartal ini
-                $gajiPerJam = $totalJamKerjaKuartal > 0 ? ($gajiPerHari / $totalJamKerjaKuartal) : 0;
+                // Hitung gaji per jam untuk karyawan di kloter ini
+                $gajiPerJam = $totalJamKerjaKloter > 0 ? ($gajiPerHari / $totalJamKerjaKloter) : 0;
 
-                // Hitung gaji kuartal ini
-                $gajiKuartalIni = $gajiPerJam * $totalJamKerjaKuartal;
+                // Hitung gaji kloter ini
+                $gajiKloterIni = $gajiPerJam * $totalJamKerjaKloter;
 
-                // Simpan detail per kuartal
-                $gajiPerKuartal[] = [
-                    'kuartal_id' => $kuartalId,
-                    'total_jam' => round($totalJamKerjaKuartal, 2),
-                    'gaji' => round($gajiKuartalIni, 0),
+                // Simpan detail per kloter
+                $gajiPerKloter[] = [
+                    'kloter_id' => $kloterId,
+                    'total_jam' => round($totalJamKerjaKloter, 2),
+                    'gaji' => round($gajiKloterIni, 0),
                 ];
 
                 // Tambah total gaji karyawan
-                $totalGaji += $gajiKuartalIni;
+                $totalGaji += $gajiKloterIni;
             }
 
             // Potong 20% jika karyawan perempuan
@@ -188,7 +188,7 @@ class LaporanController extends Controller
             $data[] = [
                 'karyawan' => $karyawan,
                 'total_jam_kerja' => round($totalJamKerja, 2),
-                'gaji_per_kuartal' => $gajiPerKuartal,
+                'gaji_per_kloter' => $gajiPerKloter,
                 'total_gaji' => round($totalGaji, 0),
             ];
         }

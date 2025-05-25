@@ -16,7 +16,7 @@ class PresensiSeeder extends Seeder
         $presensiData = [
             [
                 'karyawan_id' => 1,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -25,7 +25,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 2,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -34,7 +34,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 3,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -43,7 +43,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 4,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -52,7 +52,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 5,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -61,7 +61,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 6,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -70,7 +70,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 7,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -79,7 +79,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 8,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -88,7 +88,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 9,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -97,7 +97,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 10,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-24',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -106,7 +106,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 1,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -115,7 +115,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 2,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -124,7 +124,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 4,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -133,7 +133,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 5,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -142,7 +142,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 6,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -151,7 +151,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 7,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -160,7 +160,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 8,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -169,7 +169,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 9,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -178,7 +178,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 10,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-25',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -187,7 +187,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 1,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -196,7 +196,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 2,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -205,7 +205,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 3,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -214,7 +214,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 4,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -223,7 +223,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 5,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -232,7 +232,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 6,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -241,7 +241,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 7,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -250,7 +250,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 8,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -259,7 +259,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 9,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -268,7 +268,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 10,
-                'kuartal_id' => 1,
+                'kloter_id' => 1,
                 'tanggal' => '2025-04-26',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -277,7 +277,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 1,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -286,7 +286,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 2,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -295,7 +295,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 3,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -304,7 +304,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 4,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -313,7 +313,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 5,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -322,7 +322,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 6,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -331,7 +331,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 7,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -340,7 +340,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 8,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -349,7 +349,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 9,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -358,7 +358,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 10,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-27',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -367,7 +367,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 1,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -376,7 +376,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 3,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '05:19:37',
                 'jam_pulang' => '18:24:46',
@@ -385,7 +385,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 5,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',
@@ -394,7 +394,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 6,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '08:40:32',
                 'jam_pulang' => '17:12:28',
@@ -403,7 +403,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 7,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '05:19:13',
                 'jam_pulang' => '18:24:42',
@@ -412,7 +412,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 9,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '05:19:38',
                 'jam_pulang' => '18:24:38',
@@ -421,7 +421,7 @@ class PresensiSeeder extends Seeder
             ],
             [
                 'karyawan_id' => 10,
-                'kuartal_id' => 2,
+                'kloter_id' => 2,
                 'tanggal' => '2025-04-28',
                 'jam_masuk' => '05:19:30',
                 'jam_pulang' => '18:24:43',

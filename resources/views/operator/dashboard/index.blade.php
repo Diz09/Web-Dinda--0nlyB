@@ -49,7 +49,7 @@
                                 <td class="p-2">{{ $i + 1 }}</td>
                                 <td class="p-2">{{ $kode }}</td>
                                 <td class="p-2">{{ $brg->nama_barang }}</td>
-                                <td class="p-2">{{ number_format($brg->qty, 0, ',', '.') }} Ton</td>
+                                <td class="p-2">{{ number_format($brg->qty, 0, ',', '.') }} kg</td>
                             </tr>
                         @endforeach
                     </tbody>

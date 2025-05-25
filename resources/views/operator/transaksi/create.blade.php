@@ -51,7 +51,7 @@
 
           <div class="mb-3">
             <label for="jumlahRp">Jumlah Harga (Rp)</label>
-            <input type="number" name="jumlahRp" id="jumlahRp" class="form-control" readonly>
+            <input type="number" name="jumlahRp" id="jumlahRp" class="form-control" required>
           </div>
 
           <div class="mb-3">

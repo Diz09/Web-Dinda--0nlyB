@@ -77,7 +77,7 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     
     // route untuk tindak presensi
     Route::post('/presensi/pilih-karyawan', [PresensiController::class, 'pilihKaryawan'])->name('presensi.pilih-karyawan');
-    
+
     Route::get('/operator/presensi/{kloter_id}', [PresensiController::class, 'index'])->name('presensi.index');
     Route::get('/operator/presensi/create', [PresensiController::class, 'create'])->name('presensi.create');
     Route::post('/operator/presensi', [PresensiController::class, 'store'])->name('presensi.store');
@@ -96,6 +96,8 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
 
     Route::get('/operator/gaji', [GajiController::class, 'index'])->name('gaji.kloter');
     Route::get('/operator/gaji/{id}', [GajiController::class, 'detail'])->name('gaji.kloter.detail');
+
+    Route::post('/gaji/kloter/{id}/selesai', [GajiController::class, 'kloterSelesai'])->name('gaji.kloter.selesai');
 
     // route untuk transaksi
     Route::get('/operator/transaksi', [TransaksiController::class, 'index'])->name('operator.transaksi.index');

@@ -11,14 +11,39 @@ use App\Models\Karyawan;
 use App\Models\Kloter;
 use App\Models\Presensi;
 use App\Models\TonIkan;
+use App\Models\HistoryGajiKloter;
 
 class GajiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kloters = Kloter::with(['presensis', 'tonIkan'])->orderBy('id', 'desc')->get();
+        $tahun = $request->input('tahun');
+        $status = $request->input('status');
 
-        return view('operator.gaji.index', compact('kloters'));
+        $klotersQuery = Kloter::with(['presensis', 'tonIkan'])->orderBy('id', 'desc');
+
+        if ($tahun) {
+            $klotersQuery->whereHas('presensis', function ($query) use ($tahun) {
+                $query->whereYear('tanggal', $tahun);
+            });
+        }
+
+        $kloters = $klotersQuery->get();
+
+        // Filter manual untuk status
+        if ($status === 'selesai') {
+            $kloters = $kloters->filter(function ($kloter) {
+                return HistoryGajiKloter::where('kloter_id', $kloter->id)->exists();
+            });
+        } elseif ($status === 'belum') {
+            $kloters = $kloters->filter(function ($kloter) {
+                return !HistoryGajiKloter::where('kloter_id', $kloter->id)->exists();
+            });
+        }
+
+        $tahunList = Presensi::selectRaw('YEAR(tanggal) as tahun')->distinct()->pluck('tahun');
+
+        return view('operator.gaji.index', compact('kloters', 'tahun', 'tahunList', 'status'));
     }
 
     public function detail($id)
@@ -90,10 +115,52 @@ class GajiController extends Controller
             'hargaPerTon',
             'selectedKloter',
             'karyawanWithGaji'
-
-            // 'jumlahTonHariIni',
-            // 'hargaIkanPerTon'
         ));
+    }
+
+    public function kloterSelesai($id)
+    {
+        $kloter = Kloter::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
+
+        $alreadyDone = HistoryGajiKloter::where('kloter_id', $kloter->id)->exists();
+
+        if ($alreadyDone) {
+        return redirect()->route('gaji.index')->with('error', 'Kloter ini sudah ditandai selesai sebelumnya.');
+        }
+
+        $kloter = Kloter::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
+
+        $dataKaryawan = $kloter->presensis->groupBy('karyawan_id');
+        $banyakPekerja = $dataKaryawan->count();
+
+        $jumlahTon = $kloter->tonIkan->jumlah_ton ?? 0;
+        $hargaPerTon = $kloter->tonIkan->harga_ikan_per_ton ?? 1000000;
+        $gajiPerJam = $banyakPekerja > 0 ? ($jumlahTon * $hargaPerTon) / $banyakPekerja : 0;
+
+        $totalGaji = 0;
+
+        foreach ($dataKaryawan as $presensis) {
+            $karyawan = $presensis->first()->karyawan;
+            $totalJam = $presensis->sum(function ($presensi) {
+                return (strtotime($presensi->jam_pulang) - strtotime($presensi->jam_masuk)) / 3600;
+            });
+
+            $gaji = $gajiPerJam * $totalJam;
+            if ($karyawan->jenis_kelamin === 'P') {
+                $gaji *= 0.8;
+            }
+
+            $totalGaji += $gaji;
+        }
+
+        HistoryGajiKloter::create([
+            'kloter_id' => $kloter->id,
+            'jml_karyawan' => $banyakPekerja,
+            'total_gaji' => $totalGaji,
+            'waktu' => now()
+        ]);
+
+        return redirect()->route('gaji.kloter')->with('success', 'Kloter berhasil diselesaikan.');
     }
 
 }

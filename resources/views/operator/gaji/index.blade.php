@@ -4,7 +4,26 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Kloter Gaji</h3>
 
-    <div>Filter tahun</div>
+    <form method="GET" class="mb-3">
+        <div class="row g-2 align-items-center" style="justify-content: end;">
+            <div class="col-auto">
+                <select name="tahun" class="form-select" onchange="this.form.submit()">
+                    <option value="">Semua Tahun</option>
+                    @foreach($tahunList as $t)
+                        <option value="{{ $t }}" {{ $tahun == $t ? 'selected' : '' }}>{{ $t }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-auto">
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">Semua Status</option>
+                    <option value="selesai" {{ $status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="belum" {{ $status == 'belum' ? 'selected' : '' }}>Belum</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
     
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -15,6 +34,7 @@
                     <th>Ton Ikan</th>
                     <th>Tanggal Mulai</th>
                     <th>Tanggal Akhir</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +57,21 @@
                                 ? \Carbon\Carbon::parse($kloter->presensis->max('tanggal'))->format('d-m-Y') 
                                 : '-' }}
                         </td>
+                        <td class="text-center">
+                            @php
+                                $isSelesai = \App\Models\HistoryGajiKloter::where('kloter_id', $kloter->id)->exists();
+                            @endphp
+
+                            @if (!$isSelesai)
+                                <form action="{{ route('gaji.kloter.selesai', $kloter->id) }}" method="POST" class="form-kloter-selesai">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-selesai">Tandai Selesai</button>
+                                </form>
+                            @else
+                                <span class="badge bg-success">Selesai</span><br>
+                                <small class="text-muted">Sudah diproses</small>
+                            @endif
+                        </td>
                     </tr>
                     @empty
                     <tr>
@@ -47,4 +82,8 @@
         </table>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/gaji.js') }}"></script>
+
 @endsection

@@ -61,6 +61,10 @@
                             data-satuan="{{ $trx['satuan'] }}"
                             data-jumlahrp="{{ $trx['jumlahRp'] }}"
                             data-waktu="{{ \Carbon\Carbon::parse($trx['waktu_transaksi'])->format('Y-m-d\TH:i') }}"
+                            {{-- data-jenis_kardus_id="{{ json_decode($trx['keterangan'] ?? '{}')->jenis_kardus_id ?? '' }}"
+                            data-jumlah_kardus="{{ json_decode($trx['keterangan'] ?? '{}')->jumlah_kardus ?? '' }}" --}}
+                            data-jenis_kardus_id="{{ $keterangan['jenis_kardus_id'] ?? '' }}"
+                            data-jumlah_kardus="{{ $keterangan['jumlah_kardus'] ?? '' }}"
                         >
                             Edit
                         </button>

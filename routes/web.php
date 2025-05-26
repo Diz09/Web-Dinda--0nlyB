@@ -55,6 +55,7 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     Route::put('/operator/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
     Route::delete('/operator/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     Route::patch('/operator/barang/{id}/update-qty', [BarangController::class, 'updateQty'])->name('barang.updateQty');
+    Route::get('/barang/check', [BarangController::class, 'check'])->name('barang.check');
 
     
     // route untuk data supplier

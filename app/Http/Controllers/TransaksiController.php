@@ -96,6 +96,11 @@ class TransaksiController extends Controller
         $pemasoks = Supplier::whereHas('pemasok')->get();
         $konsumens = Supplier::whereHas('konsumen')->get();
 
+        $kardusList = Barang::with('kardus')->get()->flatMap(function ($barang) {
+            return $barang->kardus;
+        });
+
+
         // dd($kategori, $tipe, $barangs->pluck('nama_barang')); // debug untuk melihat kategori, tipe, dan nama barang
 
         return view('operator.transaksi.index', [
@@ -104,6 +109,7 @@ class TransaksiController extends Controller
             'suppliers' => $suppliers, 
             'pemasoks' => $pemasoks,
             'konsumens' => $konsumens,
+            'kardusList' => $kardusList,
         ]);
     }
 
@@ -116,6 +122,8 @@ class TransaksiController extends Controller
             'qtyHistori' => 'required|numeric|min:1',
             'jumlahRp' => 'nullable|numeric|min:0',
             'satuan' => 'required|in:ton,kg,g,liter,paket',
+            'jenis_kardus' => 'nullable|exists:barangs,id',
+            'jumlah_kardus' => 'nullable|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -134,6 +142,18 @@ class TransaksiController extends Controller
                 'g' => $qtyHistori / 1000,
                 default => $qtyHistori // liter dan paket tidak dikonversi
             };
+
+            $hargaKardus = 0;
+            if ($request->filled('jenis_kardus') && $request->jumlah_kardus > 0) {
+                $kardus = Barang::find($request->jenis_kardus);
+                if ($kardus) {
+                    $hargaKardus = $kardus->harga * $request->jumlah_kardus;
+
+                    // Kurangi stok kardus
+                    $kardus->qty -= $request->jumlah_kardus;
+                    $kardus->save();
+                }
+            }
 
             // Variabel untuk ID
             $pemasukan_id = null;
@@ -158,6 +178,7 @@ class TransaksiController extends Controller
 
                 // Hitung jumlahRp jika kosong
                 $jumlahRp = $jumlahRp ?: ($barang->harga * $qty_kg);
+                $jumlahRp += $hargaKardus;
 
             } elseif ($kategori === 'pengeluaran') {
                 // Buat kode pengeluaran
@@ -171,14 +192,18 @@ class TransaksiController extends Controller
                 $barang->qty += $qty_kg;
                 $barang->save();
 
-                // Hitung harga satuan untuk update barang
-                // $harga_satuan = $qty_kg > 0 ? $jumlahRp / $qty_kg : 0;
-                // $barang->harga = $harga_satuan;
-                // $barang->save();
+                // if ($jumlahRp && $qty_kg > 0) {
+                //     $barang->harga = $jumlahRp / $qty_kg;
+                //     $barang->save();
+                // }
 
                 if ($jumlahRp && $qty_kg > 0) {
-                    $barang->harga = $jumlahRp / $qty_kg;
-                    $barang->save();
+                    $hargaBarangSaja = $jumlahRp - $hargaKardus;
+
+                    if ($hargaBarangSaja > 0) {
+                        $barang->harga = $hargaBarangSaja / $qty_kg;
+                        $barang->save();
+                    }
                 }
             }
 
@@ -193,6 +218,10 @@ class TransaksiController extends Controller
                 'jumlahRp' => $jumlahRp,
                 'satuan' => $satuan,
                 'waktu_transaksi' => $waktu,
+                'keterangan' => json_encode([
+                    'jenis_kardus_id' => $request->jenis_kardus,
+                    'jumlah_kardus' => $request->jumlah_kardus,
+                ]),
             ]);
 
             DB::commit();
@@ -203,7 +232,7 @@ class TransaksiController extends Controller
             return back()->withInput()->withErrors(['error' => 'Gagal menyimpan transaksi: ' . $th->getMessage()]);
         }
     }
-
+    
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -213,60 +242,100 @@ class TransaksiController extends Controller
             'qtyHistori' => 'required|numeric|min:1',
             'jumlahRp' => 'nullable|numeric|min:0',
             'waktu_transaksi' => 'nullable|date',
-            'tipe_barang' => 'nullable|in:pendukung',
             'satuan' => 'required|in:ton,kg,g,liter,paket',
+            'jenis_kardus' => 'nullable|exists:barangs,id',
+            'jumlah_kardus' => 'nullable|numeric|min:0',
         ]);
 
-        $transaksi = Transaksi::findOrFail($id);
-        $barang = Barang::findOrFail($request->barang_id);
+        DB::beginTransaction();
+        try {
+            $transaksi = Transaksi::findOrFail($id);
+            $barang = Barang::findOrFail($request->barang_id);
 
-        // Kembalikan stok lama terlebih dahulu
-        if ($transaksi->kategori === 'pengeluaran') {
-            $barang->qty -= $transaksi->qtyHistori;
-        } else {
-            $barang->qty += $transaksi->qtyHistori;
-        }
-
-        // Konversi satuan ke kg
-        $qty = $request->qtyHistori;
-        $satuan = $request->satuan;
-        $qty_kg = match($satuan) {
-            'ton' => $qty * 1000,
-            'kg' => $qty,
-            'g' => $qty / 1000,
-            default => $qty,
-        };
-
-        // Hitung stok baru berdasarkan kategori
-        if ($request->kategori === 'pengeluaran') {
-            $barang->qty += $qty_kg;
-        } else {
-            if ($barang->qty < $qty_kg) {
-                return back()->withErrors(['qtyHistori' => 'Stok barang tidak mencukupi untuk pemasukan.']);
+            // Kembalikan stok barang sebelumnya
+            if ($transaksi->kategori === 'pengeluaran') {
+                $barang->qty -= $transaksi->qtyHistori;
+            } else {
+                $barang->qty += $transaksi->qtyHistori;
             }
-            $barang->qty -= $qty_kg;
 
-            // Hitung ulang harga jika jumlahRp diisi
-            if ($request->jumlahRp && $qty_kg > 0) {
-                $barang->harga = $request->jumlahRp / $qty_kg;
+            // Ambil data kardus lama dari keterangan dan kembalikan stok
+            $keteranganLama = json_decode($transaksi->keterangan, true) ?? [];
+            $jenisKardusLamaId = $keteranganLama['jenis_kardus_id'] ?? null;
+            $jumlahKardusLama = $keteranganLama['jumlah_kardus'] ?? 0;
+
+            if ($jenisKardusLamaId && $jumlahKardusLama > 0) {
+                Barang::where('id', $jenisKardusLamaId)->increment('qty', $jumlahKardusLama);
             }
+
+            // Hitung qty dalam kg
+            $qty = $request->qtyHistori;
+            $satuan = $request->satuan;
+            $qty_kg = match($satuan) {
+                'ton' => $qty * 1000,
+                'kg' => $qty,
+                'g' => $qty / 1000,
+                default => $qty,
+            };
+
+            // Hitung harga kardus baru
+            $hargaKardus = 0;
+            if ($request->filled('jenis_kardus') && $request->jumlah_kardus > 0) {
+                $kardusBaru = Barang::find($request->jenis_kardus);
+                if ($kardusBaru) {
+                    $hargaKardus = $kardusBaru->harga * $request->jumlah_kardus;
+                    $kardusBaru->qty -= $request->jumlah_kardus;
+                    $kardusBaru->save();
+                }
+            }
+
+            // Hitung ulang stok & harga barang
+            if ($request->kategori === 'pengeluaran') {
+                $barang->qty += $qty_kg;
+            } else {
+                if ($barang->qty < $qty_kg) {
+                    return back()->withErrors(['qtyHistori' => 'Stok barang tidak mencukupi untuk pemasukan.']);
+                }
+                $barang->qty -= $qty_kg;
+
+                // Hitung harga barang (tidak termasuk kardus)
+                if ($request->jumlahRp && $qty_kg > 0) {
+                    $hargaBarangSaja = $request->jumlahRp - $hargaKardus;
+                    if ($hargaBarangSaja > 0) {
+                        $barang->harga = $hargaBarangSaja / $qty_kg;
+                    }
+                }
+            }
+
+            $barang->save();
+
+            // Hitung total jumlah Rp termasuk kardus
+            $jumlahRp = $request->jumlahRp ?: ($barang->harga * $qty_kg);
+            $jumlahRp += $hargaKardus;
+
+            // Simpan perubahan transaksi
+            $transaksi->update([
+                'barang_id' => $barang->id,
+                'supplier_id' => $request->supplier_id,
+                'kategori' => $request->kategori,
+                'jumlahRp' => $jumlahRp,
+                'qtyHistori' => $qty,
+                'satuan' => $satuan,
+                'waktu_transaksi' => $request->waktu_transaksi,
+                'keterangan' => json_encode([
+                    'jenis_kardus_id' => $request->jenis_kardus,
+                    'jumlah_kardus' => $request->jumlah_kardus,
+                ])
+            ]);
+
+            DB::commit();
+            return redirect()->route('operator.transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => 'Gagal memperbarui transaksi: ' . $th->getMessage()]);
         }
-
-        $barang->save();
-
-        // Update transaksi
-        $transaksi->update([
-            'barang_id' => $barang->id,
-            'supplier_id' => $request->supplier_id,
-            'kategori' => $request->kategori,
-            'jumlahRp' => $request->jumlahRp,
-            'qtyHistori' => $qty,
-            'satuan' => $satuan,
-            'waktu_transaksi' => $request->waktu_transaksi,
-        ]);
-
-        return redirect()->route('operator.transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
     }
+
 
 
     public function destroy($id)

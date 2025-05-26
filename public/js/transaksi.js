@@ -19,6 +19,8 @@ const qtyInput = document.getElementById('qtyHistori');
 const satuanSelect = document.getElementById('satuan');
 const jumlahRpInput = document.getElementById('jumlahRp');
 
+
+
 function fillBarangOptions(kategori) {
     const tipe = kategori === 'pengeluaran' ? 'pendukung' : 'produk';
     barangSelect.innerHTML = '<option value="">-- Pilih Barang --</option>';
@@ -47,21 +49,35 @@ function fillSupplierOptions(kategori) {
 }
 
 function hitungJumlahRpCreate() {
-    const harga = parseFloat(barangSelect.selectedOptions[0]?.dataset.harga || 0);
+    const hargaBarang = parseFloat(barangSelect.selectedOptions[0]?.dataset.harga || 0);
     const qty = parseFloat(qtyInput.value || 0);
     const satuan = satuanSelect.value;
     const qtyKg = konversiSatuanKeKg(satuan, qty);
-    jumlahRpInput.value = (harga * qtyKg).toFixed(0);
+
+    // Kardus
+    const kardusSelect = document.getElementById('jenis_kardus');
+    const jumlahKardusInput = document.getElementById('jumlah_kardus');
+    const hargaKardus = parseFloat(kardusSelect?.selectedOptions[0]?.dataset.harga || 0);
+    const jumlahKardus = parseFloat(jumlahKardusInput?.value || 0);
+
+    const totalBarang = hargaBarang * qtyKg;
+    const totalKardus = hargaKardus * jumlahKardus;
+
+    jumlahRpInput.value = (totalBarang + totalKardus).toFixed(0);
 }
 
 if (kategoriSelect) {
     kategoriSelect.addEventListener('change', () => {
         fillBarangOptions(kategoriSelect.value);
         fillSupplierOptions(kategoriSelect.value);
+        toggleInputKardus(kategoriSelect.value);
     });
     barangSelect.addEventListener('change', hitungJumlahRpCreate);
     qtyInput.addEventListener('input', hitungJumlahRpCreate);
     satuanSelect.addEventListener('change', hitungJumlahRpCreate);
+    document.getElementById('jenis_kardus')?.addEventListener('change', hitungJumlahRpCreate);
+    document.getElementById('jumlah_kardus')?.addEventListener('input', hitungJumlahRpCreate);
+
 
     $('#createModal').on('show.bs.modal', () => {
         kategoriSelect.value = '';
@@ -85,6 +101,7 @@ const jumlahRpInputEdit = document.getElementById('editJumlahRp');
 kategoriEdit?.addEventListener('change', function () {
     fillBarangOptionsEdit(this.value, barangEdit.value);
     fillSupplierOptionsEdit(this.value, supplierEdit.value);
+    toggleInputKardusEdit(this.value);
     hitungJumlahRpEdit();
 });
 
@@ -118,12 +135,52 @@ function fillSupplierOptionsEdit(kategori, selectedId) {
 }
 
 function hitungJumlahRpEdit() {
-    const harga = parseFloat(barangEdit.selectedOptions[0]?.dataset.harga || 0);
+    const hargaBarang = parseFloat(barangEdit.selectedOptions[0]?.dataset.harga || 0);
     const qty = parseFloat(qtyInputEdit.value || 0);
     const satuan = satuanEdit.value;
     const qtyKg = konversiSatuanKeKg(satuan, qty);
-    jumlahRpInputEdit.value = (harga * qtyKg).toFixed(0);
+
+    // Kardus
+    const kardusSelect = document.getElementById('edit_jenis_kardus');
+    const jumlahKardusInput = document.getElementById('edit_jumlah_kardus');
+    const hargaKardus = parseFloat(kardusSelect?.selectedOptions[0]?.dataset.harga || 0);
+    const jumlahKardus = parseFloat(jumlahKardusInput?.value || 0);
+
+    const totalBarang = hargaBarang * qtyKg;
+    const totalKardus = hargaKardus * jumlahKardus;
+
+    jumlahRpInputEdit.value = (totalBarang + totalKardus).toFixed(0);
 }
+
+function toggleInputKardus(kategori) {
+    const showKardus = kategori === 'pemasukan';
+
+    const jenisKardusGroup = document.getElementById('group_jenis_kardus');
+    const jumlahKardusGroup = document.getElementById('group_jumlah_kardus');
+
+    jenisKardusGroup.style.display = showKardus ? 'block' : 'none';
+    jumlahKardusGroup.style.display = showKardus ? 'block' : 'none';
+
+    if (!showKardus) {
+        document.getElementById('jenis_kardus').value = '';
+        document.getElementById('jumlah_kardus').value = '';
+    }
+}
+toggleInputKardus(''); // pastikan disembunyikan saat awal
+
+function toggleInputKardusEdit(kategori) {
+    const show = kategori === 'pemasukan';
+    document.getElementById('edit_group_jenis_kardus').style.display = show ? 'block' : 'none';
+    document.getElementById('edit_group_jumlah_kardus').style.display = show ? 'block' : 'none';
+
+    if (!show) {
+        document.getElementById('edit_jenis_kardus').value = '';
+        document.getElementById('edit_jumlah_kardus').value = '';
+        toggleInputKardusEdit(data.kategori);
+    }
+}
+// toggleInputKardusEdit(''); // pastikan disembunyikan saat awal
+
 
 $('.btn-edit').on('click', function () {
     const data = this.dataset;
@@ -136,6 +193,16 @@ $('.btn-edit').on('click', function () {
     jumlahRpInputEdit.value = data.jumlahrp;
     document.getElementById('editWaktu').value = data.waktu;
     document.getElementById('formEdit').action = `/operator/transaksi/${data.id}`;
+    // 🔧 Tunggu sampai opsi selesai dimuat
+    setTimeout(() => {
+        document.getElementById('edit_jenis_kardus').value = data.jenis_kardus_id || '';
+        document.getElementById('edit_jumlah_kardus').value = data.jumlah_kardus || '';
+        toggleInputKardusEdit(data.kategori);
+    }, 50); // bisa 0–100ms, tergantung kompleksitas
+
+    // Debug opsional
+    console.log("Jenis Kardus ID:", data.jenis_kardus_id);
+    console.log("Jumlah Kardus:", data.jumlah_kardus);
 
     console.log('Kategori:', kategori);
     console.log('Barang ID:', editBarang);

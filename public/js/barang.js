@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Peringatan Hapus Barang
-    document.querySelectorAll('.formDeleteBarang').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Tahan submit dulu
+    document.querySelectorAll('.formDeleteBarang').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
 
             Swal.fire({
                 title: 'Hapus Data?',
@@ -50,27 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit(); // Jika setuju, submit form
+                    form.submit();
                 }
             });
         });
     });
 
     // Cek Nama Barang Sudah Ada atau Belum
-    const namaBarangInput = document.querySelector('#nama_barang');
-    if (namaBarangInput) {
-        namaBarangInput.addEventListener('change', function () {
-            const form = document.getElementById('checkForm');
-            if (form) {
-                form.submit(); // kirim GET ke backend untuk cek nama barang
-            }
-        });
-    }
-
-    // peringatan jika barang sudah ada
     const dataDiv = document.getElementById('barang-data');
-    const barangSudahAda = dataDiv?.dataset.barangSudahAda === '1';
-    if (barangSudahAda) {
+    if (dataDiv?.dataset.barangSudahAda === '1') {
         Swal.fire({
             icon: 'warning',
             title: 'Barang Sudah Ada!',
@@ -78,76 +66,72 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmButtonText: 'Mengerti'
         });
     }
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    const kodeInputWrapper = document.getElementById('kode')?.closest('.mb-3');
-    if (kodeInputWrapper) {
-        const barangSudahAda = document.getElementById('barangSudahAda')?.value === '1';
-        const namaBarang = document.getElementById('namaBarang')?.value || '';
-        const newKode = document.getElementById('newKode')?.value || '';
-
-        // Kosongkan dulu isinya
-        kodeInputWrapper.innerHTML = '';
-
-        const label = document.createElement('label');
-        label.className = 'form-label';
-        label.setAttribute('for', 'kode');
-        label.innerText = 'Kode';
-        kodeInputWrapper.appendChild(label);
-
-        if (barangSudahAda && namaBarang !== '') {
-            const input = document.createElement('input');
-            input.id = 'kode';
-            input.type = 'text';
-            input.className = 'form-control is-invalid';
-            input.value = 'Barang sudah ada. Tidak dibuat kode baru.';
-            input.disabled = true;
-
-            const feedback = document.createElement('div');
-            feedback.className = 'invalid-feedback';
-            feedback.innerHTML = `Barang <strong>${namaBarang}</strong> sudah ada, data digabung.`;
-
-            kodeInputWrapper.appendChild(input);
-            kodeInputWrapper.appendChild(feedback);
-        } else {
-            const input = document.createElement('input');
-            input.id = 'kode';
-            input.type = 'text';
-            input.className = 'form-control';
-            input.name = 'kode';
-            input.value = newKode;
-            input.readOnly = true;
-
-            kodeInputWrapper.appendChild(input);
-        }
+    
+    // Fungsi debounce (untuk input cepat)
+    function debounce(func, delay = 300) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
     }
 
-    namaBarangInput.addEventListener('change', function () {
-        const nama = this.value;
+    // Cek Nama Barang Saat Modal Dibuka
+    const createModal = document.getElementById('createModal');
+    if (createModal) {
+        const debouncedHandler = debounce(handleNamaBarangChange, 300);
+
+        createModal.addEventListener('shown.bs.modal', () => {
+            const namaBarangInput = document.querySelector('#nama_barang');
+            if (!namaBarangInput) return;
+
+            // Pastikan hanya satu event listener terpasang
+            namaBarangInput.removeEventListener('input', debouncedHandler);
+            namaBarangInput.addEventListener('input', debouncedHandler);
+        });
+    }
+
+    // fungsi cek nama barang dan tampilkan kode
+    function handleNamaBarangChange() {
+        const nama = this.value.trim();
         const filter = document.querySelector('input[name="filter"]')?.value || '';
 
-        fetch(`/barang/check?nama_barang=${encodeURIComponent(nama)}&filter=${filter}`)
-            .then(response => response.json())
-            .then(data => {
-                // Update nilai hidden
-                document.getElementById('barangSudahAda').value = data.barang_sudah_ada ? '1' : '0';
-                document.getElementById('namaBarang').value = data.nama_barang || '';
-                document.getElementById('newKode').value = data.kode || '';
+        if (nama.length < 3) return; // minimal 3 karakter agar tidak spam server
 
-                // Jalankan ulang fungsi perbarui tampilan input #kode
-                updateKodeInput();
+        fetch(`/barang/check?nama_barang=${encodeURIComponent(nama)}&filter=${filter}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Gagal fetch");
+                return response.json();
+            })
+            .then(data => {
+                const inputBarangSudahAda = document.getElementById('barangSudahAda');
+                const inputNamaBarang = document.getElementById('namaBarang');
+                const inputNewKode = document.getElementById('newKode');
+
+                if (inputBarangSudahAda && inputNamaBarang && inputNewKode) {
+                    inputBarangSudahAda.value = data.barang_sudah_ada ? '1' : '0';
+                    inputNamaBarang.value = data.nama_barang || '';
+                    inputNewKode.value = data.kode || '';
+                    updateKodeInput();
+                } else {
+                    console.warn("Elemen hidden input tidak ditemukan");
+                }
+            })
+            .catch(error => {
+                console.error("Gagal mengambil data dari /barang/check:", error);
             });
-    });
-    
+    }
+
+    // Fungsi untuk Update Tampilan Kode Barang
     function updateKodeInput() {
-        const kodeInputWrapper = document.getElementById('kode')?.closest('.mb-3');
+        const kodeInputWrapper = document.getElementById('kodeInputWrapper');
         if (!kodeInputWrapper) return;
 
         const barangSudahAda = document.getElementById('barangSudahAda')?.value === '1';
         const namaBarang = document.getElementById('namaBarang')?.value || '';
         const newKode = document.getElementById('newKode')?.value || '';
 
-        kodeInputWrapper.innerHTML = '';
+        kodeInputWrapper.innerHTML = ''; // Kosongkan
 
         const label = document.createElement('label');
         label.className = 'form-label';
@@ -155,29 +139,25 @@ document.addEventListener('DOMContentLoaded', function () {
         label.innerText = 'Kode';
         kodeInputWrapper.appendChild(label);
 
+        const input = document.createElement('input');
+        input.id = 'kode';
+        input.type = 'text';
+        input.className = 'form-control';
+        input.readOnly = true;
+
         if (barangSudahAda && namaBarang !== '') {
-            const input = document.createElement('input');
-            input.id = 'kode';
-            input.type = 'text';
-            input.className = 'form-control is-invalid';
-            input.value = 'Barang sudah ada. Tidak dibuat kode baru.';
+            input.classList.add('is-invalid');
+            input.value = newKode || 'Barang sudah ada';
             input.disabled = true;
 
             const feedback = document.createElement('div');
             feedback.className = 'invalid-feedback';
-            feedback.innerHTML = `Barang <strong>${namaBarang}</strong> sudah ada, data digabung.`;
+            feedback.innerHTML = `Barang <strong>${namaBarang}</strong> sudah ada. Kode: <strong>${newKode}</strong>`;
 
             kodeInputWrapper.appendChild(input);
             kodeInputWrapper.appendChild(feedback);
         } else {
-            const input = document.createElement('input');
-            input.id = 'kode';
-            input.type = 'text';
-            input.className = 'form-control';
-            input.name = 'kode';
             input.value = newKode;
-            input.readOnly = true;
-
             kodeInputWrapper.appendChild(input);
         }
     }

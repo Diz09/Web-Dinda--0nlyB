@@ -52,6 +52,25 @@
             </select>
           </div>
 
+          <!-- Jenis Kardus -->
+          <div class="mb-3" id="edit_group_jenis_kardus">
+            <label for="edit_jenis_kardus">Jenis Kardus</label>
+            <select name="jenis_kardus" id="edit_jenis_kardus" class="form-control">
+              <option value="">-- Pilih Kardus --</option>
+              @foreach($kardusList as $kardus)
+                <option value="{{ $kardus->barang->id }}" data-harga="{{ $kardus->barang->harga }}">
+                  {{ $kardus->barang->nama_barang }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+
+          <!-- Jumlah Kardus -->
+          <div class="mb-3" id="edit_group_jumlah_kardus">
+            <label for="edit_jumlah_kardus">Jumlah Kardus</label>
+            <input type="number" name="jumlah_kardus" id="edit_jumlah_kardus" class="form-control" min="0">
+          </div>
+
           <!-- Jumlah (Rp) -->
           <div class="mb-3">
             <label for="editJumlahRp" class="form-label">Jumlah (Rp)</label>

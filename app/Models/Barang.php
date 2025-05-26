@@ -30,4 +30,18 @@ class Barang extends Model
     {
         return $this->hasMany(Transaksi::class);
     }
+
+    // public function semuaKardus()
+    // {
+    //     return $this->hasMany(BarangPendukung::class)->whereHas('barang', function ($query) {
+    //         $query->where('nama_barang', 'like', '%kardus%');
+    //     });
+    // }
+    public function kardus()
+    {
+        return $this->hasMany(BarangPendukung::class)->whereHas('barang', function ($query) {
+            $query->where('nama_barang', 'like', '%kardus%');
+        });
+    }
+
 }

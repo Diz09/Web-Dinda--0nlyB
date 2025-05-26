@@ -46,7 +46,6 @@ class BarangController extends Controller
         );
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
@@ -192,6 +191,34 @@ class BarangController extends Controller
     {
         $barang = Barang::with(['produk', 'pendukung'])->get();
         return view('pimpinan.stock_barang.index', compact('barang'));
+    }
+
+    public function check(Request $request)
+    {
+        $request->validate([
+            'nama_barang' => 'required|string',
+            'filter' => 'required|in:produk,pendukung',
+        ]);
+
+        $barang = Barang::whereRaw('LOWER(nama_barang) = ?', [strtolower($request->nama_barang)])
+            ->whereHas($request->filter) // produk atau pendukung
+            ->with($request->filter)
+            ->first();
+
+        if ($barang) {
+            return response()->json([
+                'barang_sudah_ada' => true,
+                'nama_barang' => $barang->nama_barang,
+                'kode' => $barang->{$request->filter}->kode ?? null,
+            ]);
+        } else {
+            $kodeBaru = $this->generateKodeBaru($request->filter);
+            return response()->json([
+                'barang_sudah_ada' => false,
+                'nama_barang' => $request->nama_barang,
+                'kode' => $kodeBaru,
+            ]);
+        }
     }
 
     private function generateKodeBaru($kategori)

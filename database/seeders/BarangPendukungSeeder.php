@@ -14,7 +14,7 @@ class BarangPendukungSeeder extends Seeder
     public function run(): void
     {
         BarangPendukung::insert([
-            ['barang_id' => 1, 'kode' => 'MNT001'],
+            ['barang_id' => 1, 'kode' => 'PDN001'],
         ]);
     }
 }

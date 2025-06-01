@@ -1,3 +1,33 @@
+// filter supplier by name and alamat
+document.addEventListener('DOMContentLoaded', function () {
+    const keywordInput = document.getElementById('keywordInput');
+    const kategoriInput = document.getElementById('kategoriInput');
+    const kategoriButtons = document.querySelectorAll('.kategoriBtn');
+    const form = document.getElementById('filterForm');
+
+    let timer;
+    const delay = 500;
+
+    // Auto submit saat ketik keyword
+    if (keywordInput) {
+        keywordInput.addEventListener('input', function () {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                form.submit();
+            }, delay);
+        });
+    }
+
+    // Klik tombol kategori
+    kategoriButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const selected = this.getAttribute('data-value');
+            kategoriInput.value = selected;
+            form.submit();
+        });
+    });
+});
+
 // SweetAlert konfirmasi hapus
 document.querySelectorAll('.formDeleteSupplier').forEach(form => {
     form.addEventListener('submit', function(e) {

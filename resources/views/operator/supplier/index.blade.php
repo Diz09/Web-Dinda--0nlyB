@@ -4,12 +4,28 @@
 <div class="container mt-4">
     <h3 class="mb-4">Data Mitra Bisnis</h3>
 
-    <!-- Tombol Tambah -->
-    <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Mitra</button>
+    <div style="display: flex; justify-content:end; align-items: center; space-between: 10px;">
+        {{-- form filter --}}
+        <form id="filterForm" method="GET" action="{{ route('supplier.index') }}" class="mb-3">
+            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; flex-wrap: nowrap; margin-right: 20px;">
+                <input type="hidden" name="kategori" id="kategoriInput" value="{{ request('kategori') }}">
+                
+                <div style="display: flex; justify-content: space-between; margin-right: 20px;">
+                    <button type="button" class="btn btn-outline-primary btn-sm kategoriBtn {{ request('kategori') === 'pemasok' ? 'active disabled' : '' }}" data-value="pemasok">
+                        Pemasok
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm kategoriBtn {{ request('kategori') === 'konsumen' ? 'active disabled' : '' }}" data-value="konsumen">
+                        Konsumen
+                    </button>
+                </div>
 
-    <!-- Modal Create -->
-    @include('operator.supplier.create')
+                <input type="text" name="keyword" id="keywordInput" value="{{ request('keyword') }}" class="form-control" placeholder="Cari nama atau alamat mitra...">
+            </div>
+        </form>
 
+        <!-- Tombol Tambah -->
+        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Mitra</button>
+    </div>
 
     <!-- Tabel Supplier -->
     <div class="table-responsive">
@@ -66,6 +82,8 @@
     </div>
 </div>
 
+<!-- Modal Create -->
+@include('operator.supplier.create')
 <!-- Modal Edit Supplier -->
 @include('operator.supplier.edit')
 

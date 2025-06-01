@@ -9,10 +9,30 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::with(['pemasok', 'konsumen'])->get();
+        $keyword = $request->query('keyword');
+        $kategori = $request->query('kategori');
+
+        $suppliers = Supplier::with(['pemasok', 'konsumen']);
         
+        // filter berdasarkan keyword
+        if ($keyword) {
+            $suppliers = $suppliers->where(function ($query) use ($keyword) {
+                $query->where('nama', 'like', '%' . $keyword . '%')
+                    ->orWhere('alamat', 'like', '%' . $keyword . '%');
+            });
+        }
+        
+        // Filter berdasarkan kategori mitra
+        if ($kategori === 'pemasok') {
+            $suppliers = $suppliers->whereHas('pemasok');
+        } elseif ($kategori === 'konsumen') {
+            $suppliers = $suppliers->whereHas('konsumen');
+        }
+
+        $suppliers = $suppliers->get();
+
         return view('operator.supplier.index', compact('suppliers'));
     }
     

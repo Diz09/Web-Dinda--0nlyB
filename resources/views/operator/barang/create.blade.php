@@ -16,11 +16,14 @@
                 <div class="modal-body">
                     <input type="hidden" name="filter" value="{{ $filter }}">
 
-                    {{-- kode untuk melihat kode sudah ada atau belum --}}
+                    {{-- tempat hidden input, dipisah dari tampilan kode --}}
+                    <input type="hidden" id="barangSudahAda" value="{{ $barangSudahAda ? '1' : '0' }}">
+                    <input type="hidden" id="namaBarang" value="{{ $namaBarang ?? '' }}">
+                    <input type="hidden" id="newKode" value="{{ $newKode }}">
+
+                    {{-- hanya bagian visual kode yang akan diubah --}}
                     <div class="mb-3" id="kodeInputWrapper">
-                        <input type="hidden" id="barangSudahAda" value="{{ $barangSudahAda ? '1' : '0' }}">
-                        <input type="hidden" id="namaBarang" value="{{ $namaBarang ?? '' }}">
-                        <input type="hidden" id="newKode" value="{{ $newKode }}">
+                        {{-- tampilannya akan dimodifikasi oleh JS --}}
                     </div>
 
                     {{-- kode untuk menampilkan input nama barang --}}

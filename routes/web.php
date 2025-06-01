@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengeluaranController;
@@ -116,5 +117,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
         return response()->json($barangs);
     });
+
+
+    // export
+    Route::get('/gaji/kloter/{id}/export', [App\Http\Controllers\GajiController::class, 'export'])->name('gaji.kloter.export');
+
 // });
 

@@ -15,7 +15,11 @@
                 data-harga="{{ $kloter->tonIkan->harga_ikan_per_ton ?? '' }}">
                 Edit
             </button>
+
+            <a href="{{ route('gaji.kloter.export', $kloter->id) }}" class="btn btn-success">Unduh Excel</a>
+
             <a href="{{ route('gaji.kloter') }}" class="btn btn-secondary rounded-end rounded-start-0">Kembali</a>
+
         </div>
     </div>
 

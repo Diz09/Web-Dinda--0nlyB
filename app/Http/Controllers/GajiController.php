@@ -14,6 +14,9 @@ use App\Models\Presensi;
 use App\Models\TonIkan;
 use App\Models\HistoryGajiKloter;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GajiKloterExport;
+
 class GajiController extends Controller
 {
     public function index(Request $request)
@@ -159,4 +162,55 @@ class GajiController extends Controller
         return redirect()->route('gaji.kloter')->with('success', 'Kloter berhasil diselesaikan.');
     }
 
+    public function export($id)
+    {
+        $kloter = \App\Models\Kloter::with('tonIkan')->findOrFail($id);
+
+        $presensis = \App\Models\Presensi::with('karyawan')
+            ->where('kloter_id', $id)
+            ->get();
+
+        $tanggalUnik = $presensis->pluck('tanggal')->unique()->sort()->values();
+
+        $gajiPerJam = 0;
+        $jumlahPekerja = $presensis->pluck('karyawan_id')->unique()->count();
+        $jumlahTon = $kloter->tonIkan->jumlah_ton ?? 0;
+
+        if ($jumlahPekerja > 0) {
+            $gajiPerJam = ($jumlahTon * 1000) / $jumlahPekerja;
+        }
+
+        $data = [];
+
+        foreach ($presensis->groupBy('karyawan_id') as $karyawanId => $presensiKaryawan) {
+            $karyawan = $presensiKaryawan->first()->karyawan;
+            $jamPerTanggal = [];
+
+            foreach ($presensiKaryawan as $p) {
+                $key = \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d');
+                $jamPerTanggal[$key] = $p->jam_kerja;
+            }
+
+            $totalJam = array_sum($jamPerTanggal);
+
+            $gajiPerJamKaryawan = $karyawan->jenis_kelamin == 'Perempuan'
+                ? $gajiPerJam * 0.6
+                : $gajiPerJam;
+
+            $totalGaji = $gajiPerJamKaryawan * $totalJam;
+
+            $data[] = [
+                'karyawan' => $karyawan,
+                'jam_per_tanggal' => $jamPerTanggal,
+                'total_jam' => $totalJam,
+                'gaji_per_jam' => round($gajiPerJamKaryawan),
+                'total_gaji' => round($totalGaji),
+            ];
+
+            // dd($data, $tanggalUnik);
+
+        }
+
+        return Excel::download(new GajiKloterExport($data, $tanggalUnik), 'detail_gaji_' . $kloter->nama_kloter . '.xlsx');
+    }
 }

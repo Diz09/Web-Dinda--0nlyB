@@ -23,7 +23,7 @@
         {{-- tabel laporan pekerja --}}
         <a href="/pimpinan/laporan-karyawan" class="sidebar-link">Laporan Pekerja</a>
         {{-- tabel laporan supplier --}}
-        <a href="/pimpinan/laporan-supplier" class="sidebar-link">Laporan Supplier</a>
+        <a href="/pimpinan/laporan-supplier" class="sidebar-link">Laporan Mitra Bisnis</a>
         {{-- tabel laporan transaksi --}}
         <a href="/pimpinan/laporan-transaksi" class="sidebar-link">Laporan Keuangan</a>
         

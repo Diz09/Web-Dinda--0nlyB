@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-4">Data Supplier</h3>
+    <h3 class="mb-4">Data Mitra Bisnis</h3>
 
     <!-- Tombol Tambah -->
-    <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Supplier</button>
+    <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Mitra</button>
 
     <!-- Modal Create -->
     @include('operator.supplier.create')
@@ -18,7 +18,7 @@
                 <tr>
                     <th>No</th>
                     <th>Kode</th>
-                    <th>Nama Supplier</th>
+                    <th>Nama Mitra</th>
                     <th>Alamat</th>
                     <th>No Rekening</th>
                     <th>No Telepon</th>

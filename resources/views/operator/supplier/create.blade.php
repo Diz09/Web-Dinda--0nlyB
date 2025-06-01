@@ -5,13 +5,13 @@
             <form action="{{ route('supplier.store') }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Supplier</h5>
+                    <h5 class="modal-title">Tambah Mitra</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Supplier</label>
+                        <label for="nama" class="form-label">Nama Mitra</label>
                         <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}" required>
                     </div>
 
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="kategori" class="form-label">Kategori Supplier</label>
+                        <label for="kategori" class="form-label">Kategori Mitra Bisnis</label>
                         <select name="kategori" id="kategori" class="form-control" required>
                             <option value="">-- Pilih Kategori --</option>
                             <option value="pemasok" {{ old('kategori') == 'pemasok' ? 'selected' : '' }}>Pemasok</option>

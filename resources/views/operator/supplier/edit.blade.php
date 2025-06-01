@@ -6,13 +6,13 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Supplier</h5>
+                    <h5 class="modal-title">Edit Mitra</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="editNama" class="form-label">Nama Supplier</label>
+                        <label for="editNama" class="form-label">Nama Mitra</label>
                         <input type="text" class="form-control" id="editNama" name="nama" required>
                     </div>
 
@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editKategori" class="form-label">Kategori</label>
+                        <label for="editKategori" class="form-label">Kategori Mitra Bisnis</label>
                         <select name="kategori" id="editKategori" class="form-control" required>
                             <option value="pemasok">Pemasok</option>
                             <option value="konsumen">Konsumen</option>

@@ -32,7 +32,7 @@ Route::post('/', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Pimpinan
-Route::middleware(['auth', 'role:pimpinan'])->group(function () {
+// Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/laporan-barang', [LaporanController::class, 'barang'])->name('laporan.barang');
@@ -40,7 +40,7 @@ Route::middleware(['auth', 'role:pimpinan'])->group(function () {
     Route::get('/pimpinan/laporan-supplier', [LaporanController::class, 'supplier'])->name('laporan.supplier');
     Route::get('/pimpinan/laporan-transaksi', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
 
-});
+// });
 
 // Operator
 // Route::middleware(['auth', 'role:operator'])->group(function () {

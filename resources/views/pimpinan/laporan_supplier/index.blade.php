@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4>Laporan Supplier</h4>
+    <h4>Laporan Mitra Bisnis</h4>
 
     <!-- Filter -->
     <div class="row mb-3">
         <div class="col-md-4">
-            <input type="text" id="keyword" class="form-control" placeholder="Cari Nama atau Alamat Supplier">
+            <input type="text" id="keyword" class="form-control" placeholder="Cari Nama atau Alamat Mitra">
         </div>
         <div class="col-md-4">
             <select id="kategori" class="form-select">

@@ -5,7 +5,7 @@
             <th>Waktu</th>
             <th>Kode Transaksi</th>
             <th>Kode Barang</th>
-            <th>Supplier</th>
+            <th>Mitra</th>
             <th>Nama Barang</th>
             <th>Qty</th>
             <th>Masuk</th>

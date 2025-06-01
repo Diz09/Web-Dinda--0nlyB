@@ -27,9 +27,9 @@
           </div>
 
           <div class="mb-3">
-            <label for="supplier_id">Pilih Supplier</label>
+            <label for="supplier_id">Pilih Mitra</label>
             <select name="supplier_id" id="supplier_id" class="form-control" required>
-              <option value="">-- Pilih Supplier --</option>
+              <option value="">-- Pilih --</option>
               {{-- Opsi akan diisi lewat JS sesuai kategori --}}
             </select>
           </div>

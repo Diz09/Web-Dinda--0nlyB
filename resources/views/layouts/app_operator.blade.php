@@ -26,7 +26,7 @@
                 <a href="{{ route('barang.index', ['filter' => 'produk']) }}" class="sidebar-link">Produk</a>
                 <a href="{{ route('barang.index', ['filter' => 'pendukung']) }}" class="sidebar-link">Pendukung</a>
             </div>
-        <a href="/operator/suplier" class="sidebar-link">Suplier</a>
+        <a href="/operator/suplier" class="sidebar-link">Mitra Bisnis</a>
         <a href="/operator/karyawan" class="sidebar-link">Karyawan</a>
         <a href="/operator/gaji" class="sidebar-link">Gaji</a>
         

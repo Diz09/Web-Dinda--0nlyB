@@ -4,12 +4,25 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Karyawan</h3>
 
-    <button class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
-        Tambah Karyawan
-    </button>
+    <div class="filter-x mb-3">
+        <form id="filterForm" method="GET" action="{{ route('karyawan.index') }}" class="mb-3">
+            <div class="filter-f">
+                <input type="hidden" name="gender" id="genderInput" value="{{ request('gender') }}">
 
-    {{-- Modal Create --}}
-    @include('operator.karyawan.create')
+                <button type="button" id="toggleGenderBtn" class="btn btn-sm mr-3
+                    {{ request('gender') === 'L' ? 'btn-outline-primary' : 
+                    (request('gender') === 'P' ? 'btn-outline-danger' : 'btn-outline-secondary') }}">
+                    {{ request('gender') ?? 'Semua Gender' }}
+                </button>
+
+                <input type="text" name="nama" id="namaInput" value="{{ request('nama') }}" class="form-control" placeholder="Cari nama karyawan...">
+            </div>
+        </form>
+        
+        <button class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
+            Tambah Karyawan
+        </button>
+    </div>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -49,6 +62,10 @@
         </tbody>
     </table>
 </div>
+
+{{-- Modal Create --}}
+@include('operator.karyawan.create')
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // SweetAlert sukses

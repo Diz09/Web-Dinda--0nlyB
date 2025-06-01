@@ -9,6 +9,7 @@
 
     {{-- css tersimpan pada folder public --}}
     <link rel="stylesheet" href="{{ asset('css/operator.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/extra.css') }}">
 
 </head>
 

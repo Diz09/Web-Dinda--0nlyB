@@ -4,13 +4,13 @@
 <div class="container mt-4">
     <h3 class="mb-4">Data Mitra Bisnis</h3>
 
-    <div style="display: flex; justify-content:end; align-items: center; space-between: 10px;">
+    <div class="filter-x mb-3">
         {{-- form filter --}}
         <form id="filterForm" method="GET" action="{{ route('supplier.index') }}" class="mb-3">
-            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; flex-wrap: nowrap; margin-right: 20px;">
+            <div class="filter-f">
                 <input type="hidden" name="kategori" id="kategoriInput" value="{{ request('kategori') }}">
                 
-                <div style="display: flex; justify-content: space-between; margin-right: 20px;">
+                <div class="filter-ba">
                     <button type="button" class="btn btn-outline-primary btn-sm kategoriBtn {{ request('kategori') === 'pemasok' ? 'active disabled' : '' }}" data-value="pemasok">
                         Pemasok
                     </button>

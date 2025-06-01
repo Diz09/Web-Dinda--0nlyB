@@ -7,9 +7,24 @@ use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $karyawans = Karyawan::all();
+        $nama = $request->query('nama');
+        $gender = $request->query('gender');
+
+        $karyawans = Karyawan::query();
+
+        // Filter nama
+        if ($nama) {
+            $karyawans->where('nama', 'like', '%' . $nama . '%');
+        }
+
+        // Filter jenis kelamin
+        if ($gender) {
+            $karyawans->where('jenis_kelamin', $gender);
+        }
+
+        $karyawans = $karyawans->get();
 
         return view('operator.karyawan.index', compact('karyawans'));
     }

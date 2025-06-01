@@ -5,13 +5,32 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="mb-4">Detail Gaji {{ $kloter->nama_kloter }}</h3>
+
         <div class="btn-group" role="group" aria-label="Tombol Edit dan Kembali">
-            <button type="button" class="btn btn-warning rounded-start rounded-end-0" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-            <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-end rounded-start-0">Kembali</a>
+            <button type="button" class="btn btn-warning rounded-start rounded-end-0"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal{{ $kloter->id }}"
+                data-id="{{ $kloter->id }}"
+                data-jumlah="{{ $kloter->tonIkan->jumlah_ton ?? '' }}"
+                data-harga="{{ $kloter->tonIkan->harga_ikan_per_ton ?? '' }}">
+                Edit
+            </button>
+            <a href="{{ route('gaji.kloter') }}" class="btn btn-secondary rounded-end rounded-start-0">Kembali</a>
         </div>
     </div>
+
+    <div>
+        <input 
+            type="text" 
+            id="searchInput" 
+            class="form-control mb-3" 
+            placeholder="Cari nama karyawan..." 
+            value="{{ request('search') }}" 
+            data-url="{{ route('gaji.kloter.detail', $kloter->id) }}"
+            style="width: fit-content">
+    </div>
     
-    @include('operator.gaji.modal-edit')
+    <input type="hidden" name="kloter_id" value="{{ $selectedKloter }}">
     
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -44,7 +63,9 @@
         </table>
     </div>
 </div>
+@include('operator.gaji.modal-edit')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/gaji.js') }}"></script>
 <script>
     // SweetAlert sukses
     @if(session('success'))

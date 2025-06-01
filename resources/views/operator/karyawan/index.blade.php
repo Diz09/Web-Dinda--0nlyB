@@ -4,22 +4,17 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Karyawan</h3>
 
-    <div class="filter-x mb-3">
-        <form id="filterForm" method="GET" action="{{ route('karyawan.index') }}" class="mb-3">
-            <div class="filter-f">
-                <input type="hidden" name="gender" id="genderInput" value="{{ request('gender') }}">
-
-                <button type="button" id="toggleGenderBtn" class="btn btn-sm mr-3
-                    {{ request('gender') === 'L' ? 'btn-outline-primary' : 
-                    (request('gender') === 'P' ? 'btn-outline-danger' : 'btn-outline-secondary') }}">
-                    {{ request('gender') ?? 'Semua Gender' }}
-                </button>
-
-                <input type="text" name="nama" id="namaInput" value="{{ request('nama') }}" class="form-control" placeholder="Cari nama karyawan...">
-            </div>
+    <div class="filter-x mb-3 d-flex justify-content-between align-items-center">
+        <form id="filterForm" method="GET" action="{{ route('karyawan.index') }}" class="d-flex align-items-center mb-0">
+            <input type="text" name="nama" id="namaInput" value="{{ request('nama') }}" class="form-control" placeholder="Cari nama karyawan..." style="max-width: 220px;">
+            <input type="hidden" name="gender" id="genderInput" value="{{ request('gender') }}">
+            <button type="button" id="toggleGenderBtn"
+                class="btn btn-sm ms-2 {{ request('gender') === 'L' ? 'btn-outline-primary' : (request('gender') === 'P' ? 'btn-outline-danger' : 'btn-outline-secondary') }}"
+                style="margin-left:10px;">
+                {{ request('gender') ?? 'Semua' }}
+            </button>
         </form>
-        
-        <button class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
             Tambah Karyawan
         </button>
     </div>

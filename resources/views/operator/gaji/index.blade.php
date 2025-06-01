@@ -46,7 +46,7 @@
                                 {{ $kloter->nama_kloter }}
                             </a>
                         </td>
-                        <td>{{ number_format($kloter->jumlah_ton, 2) }} Kg</td>
+                        <td>{{ number_format($kloter->tonIkan->jumlah_ton ?? 0, 2) }} Kg</td>
                         <td>
                             {{ $kloter->presensis->min('tanggal') 
                                 ? \Carbon\Carbon::parse($kloter->presensis->min('tanggal'))->format('d-m-Y') 
@@ -59,17 +59,13 @@
                         </td>
                         <td class="text-center">
                             @php
-                                $isSelesai = \App\Models\HistoryGajiKloter::where('kloter_id', $kloter->id)->exists();
+                                $isSelesai = in_array($kloter->id, $kloterSelesaiIds);
                             @endphp
 
-                            @if (!$isSelesai)
-                                <form action="{{ route('gaji.kloter.selesai', $kloter->id) }}" method="POST" class="form-kloter-selesai">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-selesai">Tandai Selesai</button>
-                                </form>
+                            @if ($isSelesai)
+                                <span class="badge bg-success">Selesai</span>
                             @else
-                                <span class="badge bg-success">Selesai</span><br>
-                                <small class="text-muted">Sudah diproses</small>
+                                <a href="{{ route('gaji.kloter.selesai', $kloter->id) }}" class="btn btn-primary btn-sm">Proses Gaji</a>
                             @endif
                         </td>
                     </tr>

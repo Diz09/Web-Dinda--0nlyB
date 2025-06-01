@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ class GajiController extends Controller
 
         // $klotersQuery = Kloter::with(['presensis', 'tonIkan'])->orderBy('id', 'desc');
         $klotersQuery = Kloter::with(['presensis', 'tonIkan'])->orderByDesc('id');
+        $kloterSelesaiIds = HistoryGajiKloter::pluck('kloter_id')->toArray();
 
         if ($tahun) {
             $klotersQuery->whereHas('presensis', function ($query) use ($tahun) {
@@ -45,12 +47,14 @@ class GajiController extends Controller
         $tahunList = Presensi::selectRaw('YEAR(tanggal) as tahun')->distinct()->pluck('tahun');
 
         return view('operator.gaji.index', 
-            compact('kloters', 'tahun', 'tahunList', 'status')
+            compact('kloters', 'tahun', 'tahunList', 'status', 'kloterSelesaiIds')
         );
     }
 
     public function detail($id)
     {
+        $search = request('search');
+
         $kloter = Kloter::with(['presensis.karyawan', 'tonIkan'])->findOrFail($id);
         $tanggalUnik = $kloter->presensis->pluck('tanggal')->unique()->sort()->values();
         $dataKaryawan = $kloter->presensis->groupBy('karyawan_id');
@@ -71,7 +75,7 @@ class GajiController extends Controller
                 $presensi = $presensis->firstWhere('tanggal', $tanggal);
                 $jamKerja = 0;
 
-                if ($presensi) {
+                if ($presensi && $presensi->jam_masuk && $presensi->jam_pulang) {
                     $jamMasuk = strtotime($presensi->jam_masuk);
                     $jamPulang = strtotime($presensi->jam_pulang);
                     $jamKerja = ($jamPulang - $jamMasuk) / 3600;
@@ -95,6 +99,12 @@ class GajiController extends Controller
             ];
         }
 
+        if ($search) {
+            $karyawanWithGaji = array_filter($karyawanWithGaji, function ($data) use ($search) {
+                return stripos($data['karyawan']->nama, $search) !== false;
+            });
+        }
+
         return view('operator.gaji.detailGaji', compact(
             'kloter',
             'tanggalUnik',
@@ -103,7 +113,7 @@ class GajiController extends Controller
             'jumlahTon',
             'hargaPerTon',
             'karyawanWithGaji'
-        ));
+        ))->with('selectedKloter', $kloter);
     }
 
     public function kloterSelesai($id)

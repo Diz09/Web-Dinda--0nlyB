@@ -13,6 +13,7 @@ class BarangController extends Controller
     public function index(Request $request)
     {
         $filter = $request->query('filter');
+        $nama = $request->query('nama');
 
         $barangs = Barang::with(['produk', 'pendukung'])->get();
 
@@ -30,15 +31,17 @@ class BarangController extends Controller
             $newKode = null;
         }
 
+        // Filter berdasarkan nama (jika ada)
+        if ($nama) {
+            $barangs = $barangs->filter(function ($barang) use ($nama) {
+                return stripos($barang->nama_barang, $nama) !== false;
+            });
+        }
+
         // Urutkan: produk (kode PRD) lebih dulu, lalu pendukung (kode PND)
-        $barangs = $barangs->sortBy(function ($barang) {
-            if ($barang->produk) {
-                return '1' . $barang->produk->kode; // angka kecil = prioritas lebih tinggi
-            } elseif ($barang->pendukung) {
-                return '2' . $barang->pendukung->kode;
-            } else {
-                return '9'; // untuk jaga-jaga
-            }
+         $barangs = $barangs->sortBy(function ($barang) {
+            return $barang->produk ? '1' . $barang->produk->kode
+                : ($barang->pendukung ? '2' . $barang->pendukung->kode : '9');
         })->values();
 
         return view('operator.barang.index', 

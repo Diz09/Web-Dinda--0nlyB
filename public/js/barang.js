@@ -1,5 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
-    
+   
+    // filter untuk input nama barang
+    const namaInput = document.getElementById('namaInput');
+    if (namaInput) {
+        let typingTimer;
+        const doneTypingInterval = 500; // Delay submit 0.5 detik setelah ketikan berhenti
+
+        namaInput.addEventListener('input', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                document.getElementById('filterForm').submit();
+            }, doneTypingInterval);
+        });
+    }
+
     // Peringatan Ubah Kateogri saat Edit Barang
     document.querySelectorAll('.formEditBarang').forEach(function(form) {
         form.addEventListener('submit', function(e) {

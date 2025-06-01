@@ -18,10 +18,12 @@
         @include('operator.barang.create', ['filter' => request('filter')])
     @endif
 
-    <form id="filterForm" method="GET" action="{{ route('barang.index') }}" class="mb-3">
-        <input type="hidden" name="filter" value="{{ request('filter') }}">
-        <input type="text" name="nama" id="namaInput" value="{{ request('nama') }}" class="form-control form-control-sm" placeholder="Cari nama barang...">
-    </form>
+    <div class="d-flex justify-content-end mb-3">
+        <form id="filterForm" method="GET" action="{{ route('barang.index') }}" class="w-auto" style="width: fit-content;">
+            <input type="hidden" name="filter" value="{{ request('filter') }}">
+            <input type="text" name="nama" id="namaInput" value="{{ request('nama') }}" class="form-control form-control-sm" placeholder="Cari nama barang...">
+        </form>
+    </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">

@@ -11,6 +11,7 @@ class Transaksi extends Model
         'supplier_id',
         'pengeluaran_id',
         'pemasukan_id',
+        'history_gaji_kloter_id',
         'qtyHistori',
         'satuan',
         'jumlahRp',
@@ -50,5 +51,15 @@ class Transaksi extends Model
     public function pemasukan()
     {
         return $this->belongsTo(Pemasukan::class);
+    }
+
+    public function historyGajiKloter()
+    {
+        return $this->belongsTo(HistoryGajiKloter::class);
+    }
+
+    public function getKodeGajiAttribute()
+    {
+        return $this->historyGajiKloter?->kode;
     }
 }

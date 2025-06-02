@@ -25,7 +25,8 @@ class TransaksiController extends Controller
             'barang.pendukung', 
             'supplier', 
             'pemasukan', 
-            'pengeluaran'
+            'pengeluaran',
+            'historyGajiKloter',
         ]);
 
         // filter tanggal jika diisi
@@ -56,6 +57,11 @@ class TransaksiController extends Controller
             $totalSekarang = $totalSebelumnya + $masuk - $keluar;
             $totalSebelumnya = $totalSekarang;
 
+            // Jika transaksi berasal dari history gaji kloter
+            $namaTransaksi = $trx->historyGajiKloter
+                ? 'Pembayaran Gaji Kloter #' . $trx->historyGajiKloter->id
+                : ($trx->barang->nama_barang ?? '-');
+
             return [
                 'id' => $trx->id,
                 'barang_id' => $trx->barang_id,
@@ -68,8 +74,8 @@ class TransaksiController extends Controller
                 'kode_transaksi' => $trx->pemasukan->kode ?? $trx->pengeluaran->kode ?? '-',
                 'kode_barang' => $kodeBarang,
                 'supplier' => $trx->supplier->nama ?? '-',
-                'barangs' => $trx->barang->nama_barang ?? '-',
-                'nama_barang' => $trx->barang->nama_barang,
+                'barangs' => $namaTransaksi,
+                'nama_barang' => $namaTransaksi,
                 'qty' => $trx->qtyHistori ?? 0,     // akan mengambil dari qtyHistori pada tb transaksi
                 'masuk' => $masuk,
                 'keluar' => $keluar,

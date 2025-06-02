@@ -65,7 +65,10 @@
                             @if ($isSelesai)
                                 <span class="badge bg-success">Selesai</span>
                             @else
-                                <a href="{{ route('gaji.kloter.selesai', $kloter->id) }}" class="btn btn-primary btn-sm">Proses Gaji</a>
+                                <form action="{{ route('gaji.kloter.selesai', $kloter->id) }}" method="POST" class="d-inline form-kloter-selesai">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary btn-sm">Proses Gaji</button>
+                                </form>
                             @endif
                         </td>
                     </tr>

@@ -13,7 +13,8 @@ return new class extends Migration {
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade');
             $table->foreignId('pengeluaran_id')->nullable()->constrained('pengeluarans')->onDelete('cascade');
             $table->foreignId('pemasukan_id')->nullable()->constrained('pemasukans')->onDelete('cascade');
-            $table->integer('jumlahRp');
+            $table->foreignId('history_gaji_kloter_id')->nullable()->constrained('history_gaji_kloters')->onDelete('set null');
+            $table->double('jumlahRp');
             $table->integer('qtyHistori')->default(0);
             $table->string('satuan')->default('kg');
             $table->dateTime('waktu_transaksi');

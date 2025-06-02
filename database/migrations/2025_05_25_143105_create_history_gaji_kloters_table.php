@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('history_gaji_kloter', function (Blueprint $table) {
+        Schema::create('history_gaji_kloters', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kloter_id');
+            $table->foreignId('kloter_id')->nullable()->constrained('kloters')->onDelete('cascade');
+            $table->string('kode')->unique()->nullable();
             $table->integer('jml_karyawan');
             $table->double('total_gaji');
             $table->timestamp('waktu');
             $table->timestamps();
-
-            $table->foreign('kloter_id')->references('id')->on('kloters')->onDelete('cascade');
         });
     }
     

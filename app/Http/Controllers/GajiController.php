@@ -13,6 +13,8 @@ use App\Models\Kloter;
 use App\Models\Presensi;
 use App\Models\TonIkan;
 use App\Models\HistoryGajiKloter;
+use App\Models\Transaksi;
+use App\Models\Pengeluaran;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\GajiKloterExport;
@@ -152,15 +154,42 @@ class GajiController extends Controller
             $totalGaji += $gaji;
         }
 
-        HistoryGajiKloter::create([
+        // 1. Simpan ke History Gaji Kloter
+        $historyGaji = HistoryGajiKloter::create([
             'kloter_id' => $kloter->id,
             'jml_karyawan' => $banyakPekerja,
             'total_gaji' => $totalGaji,
             'waktu' => now(),
         ]);
 
-        return redirect()->route('gaji.kloter')->with('success', 'Kloter berhasil diselesaikan.');
+        // 2. Buat entri Pengeluaran jika belum ada (PGJxxx)
+        $lastKode = Pengeluaran::where('kode', 'like', 'PGJ%')->orderByDesc('id')->value('kode');
+        $nextNumber = $lastKode && preg_match('/PGJ(\d+)/', $lastKode, $m)
+            ? str_pad($m[1] + 1, 3, '0', STR_PAD_LEFT)
+            : '001';
+
+        $kodePengeluaran = 'PGJ' . $nextNumber;
+
+        $pengeluaran = Pengeluaran::create([
+            'kode' => $kodePengeluaran,
+            'nama' => 'Gaji Karyawan',
+            'keterangan' => 'Pembayaran gaji untuk kloter #' . $kloter->id,
+            'tanggal' => now(),
+        ]);
+
+        // 3. Simpan ke Transaksi, kaitkan dengan history_gaji_kloter dan pengeluaran
+        Transaksi::create([
+            'pengeluaran_id' => $pengeluaran->id,
+            'history_gaji_kloter_id' => $historyGaji->id,
+            'qtyHistori' => 1,
+            'satuan' => 'kloter',
+            'jumlahRp' => $totalGaji,
+            'waktu_transaksi' => now(),
+        ]);
+
+        return redirect()->route('gaji.kloter')->with('success', 'Kloter berhasil diselesaikan dan transaksi gaji dicatat.');
     }
+
 
     public function export($id)
     {

@@ -1,3 +1,23 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById('searchKaryawan');
+
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function () {
+            const keyword = this.value.toLowerCase();
+            const rows = document.querySelectorAll("table tbody tr");
+
+            rows.forEach(row => {
+                const nama = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase();
+                if (nama.includes(keyword)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    }
+});
+
 // pilih kloter
 document.getElementById('kloter_id').addEventListener('change', function () {
     const id = this.value;
@@ -106,3 +126,5 @@ document.querySelectorAll('.formPresensi').forEach(form => {
         hiddenInput.value = jamInput;
     });
 });
+
+

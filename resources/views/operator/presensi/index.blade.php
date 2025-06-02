@@ -30,11 +30,17 @@
             <button type="button" class="btn btn-outline-primary" id="btnLihatKloter">Lihat</button>
             @include('operator.presensi.edit')
         </div>
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#pilihKaryawanModal">
-            Pilih Karyawan untuk Kloter Ini
-        </button>
+        <div class="filter-x mb-3 d-flex justify-content-between align-items-center">
+            <input type="text" id="searchKaryawan" class="form-control mb-3" style="width: fit-content" placeholder="Cari nama karyawan...">
+            
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#pilihKaryawanModal">
+                Pilih Karyawan untuk Kloter Ini
+            </button>
+        </div>
         @include('operator.presensi._pilihKaryawan')
     </form>
+
+    
 
     {{-- checkbox fitur otomatis --}}
     <div class="form-check form-switch mb-3">

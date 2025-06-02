@@ -14,6 +14,13 @@
         </form>
 
         <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Transaksi</button>
+
+        <form method="GET" action="{{ route('operator.transaksi.export') }}" class="ms-2">
+            <input type="hidden" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}">
+            <input type="hidden" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+            <input type="hidden" name="q" id="exportSearchQuery">
+            <button type="submit" class="btn btn-success btn-sm mb-3">Export Excel</button>
+        </form>
     </div>
 
     <div class="table-responsive">

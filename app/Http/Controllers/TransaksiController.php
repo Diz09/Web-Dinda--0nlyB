@@ -13,6 +13,9 @@ use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 
+use App\Exports\LaporanTransaksiExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class TransaksiController extends Controller
 {
     public function index(Request $request)
@@ -342,6 +345,16 @@ class TransaksiController extends Controller
         $transaksi->delete();
 
         return redirect()->route('operator.transaksi.index')->with('success', 'Data transaksi berhasil dihapus.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $tanggalMulai = $request->tanggal_mulai;
+        $tanggalAkhir = $request->tanggal_akhir;
+        $q = $request->q; // Optional, untuk pencarian
+
+        $filename = 'laporan_transaksi_operator_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new LaporanTransaksiExport($tanggalMulai, $tanggalAkhir, $q), $filename);
     }
 
 }

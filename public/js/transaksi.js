@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+$(document).ready(function () {
+    $('#searchTransaksi').on('input', function () {
+        $('#exportSearchQuery').val($(this).val());
+    });
+});
+
 // Data dari backend (harus disediakan dari Blade)
 const barangsData = window.barangsData || {};
 const suppliersData = window.suppliersData || {};

@@ -10,6 +10,9 @@
     </button>    
 
     <form method="GET" class="mb-4 flex items-center gap-2" style="text-align-last: end">
+
+        <input type="text" id="searchTransaksi" class="form-control mb-3" placeholder="Cari kode, nama barang, atau mitra...">
+
         <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="border px-2 py-1 rounded">
         <span>s/d</span>
         <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="border px-2 py-1 rounded">

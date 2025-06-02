@@ -1,3 +1,22 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('searchTransaksi');
+    const rows = document.querySelectorAll('table tbody tr');
+
+    input.addEventListener('input', function () {
+        const keyword = this.value.toLowerCase();
+
+        rows.forEach(row => {
+            const kodeTransaksi = row.cells[2].textContent.toLowerCase();
+            const kodeBarang    = row.cells[3].textContent.toLowerCase();
+            const mitra         = row.cells[4].textContent.toLowerCase();
+            const namaBarang    = row.cells[5].textContent.toLowerCase();
+
+            const isMatch = [kodeTransaksi, kodeBarang, mitra, namaBarang].some(text => text.includes(keyword));
+            row.style.display = isMatch ? '' : 'none';
+        });
+    });
+});
+
 // Data dari backend (harus disediakan dari Blade)
 const barangsData = window.barangsData || {};
 const suppliersData = window.suppliersData || {};

@@ -174,10 +174,12 @@ class GajiController extends Controller
 
         $gajiPerJam = 0;
         $jumlahPekerja = $presensis->pluck('karyawan_id')->unique()->count();
+        
         $jumlahTon = $kloter->tonIkan->jumlah_ton ?? 0;
+        $hargaPerTon = $kloter->tonIkan->harga_ikan_per_ton ?? 1000000;
 
         if ($jumlahPekerja > 0) {
-            $gajiPerJam = ($jumlahTon * 1000) / $jumlahPekerja;
+            $gajiPerJam = ($jumlahTon * $hargaPerTon) / $jumlahPekerja;
         }
 
         $data = [];
@@ -188,7 +190,15 @@ class GajiController extends Controller
 
             foreach ($presensiKaryawan as $p) {
                 $key = \Carbon\Carbon::parse($p->tanggal)->format('Y-m-d');
-                $jamPerTanggal[$key] = $p->jam_kerja;
+
+                $jamKerja = 0;
+                if ($p->jam_masuk && $p->jam_pulang) {
+                    $jamMasuk = strtotime($p->jam_masuk);
+                    $jamPulang = strtotime($p->jam_pulang);
+                    $jamKerja = ($jamPulang - $jamMasuk) / 3600;
+                }
+
+                $jamPerTanggal[$key] = $jamKerja;
             }
 
             $totalJam = array_sum($jamPerTanggal);

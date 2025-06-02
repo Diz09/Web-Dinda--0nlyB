@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 
 namespace App\Models;
 
@@ -17,4 +17,4 @@ class Gaji extends Model
         'gaji_pokok',
         'total_gaji',
     ];
-}
+} -->

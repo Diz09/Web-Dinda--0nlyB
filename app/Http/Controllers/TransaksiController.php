@@ -336,8 +336,6 @@ class TransaksiController extends Controller
         }
     }
 
-
-
     public function destroy($id)
     {
         $transaksi = Transaksi::findOrFail($id);
@@ -345,5 +343,30 @@ class TransaksiController extends Controller
 
         return redirect()->route('operator.transaksi.index')->with('success', 'Data transaksi berhasil dihapus.');
     }
+
+    // public function catatUangMakan()
+    // {
+    //     $barang = Barang::getBarangUangMakan();
+
+    //     if (!$barang) {
+    //         return redirect()->back()->with('error', 'Barang uang makan tidak ditemukan!');
+    //     }
+
+    //     $karyawan = Karyawan::where('status', 'aktif')->get();
+
+    //     foreach ($karyawan as $row) {
+    //         Transaksi::create([
+    //             'barang_id'   => $barang->id,
+    //             'karyawan_id' => $row->id,
+    //             'qty'         => 1,
+    //             'total'       => $barang->harga,
+    //             'tanggal'     => now()->format('Y-m-d'),
+    //             'jenis'       => 'keluar',
+    //             'keterangan'  => 'Uang Makan Otomatis',
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'Transaksi uang makan berhasil dicatat!');
+    // }
 }
 

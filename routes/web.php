@@ -118,6 +118,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
         return response()->json($barangs);
     });
 
+    // Route::post('/transaksi/uang-makan', [TransaksiController::class, 'catatUangMakan'])->name('transaksi.uang-makan');
+    Route::post('/dashboard/uang-makan', [DashboardController::class, 'tambahUangMakanHarian'])->name('dashboard.uang-makan');
 
     // export
     Route::get('/gaji/kloter/{id}/export', [App\Http\Controllers\GajiController::class, 'export'])->name('gaji.kloter.export');

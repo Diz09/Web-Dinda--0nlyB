@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', function () {
             row.style.display = isMatch ? '' : 'none';
         });
     });
+
+    const form = document.getElementById('formFilterTanggal');
+    const tanggalMulai = document.getElementById('tanggalMulai');
+    const tanggalAkhir = document.getElementById('tanggalAkhir');
+
+    // Saat tanggal akhir berubah, kirim form otomatis
+    tanggalAkhir.addEventListener('change', function () {
+        if (tanggalMulai.value && tanggalAkhir.value) {
+            form.submit();
+        }
+    });
 });
 
 // Data dari backend (harus disediakan dari Blade)

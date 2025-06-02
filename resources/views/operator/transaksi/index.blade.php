@@ -4,20 +4,17 @@
 <div class="container">
     <h1 class="mb-4">Transaksi</h1>
     
-    <!-- Tombol Tambah -->
-    <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">
-        Tambah Transaksi
-    </button>    
+    <div style="display: flex; align-items: center; gap: 5px; justify-content: flex-end;">
+        <input type="text" id="searchTransaksi" class="form-control mb-3" style="width: fit-content" placeholder="Cari kode, nama barang, atau mitra...">
 
-    <form method="GET" class="mb-4 flex items-center gap-2" style="text-align-last: end">
+        <form method="GET" id="formFilterTanggal" class="mb-4 flex items-center gap-2" style="margin-bottom: 0;">
+            <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" id="tanggalMulai" class="border px-2 py-1 rounded">
+            <span>s/d</span>
+            <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" id="tanggalAkhir" class="border px-2 py-1 rounded">
+        </form>
 
-        <input type="text" id="searchTransaksi" class="form-control mb-3" placeholder="Cari kode, nama barang, atau mitra...">
-
-        <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="border px-2 py-1 rounded">
-        <span>s/d</span>
-        <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="border px-2 py-1 rounded">
-        <button type="submit" class="button-success px-3 py-1 rounded" style="background: aqua">Filter</button>
-    </form>    
+        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Tambah Transaksi</button>
+    </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">

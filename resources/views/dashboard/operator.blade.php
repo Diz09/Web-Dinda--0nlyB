@@ -17,12 +17,6 @@
         </div>
 
         <div class="flex justify-end mb-4">
-            {{-- <form action="{{ route('transaksi.uang-makan') }}" method="POST" id="form-uang-makan">
-                @csrf
-                <button type="submit" class="text-black font-bold py-2 px-4 rounded shadow" style="background: aqua; ">
-                    Catat Uang Makan Hari Ini
-                </button>
-            </form> --}}
             <form action="{{ route('dashboard.uang-makan') }}" method="POST" onsubmit="return confirm('Tambah transaksi uang makan harian hari ini?')">
                 @csrf
                 <button type="submit" class="btn btn-success">Tambah Uang Makan Harian</button>

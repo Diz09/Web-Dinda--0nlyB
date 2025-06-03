@@ -18,85 +18,74 @@ class DashboardController extends Controller
     // Menampilkan dashboard pimpinan.
     public function pimpinan(Request $request)
     {
-        $filter = $request->get('filter', 'tahun');
-        $query = Transaksi::query();
+        $currentYear = now()->year;
+        $start = $request->get('start_date') 
+            ? Carbon::parse($request->get('start_date')) 
+            : Carbon::create($currentYear, 1, 1)->startOfDay();
+        $end = $request->get('end_date') 
+            ? Carbon::parse($request->get('end_date')) 
+            : Carbon::create($currentYear, 12, 31)->endOfDay();
 
-        if ($filter === 'bulan') {
-            $year = $request->get('year', now()->year);
-            $month = $request->get('month', now()->month);
-            $bulanAktif = \Carbon\Carbon::create($year, $month)->translatedFormat('F Y');
-            $query->whereYear('waktu_transaksi', $year)->whereMonth('waktu_transaksi', $month);
+        $query = Transaksi::whereBetween('waktu_transaksi', [$start, $end]);
 
-            // Bulan: labels = tanggal 1 - akhir
-            $start = Carbon::create($year, $month, 1);
-            $end = $start->copy()->endOfMonth();
-            $dates = CarbonPeriod::create($start, $end);
+        $dates = CarbonPeriod::create($start, $end);
 
-            $labels = [];
-            $pendapatanBulanan = [];
-            $pengeluaranBulanan = [];
+        $labels = [];
+        $pendapatanBulanan = [];
+        $pengeluaranBulanan = [];
 
-            foreach ($dates as $date) {
-                $labels[] = $date->format('d');
-                $pendapatan = (clone $query)
-                    ->whereDate('waktu_transaksi', $date)
-                    ->whereNotNull('pemasukan_id')
-                    ->sum('jumlahRp');
+        foreach ($dates as $date) {
+            $labels[] = $date->format('d M');
 
-                $pengeluaran = (clone $query)
-                    ->whereDate('waktu_transaksi', $date)
-                    ->whereNotNull('pengeluaran_id')
-                    ->sum('jumlahRp');
+            $pendapatan = Transaksi::whereDate('waktu_transaksi', $date)
+                ->whereNotNull('pemasukan_id')
+                ->sum('jumlahRp');
 
-                $pendapatanBulanan[] = $pendapatan;
-                $pengeluaranBulanan[] = $pengeluaran;
-            }
-        } else { // filter tahun (default)
-            $year = $request->get('year', now()->year);
-            $bulanAktif = "Tahun $year";
-            $query->whereYear('waktu_transaksi', $year);
+            $pengeluaran = Transaksi::whereDate('waktu_transaksi', $date)
+                ->where(function ($q) {
+                    $q->whereNotNull('pengeluaran_id')
+                    ->orWhereNotNull('history_gaji_kloter_id');
+                })
+                ->sum('jumlahRp');
 
-            $labels = [];
-            $pendapatanBulanan = [];
-            $pengeluaranBulanan = [];
-
-            for ($i = 1; $i <= 12; $i++) {
-                $labels[] = Carbon::create()->month($i)->format('M');
-
-                $pendapatan = (clone $query)
-                    ->whereMonth('waktu_transaksi', $i)
-                    ->whereNotNull('pemasukan_id')
-                    ->sum('jumlahRp');
-
-                $pengeluaran = (clone $query)
-                    ->whereMonth('waktu_transaksi', $i)
-                    ->whereNotNull('pengeluaran_id')
-                    ->sum('jumlahRp');
-
-                $pendapatanBulanan[] = $pendapatan;
-                $pengeluaranBulanan[] = $pengeluaran;
-            }
+            $pendapatanBulanan[] = $pendapatan;
+            $pengeluaranBulanan[] = $pengeluaran;
         }
 
+        $bulanAktif = $start->translatedFormat('d M Y') . ' - ' . $end->translatedFormat('d M Y');
+
         $totalPendapatan = Transaksi::whereNotNull('pemasukan_id')->sum('jumlahRp');
-        $totalPengeluaran = Transaksi::whereNotNull('pengeluaran_id')->sum('jumlahRp');
+        $totalPengeluaran = Transaksi::where(function ($q) {
+            $q->whereNotNull('pengeluaran_id')
+            ->orWhereNotNull('history_gaji_kloter_id');
+        })->sum('jumlahRp');
 
         $keuangan = [
             'pendapatan' => $totalPendapatan,
             'pengeluaran' => $totalPengeluaran
         ];
 
-        return view('dashboard.pimpinan', compact('labels', 'pendapatanBulanan', 'pengeluaranBulanan', 'keuangan', 'bulanAktif'));
+        return view('dashboard.pimpinan', compact(
+            'labels', 
+            'pendapatanBulanan', 
+            'pengeluaranBulanan', 
+            'keuangan', 
+            'bulanAktif'
+        ));
     }
+
 
     // Menampilkan dashboard operator
     public function operator()
     {
         // Ambil 5 data barang terbaru
-        $barangTerbaru = Barang::with(['produk', 'pendukung'])->latest()->take(5)->get();
+        $barangTerbaru = Barang::with(['produk', 'pendukung'])
+            ->latest()
+            ->take(5)
+            ->get();
 
         // Ambil 5 transaksi terbaru
-        $transaksiTerbaru = Transaksi::with(['barang', 'pemasukan', 'pengeluaran'])
+        $transaksiTerbaru = Transaksi::with(['barang', 'pemasukan', 'pengeluaran',  'historyGajiKloter'])
         ->orderBy('waktu_transaksi', 'desc')
         ->take(5)
         ->get()
@@ -104,9 +93,14 @@ class DashboardController extends Controller
             $kategori = $trx->pengeluaran_id === null ? 'Masuk' : 'Keluar';
             $harga = ($kategori === 'Masuk' ? '+ ' : '- ') . 'Rp ' . number_format($trx->jumlahRp, 0, ',', '.');
 
+            // Tentukan nama transaksi
+            $namaTransaksi = $trx->historyGajiKloter
+                ? 'Pembayaran Gaji Kloter #' . $trx->historyGajiKloter->id
+                : ($trx->barang->nama_barang ?? '-');
+
             return [
                 'waktu' => $trx->waktu_transaksi,
-                'nama_barang' => $trx->barang->nama_barang ?? '-',
+                'nama_barang' => $namaTransaksi,
                 'kategori' => $kategori,
                 'harga' => $harga,
             ];

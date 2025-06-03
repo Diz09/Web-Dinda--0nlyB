@@ -30,17 +30,13 @@
                 <span class="text-sm text-gray-600">({{ $bulanAktif }})</span>
             </h2>
     
-            <form method="GET" class="flex items-center gap-2" style="padding-top: 10px">
-                <select name="filter" class="border px-2 py-1 rounded text-sm">
-                    <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Per Tahun</option>
-                    <option value="bulan" {{ request('filter') == 'bulan' ? 'selected' : '' }}>Per Bulan</option>
-                </select>
-                <input type="number" name="year" placeholder="Tahun" value="{{ request('year', now()->year) }}"
-                    class="filter-info border px-2 py-1 rounded w-20 text-sm">
-                <input type="number" name="month" placeholder="Bulan" value="{{ request('month', now()->month) }}"
-                    class="filter-info border px-2 py-1 rounded w-16 text-sm">
-                <button type="submit" class="bg-blue-500 text-black px-3 py-1 rounded text-sm" style="background: #bdbdf2">Terapkan</button>
+            <form id="date-filter-form" class="flex items-center gap-2" style="padding-top: 10px">
+                <input style="width: fit-content" type="date" name="start_date" id="start_date" value="{{ request('start_date', now()->startOfMonth()->toDateString()) }}"
+                    class="filter-info border px-2 py-1 rounded text-sm">
+                <input style="width: fit-content" type="date" name="end_date" id="end_date" value="{{ request('end_date', now()->endOfMonth()->toDateString()) }}"
+                    class="filter-info border px-2 py-1 rounded text-sm">
             </form>
+
         </div>
     
         <div class="chart-card">
@@ -51,6 +47,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    const form = document.getElementById('date-filter-form');
+    const startInput = document.getElementById('start_date');
+    const endInput = document.getElementById('end_date');
+
+    [startInput, endInput].forEach(input => {
+        input.addEventListener('change', () => {
+            const startDate = startInput.value;
+            const endDate = endInput.value;
+            if (startDate && endDate && startDate <= endDate) {
+                form.submit();
+            }
+        });
+    });
+
     const ctx = document.getElementById('financeChart').getContext('2d');
     const financeChart = new Chart(ctx, {
         type: 'line',
@@ -63,32 +73,52 @@
                     borderColor: 'blue',
                     backgroundColor: 'blue',
                     fill: false,
-                    tension: 0.4
+                    tension: 0.4, // Membuat garis lengkung
+                    pointRadius: 4,
+                    pointBackgroundColor: 'blue',
+                    borderWidth: 3, // Garis lebih tebal
+                    showLine: true, // Pastikan garis antar titik muncul
+                    },
+                    {
+                        label: 'Pengeluaran',
+                        data: [0, ...{!! json_encode($pengeluaranBulanan) !!}, 0], // Awali & akhiri dengan 0
+                        borderColor: 'red',
+                        backgroundColor: 'red',
+                        fill: false,
+                        tension: 0.4, // Membuat garis lengkung
+                        pointRadius: 4,
+                        pointBackgroundColor: 'red',
+                        borderWidth: 4, // Garis lebih tebal
+                        showLine: true // Pastikan garis antar titik muncul
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: {
+                    line: {
+                        cubicInterpolationMode: 'monotone', // Garis lengkung halus
+                    }
                 },
-                {
-                    label: 'Pengeluaran',
-                    data: {!! json_encode($pengeluaranBulanan) !!},
-                    borderColor: 'red',
-                    backgroundColor: 'red',
-                    fill: false,
-                    tension: 0.4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
+                spanGaps: true, // Hubungkan titik meskipun ada data kosong
+                scales: {
+                    y: {
+                        type: 'logarithmic',
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, ticks) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+
+    // Tambahkan titik 0 di awal dan akhir dataset untuk Pendapatan
+    financeChart.data.datasets[0].data = [0, ...{!! json_encode($pendapatanBulanan) !!}, 0];
+    financeChart.data.labels = ['Awal', ...{!! json_encode($labels) !!}, 'Akhir'];
+    financeChart.update();
 </script>
 @endsection

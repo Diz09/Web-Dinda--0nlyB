@@ -1,3 +1,39 @@
+/**
+ * Web Routes
+ * 
+ * File ini berisi seluruh rute aplikasi berbasis Laravel untuk fitur login, logout, dashboard, 
+ * serta manajemen data seperti barang, supplier, karyawan, presensi, gaji, transaksi, dan laporan.
+ * 
+ * Struktur rute dibagi berdasarkan peran pengguna: Pimpinan dan Operator.
+ * 
+ * Fitur:
+ * 
+ * 1. Autentikasi:
+ *    - Halaman login (GET '/')
+ *    - Proses login (POST '/')
+ *    - Logout (POST '/logout')
+ * 
+ * 2. Pimpinan:
+ *    - Dashboard pimpinan
+ *    - Laporan data barang
+ *    - Laporan data karyawan
+ *    - Laporan data supplier
+ *    - Laporan data transaksi
+ * 
+ * 3. Operator:
+ *    - Dashboard operator
+ *    - CRUD data barang (tambah, edit, hapus, update stok, cek barang)
+ *    - CRUD data supplier (tambah, edit, hapus)
+ *    - CRUD data karyawan (tambah, edit, hapus, pembayaran gaji)
+ *    - Presensi karyawan (pilih karyawan, input masuk/pulang, simpan ton ikan)
+ *    - Manajemen gaji per kloter (lihat, detail, bayar, export, kloter selesai)
+ *    - Manajemen transaksi (tambah, edit, hapus, export, ambil data barang)
+ *    - Pencatatan uang makan harian
+ * 
+ * Catatan:
+ * - Middleware autentikasi dan role dapat diaktifkan dengan membuka komentar pada bagian terkait.
+ * - Pastikan semua controller dan view yang disebutkan tersedia pada aplikasi.
+ */
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -10,7 +46,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\BarangKeluarController;
-use App\Http\Controllers\gajiController;
+use App\Http\Controllers\GajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LaporanController;
@@ -18,29 +54,21 @@ use App\Http\Controllers\DataKeuanganController;
 use App\Http\Controllers\TonIkanController;
 use App\Http\Controllers\TransaksiController;
 
-// Route::get('/home', function () {
-//     return view('welcome');
-// })->name('home');
-
-
 // Rute untuk login dan logout
 Route::get('/', function () {
     return view('login'); // pastikan file ini ada di resources/views/auth/login.blade.php
 })->name('login');
 
 Route::post('/', [AuthenticatedSessionController::class, 'store']);
-// Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Pimpinan
 // Route::middleware(['auth', 'role:pimpinan'])->group(function () {
-    // Route::get('/dashboard-pimpinan', [DashboardController::class, 'pimpinan'])->middleware('auth');
     Route::get('/pimpinan/dashboard', [DashboardController::class, 'pimpinan'])->name('dashboard.pimpinan');
     Route::get('/pimpinan/laporan-barang', [LaporanController::class, 'barang'])->name('laporan.barang');
     Route::get('/pimpinan/laporan-karyawan', [LaporanController::class, 'karyawan'])->name('laporan.karyawan');
     Route::get('/pimpinan/laporan-supplier', [LaporanController::class, 'supplier'])->name('laporan.supplier');
     Route::get('/pimpinan/laporan-transaksi', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
-
 // });
 
 // Operator
@@ -117,14 +145,12 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
         return response()->json($barangs);
     });
-
-    // Route::post('/transaksi/uang-makan', [TransaksiController::class, 'catatUangMakan'])->name('transaksi.uang-makan');
+    
     Route::post('/dashboard/uang-makan', [DashboardController::class, 'tambahUangMakanHarian'])->name('dashboard.uang-makan');
 
     // export
     Route::get('/gaji/kloter/{id}/export', [GajiController::class, 'export'])->name('gaji.kloter.export');
     Route::get('operator/transaksi/export', [TransaksiController::class, 'exportExcel'])->name('operator.transaksi.export');
-
 
 // });
 

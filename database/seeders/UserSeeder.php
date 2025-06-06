@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             ['email' => 'pimpinan@example.com'], // Kondisi untuk mencari data
             [
                 'name' => 'Pimpinan User',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('PassAdmin123'),
                 'role' => 'pimpinan',
             ]
         );
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             ['email' => 'operator@example.com'], // Kondisi untuk mencari data
             [
                 'name' => 'Operator User',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('PassOperator123'),
                 'role' => 'operator',
             ]
         );

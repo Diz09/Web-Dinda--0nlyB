@@ -14,25 +14,25 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             // fungsi presensi dan penggajian
-            KaryawanSeeder::class,
-            KloterSeeder::class,
-            TonIkanSeeder::class,
-            PresensiSeeder::class,
+            // KaryawanSeeder::class,
+            // KloterSeeder::class,
+            // TonIkanSeeder::class,
+            // PresensiSeeder::class,
 
             // Gudang Barang
-            BarangSeeder::class,
-            BarangPendukungSeeder::class,
-            BarangProdukSeeder::class,
+            // BarangSeeder::class,
+            // BarangPendukungSeeder::class,
+            // BarangProdukSeeder::class,
 
             // Suppliers
-            SupplierSeeder::class,
-            KonsumenSeeder::class,
-            PemasokSeeder::class,
+            // SupplierSeeder::class,
+            // KonsumenSeeder::class,
+            // PemasokSeeder::class,
 
             // Transaksi
-            PengeluaranSeeder::class,
-            PemasukanSeeder::class,
-            TransaksiSeeder::class,
+            // PengeluaranSeeder::class,
+            // PemasukanSeeder::class,
+            // TransaksiSeeder::class,
         ]);
     }
 }

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('jml_karyawan');
             $table->double('total_gaji');
             $table->timestamp('waktu');
+            $table->date('tanggal_awal')->nullable();
+            $table->date('tanggal_akhir')->nullable();
             $table->timestamps();
         });
     }

@@ -31,10 +31,24 @@
             </h2>
     
             <form id="date-filter-form" class="flex items-center gap-2" style="padding-top: 10px">
-                <input style="width: fit-content" type="date" name="start_date" id="start_date" value="{{ request('start_date', now()->startOfMonth()->toDateString()) }}"
+                <input style="width: fit-content" type="date" name="start_date" id="start_date" 
+                    value="{{ request('start_date', now()->startOfMonth()->toDateString()) }}"
                     class="filter-info border px-2 py-1 rounded text-sm">
-                <input style="width: fit-content" type="date" name="end_date" id="end_date" value="{{ request('end_date', now()->endOfMonth()->toDateString()) }}"
+                <input style="width: fit-content" type="date" name="end_date" id="end_date" 
+                    value="{{ request('end_date', now()->endOfMonth()->toDateString()) }}"
                     class="filter-info border px-2 py-1 rounded text-sm">
+
+                <select id="kloterFilter" name="kloter_id" class="border px-2 py-1 rounded text-sm">
+                    <option value="">Pilih Kloter</option>
+                    @foreach($kloters as $kloter)
+                        <option value="{{ $kloter->id }}" 
+                            data-start="{{ $kloter->tanggal_awal }}" 
+                            data-end="{{ $kloter->tanggal_akhir }}"
+                            {{ request('kloter_id') == $kloter->id ? 'selected' : '' }}>
+                            Kloter {{ $kloter->kloter_id }} ({{ $kloter->tanggal_awal }} - {{ $kloter->tanggal_akhir }})
+                        </option>
+                    @endforeach
+                </select>
             </form>
 
         </div>
@@ -59,6 +73,19 @@
                 form.submit();
             }
         });
+    });
+
+    document.getElementById('kloterFilter').addEventListener('change', function () {
+        const selected = this.options[this.selectedIndex];
+        const start = selected.getAttribute('data-start');
+        const end = selected.getAttribute('data-end');
+
+        if (start && end) {
+            document.getElementById('start_date').value = start;
+            document.getElementById('end_date').value = end;
+        }
+
+        document.getElementById('date-filter-form').submit();
     });
 
     const ctx = document.getElementById('financeChart').getContext('2d');
@@ -118,7 +145,7 @@
 
     // Tambahkan titik 0 di awal dan akhir dataset untuk Pendapatan
     financeChart.data.datasets[0].data = [0, ...{!! json_encode($pendapatanBulanan) !!}, 0];
-    financeChart.data.labels = ['Awal', ...{!! json_encode($labels) !!}, 'Akhir'];
+    financeChart.data.labels = ['0', ...{!! json_encode($labels) !!}, ' X'];
     financeChart.update();
 </script>
 @endsection

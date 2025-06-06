@@ -129,6 +129,11 @@ class GajiController extends Controller
             return redirect()->route('gaji.index')->with('error', 'Kloter ini sudah ditandai selesai sebelumnya.');
         }
 
+        // Ambil data tanggal awal dan akhir dari presensi kloter
+        $tanggalUnik = $kloter->presensis->pluck('tanggal')->unique()->sort()->values();
+        $tanggalAwal = $tanggalUnik->first();
+        $tanggalAkhir = $tanggalUnik->last();
+
         $dataKaryawan = $kloter->presensis->groupBy('karyawan_id');
         $banyakPekerja = $dataKaryawan->count();
 
@@ -155,11 +160,14 @@ class GajiController extends Controller
         }
 
         // 1. Simpan ke History Gaji Kloter
-        $historyGaji = HistoryGajiKloter::create([
+         $historyGaji = HistoryGajiKloter::create([
             'kloter_id' => $kloter->id,
+            'kode' => 'GK-' . strtoupper(uniqid()),
             'jml_karyawan' => $banyakPekerja,
             'total_gaji' => $totalGaji,
             'waktu' => now(),
+            'tanggal_awal' => $tanggalAwal,
+            'tanggal_akhir' => $tanggalAkhir,
         ]);
 
         // 2. Buat entri Pengeluaran jika belum ada (PGJxxx)

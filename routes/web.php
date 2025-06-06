@@ -1,4 +1,6 @@
-/**
+<?php
+
+/*
  * Web Routes
  * 
  * File ini berisi seluruh rute aplikasi berbasis Laravel untuk fitur login, logout, dashboard, 
@@ -34,7 +36,6 @@
  * - Middleware autentikasi dan role dapat diaktifkan dengan membuka komentar pada bagian terkait.
  * - Pastikan semua controller dan view yang disebutkan tersedia pada aplikasi.
  */
-<?php
 
 use Illuminate\Support\Facades\Route;
 
@@ -145,7 +146,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 
         return response()->json($barangs);
     });
-    
+
     Route::post('/dashboard/uang-makan', [DashboardController::class, 'tambahUangMakanHarian'])->name('dashboard.uang-makan');
 
     // export

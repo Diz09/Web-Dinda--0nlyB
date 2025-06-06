@@ -12,6 +12,7 @@ use App\Models\BarangPendukung;
 use App\Models\BarangProduk;
 use App\Models\Transaksi;
 use App\Models\Pengeluaran;
+use App\Models\HistoryGajiKloter;
 
 class DashboardController extends Controller
 {
@@ -25,6 +26,11 @@ class DashboardController extends Controller
         $end = $request->get('end_date') 
             ? Carbon::parse($request->get('end_date')) 
             : Carbon::create($currentYear, 12, 31)->endOfDay();
+
+        $kloters = HistoryGajiKloter::whereNotNull('tanggal_awal')
+            ->whereNotNull('tanggal_akhir')
+            ->orderBy('id', 'desc')
+            ->get();
 
         $query = Transaksi::whereBetween('waktu_transaksi', [$start, $end]);
 
@@ -54,11 +60,16 @@ class DashboardController extends Controller
 
         $bulanAktif = $start->translatedFormat('d M Y') . ' - ' . $end->translatedFormat('d M Y');
 
-        $totalPendapatan = Transaksi::whereNotNull('pemasukan_id')->sum('jumlahRp');
-        $totalPengeluaran = Transaksi::where(function ($q) {
-            $q->whereNotNull('pengeluaran_id')
-            ->orWhereNotNull('history_gaji_kloter_id');
-        })->sum('jumlahRp');
+        $totalPendapatan = Transaksi::whereBetween('waktu_transaksi', [$start, $end])
+            ->whereNotNull('pemasukan_id')
+            ->sum('jumlahRp');
+
+        $totalPengeluaran = Transaksi::whereBetween('waktu_transaksi', [$start, $end])
+            ->where(function ($q) {
+                $q->whereNotNull('pengeluaran_id')
+                ->orWhereNotNull('history_gaji_kloter_id');
+            })
+            ->sum('jumlahRp');
 
         $keuangan = [
             'pendapatan' => $totalPendapatan,
@@ -70,7 +81,8 @@ class DashboardController extends Controller
             'pendapatanBulanan', 
             'pengeluaranBulanan', 
             'keuangan', 
-            'bulanAktif'
+            'bulanAktif',
+            'kloters'
         ));
     }
 

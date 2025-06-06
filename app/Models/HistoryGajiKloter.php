@@ -17,6 +17,8 @@ class HistoryGajiKloter extends Model
         'jml_karyawan', 
         'total_gaji', 
         'waktu',
+        'tanggal_awal',
+        'tanggal_akhir',
     ];
 
     public static function boot()

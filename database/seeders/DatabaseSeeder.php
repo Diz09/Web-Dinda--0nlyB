@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             // fungsi presensi dan penggajian
-            // KaryawanSeeder::class,
-            // KloterSeeder::class,
+            KaryawanSeeder::class,
+            KloterSeeder::class,
             // TonIkanSeeder::class,
             // PresensiSeeder::class,
 

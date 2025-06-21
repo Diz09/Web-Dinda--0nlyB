@@ -25,9 +25,9 @@ class TransaksiSeeder extends Seeder
         $startDate = Carbon::now()->subYear();
         $endDate = Carbon::now();
         
-        for ($i = 0; $i < 4; $i++) { // pilih bulan  dari 1 - 12
+        for ($i = 0; $i < 12; $i++) { // pilih bulan  dari 1 - 12
             $tipe = $i % 2 === 0 ? 'pemasukan' : 'pengeluaran'; // selang-seling
-            $tanggal = Carbon::create(2025, 1, 1)
+            $tanggal = Carbon::create(2024, 1, 1)
                 ->addMonths($i)
                 ->day(rand(1, 28)) // Acak tanggal antara 1 sampai 28 agar aman untuk semua bulan
                 ->setTime(rand(0, 23), rand(0, 59), rand(0, 59)); // Acak waktu dalam hari

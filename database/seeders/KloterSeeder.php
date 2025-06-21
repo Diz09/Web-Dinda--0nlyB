@@ -16,12 +16,17 @@ class KloterSeeder extends Seeder
     {
         DB::table('kloters')->insert([
             [
-                'nama_kloter' => 'Kloter-1',
+                'nama_kloter' => 'Kloter-4',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kloter' => 'Kloter-2',
+                'nama_kloter' => 'Kloter-5',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kloter' => 'Kloter-6',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

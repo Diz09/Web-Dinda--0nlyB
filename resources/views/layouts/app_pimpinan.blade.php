@@ -10,6 +10,11 @@
 
     {{-- jQuery CDN --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+
+    <!-- Tambahkan di dalam tag <head> untuk CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    
 </head>
 
 <body>
@@ -43,6 +48,14 @@
         @yield('content')
     </div>
 
+    <!-- Tambahkan di bagian bawah sebelum penutup tag </body> untuk JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Moment.js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <!-- Daterangepicker JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -67,12 +80,4 @@
         @endif
     </script>
 </body>
-
-<!-- Tambahkan di dalam tag <head> untuk CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Tambahkan di bagian bawah sebelum penutup tag </body> untuk JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </html>

@@ -14,14 +14,35 @@ class TonIkanSeeder extends Seeder
     {
         $tonIkanData = [
             [
-                'kloter_id' => 1,
+                'kloter_id' => 3,
                 'jumlah_ton' => 200.00,
                 'harga_ikan_per_ton' => 1000000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'kloter_id' => 2,
+                'kloter_id' => 3,
+                'jumlah_ton' => 50.00,
+                'harga_ikan_per_ton' => 1000000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kloter_id' => 4,
+                'jumlah_ton' => 50.00,
+                'harga_ikan_per_ton' => 1000000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kloter_id' => 5,
+                'jumlah_ton' => 50.00,
+                'harga_ikan_per_ton' => 1000000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'kloter_id' => 6,
                 'jumlah_ton' => 50.00,
                 'harga_ikan_per_ton' => 1000000,
                 'created_at' => now(),

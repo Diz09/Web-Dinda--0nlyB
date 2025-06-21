@@ -45,6 +45,11 @@
                     class="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition">
                     Login
                 </button>
+            </div>  
+            <div class="text-right mt-1">Belum punya akun?
+                <a href="{{ route('register') }}" class="text-white underline hover:text-gray-200 text-sm">
+                    Daftar di sini
+                </a>
             </div>
         </form>
     </div>

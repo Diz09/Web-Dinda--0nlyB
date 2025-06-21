@@ -40,6 +40,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\AbsenController;
@@ -55,12 +56,23 @@ use App\Http\Controllers\DataKeuanganController;
 use App\Http\Controllers\TonIkanController;
 use App\Http\Controllers\TransaksiController;
 
-// Rute untuk login dan logout
-Route::get('/', function () {
+
+// rute untuk Auth
+Route::match(['get', 'post'], '/', function (\Illuminate\Http\Request $request) {
+    if ($request->isMethod('post')) {
+        return app(AuthenticatedSessionController::class)->store($request);
+    }
     return view('login'); // pastikan file ini ada di resources/views/auth/login.blade.php
 })->name('login');
 
-Route::post('/', [AuthenticatedSessionController::class, 'store']);
+// Fitur Register (gabungkan GET dan POST dalam satu route menggunakan match)
+Route::match(['get', 'post'], '/register', function (\Illuminate\Http\Request $request) {
+    if ($request->isMethod('post')) {
+        return app(RegisterController::class)->store($request);
+    }
+    return app(RegisterController::class)->create($request);
+})->name('register');
+
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 // Pimpinan

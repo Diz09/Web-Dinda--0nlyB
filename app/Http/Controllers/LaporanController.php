@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\DB;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Models\Barang;
 use App\Models\Supplier;
-// use App\Models\Produk;
 use App\Models\Karyawan;
 use App\Models\Presensi;
 use App\Models\Kloter;
@@ -299,12 +299,21 @@ class LaporanController extends Controller
             ];
         })->reverse()->values();
 
-        if ($request->has('export') && $request->export === 'excel') {
-            return Excel::download(new LaporanTransaksiExport(
-                $request->tanggal_mulai,
-                $request->tanggal_akhir,
-                $request->q
-            ), 'laporan_transaksi.xlsx');
+        if ($request->has('export')) {
+            if ($request->export === 'excel') {
+                return Excel::download(new LaporanTransaksiExport(
+                    $request->tanggal_mulai,
+                    $request->tanggal_akhir,
+                    $request->q
+                ), 'laporan_transaksi.xlsx');
+            }
+
+            if ($request->export === 'pdf') {
+                $daterange = $request->daterange ?? '-';
+                $pdf = PDF::loadView('pimpinan.laporan_transaksi.pdf', compact('data', 'daterange'))
+                        ->setPaper('A4', 'landscape');
+                return $pdf->download('laporan_transaksi.pdf');
+            }
         }
         
         if ($request->ajax()) {

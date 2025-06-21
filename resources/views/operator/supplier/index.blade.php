@@ -2,7 +2,17 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-4">Data Mitra Bisnis</h3>
+    @php
+        $kategori = request('kategori');
+        $judul = 'Data Mitra Bisnis';
+        if ($kategori === 'pemasok') {
+            $judul .= ' / Pemasok';
+        } elseif ($kategori === 'konsumen') {
+            $judul .= ' / Konsumen';
+        }
+    @endphp
+
+    <h3 class="mb-4">{{ $judul }}</h3>
 
     <div class="filter-x mb-3">
         {{-- form filter --}}
